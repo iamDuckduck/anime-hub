@@ -8,7 +8,7 @@ interface Props {
 
 const AnimeCard = ({ anime }: Props) => {
   return (
-    <Card width="310px" borderRadius={10} overflow="hidden">
+    <Card>
       <Image src={anime.images.jpg.image_url} />
       <CardBody>
         <Heading fontSize="2xl">{anime.title}</Heading>
