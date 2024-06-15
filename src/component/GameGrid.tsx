@@ -5,7 +5,7 @@ import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
 
 const GameGrid = () => {
-  const { animes, error, isLoading } = useAnimes();
+  const { data, error, isLoading } = useAnimes();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   return (
@@ -22,7 +22,7 @@ const GameGrid = () => {
               <GameCardSkeleton key={skeleton}></GameCardSkeleton>
             </GameCardContainer>
           ))}
-        {animes.map((anime) => (
+        {data.map((anime) => (
           <GameCardContainer>
             <AnimeCard key={anime.mal_id} anime={anime}></AnimeCard>
           </GameCardContainer>
