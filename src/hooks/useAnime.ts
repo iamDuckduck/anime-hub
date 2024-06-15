@@ -6,6 +6,8 @@ export interface Anime {
   mal_id: number;
   title: string;
   images: images;
+  popularity: number;
+  year: number;
 }
 
 interface images{
@@ -13,7 +15,7 @@ interface images{
     image_url: string;
   };
   wedp:{
-    image_url: string;
+     image_url: string;
   }
 }
 
