@@ -8,6 +8,7 @@ export interface Anime {
   images: images;
   popularity: number;
   year: number;
+  score:number;
 }
 
 interface images{
