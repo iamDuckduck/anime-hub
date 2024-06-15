@@ -2,10 +2,21 @@ import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
 
-interface Anime {
+export interface Anime {
   mal_id: number;
   title: string;
+  images: images;
 }
+
+interface images{
+  jpg: {
+    image_url: string;
+  };
+  wedp:{
+    image_url: string;
+  }
+}
+
 interface FetchGamesResponse {
   data: Anime[];
 }
