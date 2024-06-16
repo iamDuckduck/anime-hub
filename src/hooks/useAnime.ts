@@ -19,11 +19,17 @@ interface images{
   }
 }
 
+
 const useAnimes = (
+  // add sort_order to fix unalign sorting
+   
   animeQuery: AnimeQuery
   ) => 
   useData<Anime>("anime", {
-  params:{genres: animeQuery.genre?.mal_id, status: animeQuery.status}
+  params:{
+    genres: animeQuery.genre?.mal_id, 
+    status: animeQuery.status,
+    order_by: animeQuery.sortOrder}
 }, 
 [animeQuery]
 );

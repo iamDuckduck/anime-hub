@@ -10,6 +10,7 @@ import SortSelector from "./component/SortSelector";
 export interface AnimeQuery {
   genre: Genre | null;
   status: string | null;
+  sortOrder: string;
 }
 function App() {
   const [animeQuery, setAnimeQuery] = useState<AnimeQuery>({} as AnimeQuery);
@@ -44,7 +45,12 @@ function App() {
               setAnimeQuery({ ...animeQuery, status })
             }
           ></StatusSelector>
-          <SortSelector></SortSelector>
+          <SortSelector
+            sortOrder={animeQuery.sortOrder}
+            onSelectSortOrder={(sortOrder) =>
+              setAnimeQuery({ ...animeQuery, sortOrder })
+            }
+          ></SortSelector>
         </HStack>
         <GameGrid animeQuery={animeQuery}></GameGrid>
       </GridItem>
