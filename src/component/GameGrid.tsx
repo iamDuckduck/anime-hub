@@ -7,9 +7,11 @@ import { Genre } from "../hooks/useGenres";
 
 interface Props {
   selectedGenre: Genre | null;
+  selectedStatus: string | null;
 }
-const GameGrid = ({ selectedGenre }: Props) => {
-  const { data, error, isLoading } = useAnimes(selectedGenre);
+
+const GameGrid = ({ selectedGenre, selectedStatus }: Props) => {
+  const { data, error, isLoading } = useAnimes(selectedGenre, selectedStatus);
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   return (

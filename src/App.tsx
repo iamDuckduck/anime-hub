@@ -8,6 +8,7 @@ import StatusSelector from "./component/StatusSelector";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   return (
     <Grid
@@ -32,8 +33,14 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main">
-        <StatusSelector></StatusSelector>
-        <GameGrid selectedGenre={selectedGenre}></GameGrid>
+        <StatusSelector
+          selectedStatus={selectedStatus}
+          onSelectStatus={(string) => setSelectedStatus(string)}
+        ></StatusSelector>
+        <GameGrid
+          selectedStatus={selectedStatus}
+          selectedGenre={selectedGenre}
+        ></GameGrid>
       </GridItem>
     </Grid>
   );

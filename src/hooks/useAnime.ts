@@ -22,7 +22,14 @@ interface images{
   }
 }
 
-
-const useAnimes = (selectedGenre: Genre | null) => useData<Anime>("anime", {params:{genres: selectedGenre?.mal_id}}, [selectedGenre?.mal_id]);
+const useAnimes = (
+  selectedGenre: Genre | null, 
+  selectedStatus: string | null
+  ) => 
+  useData<Anime>("anime", {
+  params:{genres: selectedGenre?.mal_id, status: selectedStatus}
+}, 
+[selectedGenre?.mal_id, selectedStatus]
+);
 
 export default useAnimes;
