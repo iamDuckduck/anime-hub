@@ -29,7 +29,8 @@ const useAnimes = (
   params:{
     genres: animeQuery.genre?.mal_id, 
     status: animeQuery.status,
-    order_by: animeQuery.sortOrder}
+    order_by: animeQuery.sortOrder,
+    q: animeQuery.searchText}
 }, 
 [animeQuery]
 );

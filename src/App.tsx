@@ -11,6 +11,7 @@ export interface AnimeQuery {
   genre: Genre | null;
   status: string | null;
   sortOrder: string;
+  searchText: string;
 }
 function App() {
   const [animeQuery, setAnimeQuery] = useState<AnimeQuery>({} as AnimeQuery);
@@ -27,7 +28,11 @@ function App() {
       }}
     >
       <GridItem area="nav">
-        <NavBar></NavBar>
+        <NavBar
+          onSearch={(searchText) =>
+            setAnimeQuery({ ...animeQuery, searchText })
+          }
+        ></NavBar>
       </GridItem>
       <Show above="lg">
         <GridItem area="aside" paddingX={5}>
