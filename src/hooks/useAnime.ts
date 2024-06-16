@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
 import useData from "./useData";
+import { Genre } from "./useGenres";
 
 export interface Anime {
   mal_id: number;
@@ -22,6 +23,6 @@ interface images{
 }
 
 
-const useAnimes = () => useData<Anime>("anime");
+const useAnimes = (selectedGenre: Genre | null) => useData<Anime>("anime", {params:{genres: selectedGenre?.mal_id}}, [selectedGenre?.mal_id]);
 
 export default useAnimes;

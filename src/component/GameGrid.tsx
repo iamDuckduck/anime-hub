@@ -3,9 +3,13 @@ import useAnimes from "../hooks/useAnime";
 import AnimeCard from "./AnimeCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
+import { Genre } from "../hooks/useGenres";
 
-const GameGrid = () => {
-  const { data, error, isLoading } = useAnimes();
+interface Props {
+  selectedGenre: Genre | null;
+}
+const GameGrid = ({ selectedGenre }: Props) => {
+  const { data, error, isLoading } = useAnimes(selectedGenre);
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   return (
