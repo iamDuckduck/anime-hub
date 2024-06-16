@@ -4,14 +4,14 @@ import AnimeCard from "./AnimeCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
 import { Genre } from "../hooks/useGenres";
+import { AnimeQuery } from "../App";
 
 interface Props {
-  selectedGenre: Genre | null;
-  selectedStatus: string | null;
+  animeQuery: AnimeQuery;
 }
 
-const GameGrid = ({ selectedGenre, selectedStatus }: Props) => {
-  const { data, error, isLoading } = useAnimes(selectedGenre, selectedStatus);
+const GameGrid = ({ animeQuery }: Props) => {
+  const { data, error, isLoading } = useAnimes(animeQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   return (

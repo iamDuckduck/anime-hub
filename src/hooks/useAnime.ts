@@ -3,6 +3,7 @@ import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
 import useData from "./useData";
 import { Genre } from "./useGenres";
+import { AnimeQuery } from "../App";
 
 export interface Anime {
   mal_id: number;
@@ -23,13 +24,12 @@ interface images{
 }
 
 const useAnimes = (
-  selectedGenre: Genre | null, 
-  selectedStatus: string | null
+  animeQuery: AnimeQuery
   ) => 
   useData<Anime>("anime", {
-  params:{genres: selectedGenre?.mal_id, status: selectedStatus}
+  params:{genres: animeQuery.genre?.mal_id, status: animeQuery.status}
 }, 
-[selectedGenre?.mal_id, selectedStatus]
+[animeQuery]
 );
 
 export default useAnimes;

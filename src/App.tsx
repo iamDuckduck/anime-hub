@@ -6,9 +6,12 @@ import { useState } from "react";
 import { Genre } from "./hooks/useGenres";
 import StatusSelector from "./component/StatusSelector";
 
+export interface AnimeQuery {
+  genre: Genre | null;
+  status: string | null;
+}
 function App() {
-  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [animeQuery, setAnimeQuery] = useState<AnimeQuery>({} as AnimeQuery);
 
   return (
     <Grid
@@ -27,20 +30,17 @@ function App() {
       <Show above="lg">
         <GridItem area="aside" paddingX={5}>
           <GenreList
-            selectedGenre={selectedGenre}
-            onSelectGenre={(genre) => setSelectedGenre(genre)}
+            selectedGenre={animeQuery.genre}
+            onSelectGenre={(genre) => setAnimeQuery({ ...animeQuery, genre })}
           ></GenreList>
         </GridItem>
       </Show>
       <GridItem area="main">
         <StatusSelector
-          selectedStatus={selectedStatus}
-          onSelectStatus={(string) => setSelectedStatus(string)}
+          selectedStatus={animeQuery.status}
+          onSelectStatus={(status) => setAnimeQuery({ ...animeQuery, status })}
         ></StatusSelector>
-        <GameGrid
-          selectedStatus={selectedStatus}
-          selectedGenre={selectedGenre}
-        ></GameGrid>
+        <GameGrid animeQuery={animeQuery}></GameGrid>
       </GridItem>
     </Grid>
   );
