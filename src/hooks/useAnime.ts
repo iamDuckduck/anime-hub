@@ -1,8 +1,4 @@
-import { useEffect, useState } from "react";
-import apiClient from "../services/api-client";
-import { CanceledError } from "axios";
 import useData from "./useData";
-import { Genre } from "./useGenres";
 import { AnimeQuery } from "../App";
 
 export interface Anime {
