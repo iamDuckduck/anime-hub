@@ -3,7 +3,6 @@ import useAnimes from "../hooks/useAnime";
 import AnimeCard from "./AnimeCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
-import { Genre } from "../hooks/useGenres";
 import { AnimeQuery } from "../App";
 
 interface Props {
