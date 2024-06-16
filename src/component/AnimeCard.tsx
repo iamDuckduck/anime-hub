@@ -11,12 +11,12 @@ const AnimeCard = ({ anime }: Props) => {
     <Card>
       <Image src={anime.images.jpg.image_url} />
       <CardBody>
-        <Heading fontSize="2xl">{anime.title}</Heading>
-        <HStack marginTop={3} justifyContent="space-between">
+        <HStack justifyContent="space-between" marginBottom={3}>
           <Text>Released: {anime.year ? anime.year : "NA"}</Text>
           <Text>Rank: {anime.popularity}</Text>
           <CriticScore score={anime.score}></CriticScore>
         </HStack>
+        <Heading fontSize="2xl">{anime.title}</Heading>
       </CardBody>
     </Card>
   );
