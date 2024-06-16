@@ -6,6 +6,7 @@ interface Props {
   selectedStatus: string | null;
 }
 
+//refactor needed here?
 const status: string[] = ["airing", "complete", "upcoming"];
 
 const PlatformSelector = ({ onSelectStatus, selectedStatus }: Props) => {

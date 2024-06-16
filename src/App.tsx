@@ -1,10 +1,11 @@
-import { Grid, GridItem, Show } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Show } from "@chakra-ui/react";
 import NavBar from "./component/navBar";
 import GameGrid from "./component/GameGrid";
 import GenreList from "./component/GenreList";
 import { useState } from "react";
 import { Genre } from "./hooks/useGenres";
 import StatusSelector from "./component/StatusSelector";
+import SortSelector from "./component/SortSelector";
 
 export interface AnimeQuery {
   genre: Genre | null;
@@ -36,10 +37,15 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main">
-        <StatusSelector
-          selectedStatus={animeQuery.status}
-          onSelectStatus={(status) => setAnimeQuery({ ...animeQuery, status })}
-        ></StatusSelector>
+        <HStack spacing={5} paddingLeft={2} marginBottom={5}>
+          <StatusSelector
+            selectedStatus={animeQuery.status}
+            onSelectStatus={(status) =>
+              setAnimeQuery({ ...animeQuery, status })
+            }
+          ></StatusSelector>
+          <SortSelector></SortSelector>
+        </HStack>
         <GameGrid animeQuery={animeQuery}></GameGrid>
       </GridItem>
     </Grid>
