@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Genre } from "./hooks/useGenres";
 import StatusSelector from "./component/StatusSelector";
 import SortSelector from "./component/SortSelector";
+import GameHeading from "./component/GameHeading";
 
 export interface AnimeQuery {
   genre: Genre | null;
@@ -43,22 +44,25 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main">
-        <Flex paddingLeft={2} marginBottom={5}>
-          <Box marginRight={5}>
-            <StatusSelector
-              selectedStatus={animeQuery.status}
-              onSelectStatus={(status) =>
-                setAnimeQuery({ ...animeQuery, status })
+        <Box paddingLeft={2}>
+          <GameHeading animeQuery={animeQuery}></GameHeading>
+          <Flex marginBottom={5}>
+            <Box marginRight={5}>
+              <StatusSelector
+                selectedStatus={animeQuery.status}
+                onSelectStatus={(status) =>
+                  setAnimeQuery({ ...animeQuery, status })
+                }
+              ></StatusSelector>
+            </Box>
+            <SortSelector
+              sortOrder={animeQuery.sortOrder}
+              onSelectSortOrder={(sortOrder) =>
+                setAnimeQuery({ ...animeQuery, sortOrder })
               }
-            ></StatusSelector>
-          </Box>
-          <SortSelector
-            sortOrder={animeQuery.sortOrder}
-            onSelectSortOrder={(sortOrder) =>
-              setAnimeQuery({ ...animeQuery, sortOrder })
-            }
-          ></SortSelector>
-        </Flex>
+            ></SortSelector>
+          </Flex>
+        </Box>
         <GameGrid animeQuery={animeQuery}></GameGrid>
       </GridItem>
     </Grid>
