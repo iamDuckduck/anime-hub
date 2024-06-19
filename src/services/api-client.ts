@@ -2,6 +2,9 @@ import axios, { AxiosRequestConfig } from "axios";
 
 export interface FetchResponse<T> {
   data: T[];
+  pagination:{
+    has_next_page: Boolean
+  }
 }
 const axiosInstance = axios.create({
     baseURL: "https://api.jikan.moe/v4/"
