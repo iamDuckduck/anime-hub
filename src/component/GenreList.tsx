@@ -15,12 +15,12 @@ interface GenrePic {
 }
 interface Props {
   onSelectGenre: (genre: Genre) => void;
-  selectedGenre: Genre | null;
+  selectedGenreId?: number;
 }
 
 const genrePicData: GenrePic = genrePicJson;
 
-const GenreList = ({ onSelectGenre, selectedGenre }: Props) => {
+const GenreList = ({ onSelectGenre, selectedGenreId }: Props) => {
   const { data: genres, error, isLoading } = useGenres();
 
   if (error) return null;
@@ -45,7 +45,7 @@ const GenreList = ({ onSelectGenre, selectedGenre }: Props) => {
                 whiteSpace="normal"
                 textAlign="left"
                 fontWeight={
-                  genre.mal_id === selectedGenre?.mal_id ? "bold" : "normal"
+                  genre.mal_id === selectedGenreId ? "bold" : "normal"
                 }
                 onClick={() => onSelectGenre(genre)}
                 fontSize="lg"

@@ -27,7 +27,7 @@ const apiClient = new APIClient<Anime>("/anime");
 const useAnimes = (animeQuery: AnimeQuery) => {
   // add sort_order to fix unalign sorting
   const params = {
-    genres: animeQuery.genre?.mal_id,
+    genres: animeQuery.genreId,
     status: animeQuery.status,
     order_by: animeQuery.sortOrder,
     q: animeQuery.searchText,
@@ -38,7 +38,7 @@ const useAnimes = (animeQuery: AnimeQuery) => {
     queryFn: ({ pageParam = 1}) =>
       apiClient.getAll({
           params:{
-          genres: animeQuery.genre?.mal_id,
+          genres: animeQuery.genreId,
           status: animeQuery.status,
           order_by: animeQuery.sortOrder,
           q: animeQuery.searchText,
@@ -46,7 +46,7 @@ const useAnimes = (animeQuery: AnimeQuery) => {
         } 
       }),   
       getNextPageParam: (lastPage, allPages) => {
-        return lastPage.pagination.has_next_page ? allPages.length + 1 : undefined;
+        return lastPage.pagination?.has_next_page ? allPages.length + 1 : undefined;
       },
     staleTime: 24  * 60 * 60 * 1000, //24 hour
   });

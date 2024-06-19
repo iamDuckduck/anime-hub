@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 export interface FetchResponse<T> {
   data: T[];
-  pagination:{
+  pagination?:{
     has_next_page: Boolean
   }
 }

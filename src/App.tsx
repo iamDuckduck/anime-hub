@@ -3,13 +3,12 @@ import NavBar from "./component/navBar";
 import GameGrid from "./component/GameGrid";
 import GenreList from "./component/GenreList";
 import { useState } from "react";
-import { Genre } from "./hooks/useGenres";
 import StatusSelector from "./component/StatusSelector";
 import SortSelector from "./component/SortSelector";
 import GameHeading from "./component/GameHeading";
 
 export interface AnimeQuery {
-  genre: Genre | null;
+  genreId?: number;
   status: string | null;
   sortOrder: string;
   searchText: string;
@@ -38,8 +37,10 @@ function App() {
       <Show above="lg">
         <GridItem area="aside" paddingX={5}>
           <GenreList
-            selectedGenre={animeQuery.genre}
-            onSelectGenre={(genre) => setAnimeQuery({ ...animeQuery, genre })}
+            selectedGenreId={animeQuery.genreId}
+            onSelectGenre={(genre) =>
+              setAnimeQuery({ ...animeQuery, genreId: genre.mal_id })
+            }
           ></GenreList>
         </GridItem>
       </Show>
