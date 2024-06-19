@@ -1,6 +1,6 @@
-import useData from "./useData";
 
-//refactor needed for type string 
-const useGenres = () => useData<string>("/anime/status");
 
-export default useGenres;
+// //refactor needed for type string 
+// const useGenres = () => useData<string>("/anime/status");
+
+// export default useGenres;

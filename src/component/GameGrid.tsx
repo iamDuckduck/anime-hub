@@ -1,4 +1,4 @@
-import { SimpleGrid, Skeleton, Text } from "@chakra-ui/react";
+import { SimpleGrid, Text } from "@chakra-ui/react";
 import useAnimes from "../hooks/useAnime";
 import AnimeCard from "./AnimeCard";
 import GameCardSkeleton from "./GameCardSkeleton";
@@ -10,10 +10,10 @@ interface Props {
 }
 
 const GameGrid = ({ animeQuery }: Props) => {
-  const { data, error, isLoading } = useAnimes(animeQuery);
+  const { data: animes, error, isLoading } = useAnimes(animeQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
 
-  if (error) return <Text>{error}</Text>;
+  if (error) return <Text>{error.message}</Text>;
   return (
     <>
       <SimpleGrid
@@ -27,7 +27,7 @@ const GameGrid = ({ animeQuery }: Props) => {
               <GameCardSkeleton></GameCardSkeleton>
             </GameCardContainer>
           ))}
-        {data.map((anime) => (
+        {animes?.data.map((anime) => (
           <GameCardContainer key={anime.mal_id}>
             <AnimeCard anime={anime}></AnimeCard>
           </GameCardContainer>

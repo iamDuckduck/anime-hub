@@ -1,5 +1,6 @@
-import useData from "./useData";
 import { AnimeQuery } from "../App";
+import { useQuery } from "@tanstack/react-query";
+import apiClient, { FetchResponse } from "../services/api-client";
 
 export interface Anime {
   mal_id: number;
@@ -7,7 +8,7 @@ export interface Anime {
   images: images;
   popularity: number;
   year: number;
-  score:number; 
+  score:number;
 }
 
 interface images{
@@ -20,19 +21,47 @@ interface images{
 }
 
 
-const useAnimes = (
+const useAnimes = (animeQuery: AnimeQuery) => {
   // add sort_order to fix unalign sorting
-   
-  animeQuery: AnimeQuery
-  ) => 
-  useData<Anime>("anime", {
-  params:{
-    genres: animeQuery.genre?.mal_id, 
+  const params = {
+    genres: animeQuery.genre?.mal_id,
     status: animeQuery.status,
     order_by: animeQuery.sortOrder,
-    q: animeQuery.searchText}
-}, 
-[animeQuery]
-);
+    q: animeQuery.searchText,
+  };
+
+  return useQuery<FetchResponse<Anime>, Error>({
+    queryKey: ["animes", animeQuery ],
+    queryFn: () =>
+      apiClient
+        .get<FetchResponse<Anime>>("/anime", {
+          params:{
+          genres: animeQuery.genre?.mal_id,
+          status: animeQuery.status,
+          order_by: animeQuery.sortOrder,
+          q: animeQuery.searchText,
+        } 
+      })
+        .then((res) => res.data),
+    staleTime: 60 * 1000,
+  });
+};
 
 export default useAnimes;
+
+// const useAnimes = (
+//   // add sort_order to fix unalign sorting
+   
+//   animeQuery: AnimeQuery
+//   ) => 
+//   useData<Anime>("anime", {
+//   params:{
+//     genres: animeQuery.genre?.mal_id, 
+//     status: animeQuery.status,
+//     order_by: animeQuery.sortOrder,
+//     q: animeQuery.searchText}
+// }, 
+// [animeQuery]
+// );
+
+// export default useAnimes;
