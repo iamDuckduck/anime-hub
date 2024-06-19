@@ -46,10 +46,9 @@ const useAnimes = (animeQuery: AnimeQuery) => {
         } 
       }),   
       getNextPageParam: (lastPage, allPages) => {
-        console.log(lastPage);
         return lastPage.pagination.has_next_page ? allPages.length + 1 : undefined;
       },
-    staleTime: 60 * 1000,
+    staleTime: 24  * 60 * 60 * 1000, //24 hour
   });
 };
 
