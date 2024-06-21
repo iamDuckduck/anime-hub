@@ -1,5 +1,3 @@
-import useGenres, { Genre } from "../hooks/useGenres";
-import genrePicJson from "../assets/genresLogo.json";
 import {
   Button,
   HStack,
@@ -9,19 +7,20 @@ import {
   ListItem,
   Spinner,
 } from "@chakra-ui/react";
+import genrePicJson from "../assets/genresLogo.json";
+import useGenres from "../hooks/useGenres";
+import useAnimeQueryStore from "../store";
 
 interface GenrePic {
   [key: string]: string;
 }
-interface Props {
-  onSelectGenre: (genre: Genre) => void;
-  selectedGenreId?: number;
-}
 
 const genrePicData: GenrePic = genrePicJson;
 
-const GenreList = ({ onSelectGenre, selectedGenreId }: Props) => {
+const GenreList = () => {
   const { data: genres, error, isLoading } = useGenres();
+  const selectedGenreId = useAnimeQueryStore((s) => s.animeQuery.genreId);
+  const setSelectedGenreId = useAnimeQueryStore((s) => s.setGenreId);
 
   if (error) return null;
   if (isLoading) return <Spinner></Spinner>;
@@ -47,7 +46,7 @@ const GenreList = ({ onSelectGenre, selectedGenreId }: Props) => {
                 fontWeight={
                   genre.mal_id === selectedGenreId ? "bold" : "normal"
                 }
-                onClick={() => onSelectGenre(genre)}
+                onClick={() => setSelectedGenreId(genre.mal_id)}
                 fontSize="lg"
                 variant="link"
               >

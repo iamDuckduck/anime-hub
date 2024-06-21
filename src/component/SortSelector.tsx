@@ -1,10 +1,11 @@
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
-interface Props {
-  onSelectSortOrder: (sortOrder: string) => void;
-  sortOrder: string;
-}
-const SortSelector = ({ onSelectSortOrder, sortOrder }: Props) => {
+import useAnimeQueryStore from "../store";
+
+const SortSelector = () => {
+  const sortOrder = useAnimeQueryStore((s) => s.animeQuery.sortOrder);
+  const setSortOrder = useAnimeQueryStore((s) => s.setSortorder);
+
   const sortOrders = [
     { value: "", label: "Relevance" },
     { value: "title", label: "Title" },
@@ -27,7 +28,7 @@ const SortSelector = ({ onSelectSortOrder, sortOrder }: Props) => {
       <MenuList>
         {sortOrders.map((order) => (
           <MenuItem
-            onClick={() => onSelectSortOrder(order.value)}
+            onClick={() => setSortOrder(order.value)}
             key={order.value}
             value={order.value}
           >

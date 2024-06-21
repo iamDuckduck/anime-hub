@@ -1,17 +1,12 @@
 import { SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import useAnimes from "../hooks/useAnime";
 import AnimeCard from "./AnimeCard";
-import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
-import { AnimeQuery } from "../App";
-import InfiniteScroll from "react-infinite-scroll-component";
-import React from "react";
+import GameCardSkeleton from "./GameCardSkeleton";
 
-interface Props {
-  animeQuery: AnimeQuery;
-}
-
-const GameGrid = ({ animeQuery }: Props) => {
+const GameGrid = () => {
   const {
     data: animes,
     error,
@@ -19,7 +14,7 @@ const GameGrid = ({ animeQuery }: Props) => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useAnimes(animeQuery);
+  } = useAnimes();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   const fetchedGamesCount =

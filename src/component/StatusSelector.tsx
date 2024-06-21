@@ -1,23 +1,21 @@
-import { Menu, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
+import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
-
-interface Props {
-  onSelectStatus: (status: string) => void;
-  selectedStatus: string | null;
-}
+import useAnimeQueryStore from "../store";
 
 //refactor needed here?
-const status: string[] = ["airing", "complete", "upcoming"];
+const statusList: string[] = ["airing", "complete", "upcoming"];
 
-const PlatformSelector = ({ onSelectStatus, selectedStatus }: Props) => {
+const PlatformSelector = () => {
+  const status = useAnimeQueryStore((s) => s.animeQuery.status);
+  const setSelectedStatus = useAnimeQueryStore((s) => s.setStatus);
   return (
     <Menu>
       <MenuButton as={Button} rightIcon={<BsChevronDown></BsChevronDown>}>
-        {selectedStatus || "status"}
+        {status || "status"}
       </MenuButton>
       <MenuList>
-        {status.map((s) => (
-          <MenuItem onClick={() => onSelectStatus(s)} key={s}>
+        {statusList.map((s) => (
+          <MenuItem onClick={() => setSelectedStatus(s)} key={s}>
             {s}
           </MenuItem>
         ))}

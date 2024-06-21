@@ -1,21 +1,19 @@
 import { Heading } from "@chakra-ui/react";
-import { AnimeQuery } from "../App";
-import useGenres from "../hooks/useGenres";
 import useGenre from "../hooks/useGenre";
+import useAnimeQueryStore from "../store";
 
-interface Props {
-  animeQuery: AnimeQuery;
-}
+const GameHeading = () => {
+  const genreId = useAnimeQueryStore((s) => s.animeQuery.genreId);
+  const genre = useGenre(genreId);
 
-const GameHeading = ({ animeQuery }: Props) => {
-  const genre = useGenre(animeQuery.genreId);
+  const status = useAnimeQueryStore((s) => s.animeQuery.status);
 
-  function capFirst(heading: string | null) {
+  function capFirst(heading: string | undefined) {
     if (typeof heading == "string")
       return heading.charAt(0).toUpperCase() + heading.slice(1);
   }
 
-  const heading = `${capFirst(animeQuery?.status) || ""} ${genre || ""} Animes`;
+  const heading = `${capFirst(status) || ""} ${genre || ""} Animes`;
 
   return (
     <Heading as="h1" marginY={5} fontSize="5xl">

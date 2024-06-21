@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ms from "ms";
-import { AnimeQuery } from "../App";
 import APIClient, { FetchResponse } from "../services/api-client";
+import useAnimeQueryStore from "../store";
 
 
 export interface Anime {
@@ -25,14 +25,8 @@ interface images{
 const apiClient = new APIClient<Anime>("/anime");
 
 
-const useAnimes = (animeQuery: AnimeQuery) => {
-  // add sort_order to fix unalign sorting
-  const params = {
-    genres: animeQuery.genreId,
-    status: animeQuery.status,
-    order_by: animeQuery.sortOrder,
-    q: animeQuery.searchText,
-  };
+const useAnimes = () => {
+  const animeQuery = useAnimeQueryStore((s) => s.animeQuery);
 
   return useInfiniteQuery<FetchResponse<Anime>, Error>({
     queryKey: ["animes", animeQuery ],
