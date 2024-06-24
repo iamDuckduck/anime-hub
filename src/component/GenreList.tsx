@@ -8,8 +8,9 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import genrePicJson from "../assets/genresLogo.json";
-import useGenres from "../hooks/useGenres";
+
 import useAnimeQueryStore from "../store";
+import useGenres from "../hooks/useGenres";
 
 interface GenrePic {
   [key: string]: string;
