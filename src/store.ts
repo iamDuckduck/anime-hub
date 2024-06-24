@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { mountStoreDevtool } from "simple-zustand-devtools";
+
 
 export interface AnimeQuery {
   genreId?: number;
@@ -24,6 +24,7 @@ const useAnimeQueryStore = create<AnimeQueryStore>(set => ({
     setStatus: (status) => set(store=>({animeQuery: {...store.animeQuery, status}})),
     setSortorder: (sortOrder) => set(store=>({animeQuery:{...store.animeQuery, sortOrder}})),
 }))
+
 
 // if(process.env.NODE_ENV === 'development')
 //     mountStoreDevtool('anime query store', useAnimeQueryStore) 
