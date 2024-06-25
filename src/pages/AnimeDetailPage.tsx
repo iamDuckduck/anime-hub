@@ -1,4 +1,10 @@
-import { AspectRatio, Heading, SimpleGrid, Spinner } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Box,
+  Heading,
+  SimpleGrid,
+  Spinner,
+} from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import useAnime from "../hooks/useAnime";
 import ExpandableText from "../component/ExpandableText";
@@ -17,11 +23,17 @@ const AnimeDetails = () => {
 
   return (
     <>
-      <Heading>{anime.data.title}</Heading>
-      <ExpandableText children={anime.data.synopsis}></ExpandableText>
-      <GameAtrributes anime={anime.data}></GameAtrributes>
-      <AnimeTrailer anime={anime.data}></AnimeTrailer>
-      <AnimeScreenShots animeId={anime.data.mal_id}></AnimeScreenShots>
+      <SimpleGrid columns={{ base: 1, md: 2 }}>
+        <Box>
+          <Heading>{anime.data.title}</Heading>
+          <ExpandableText children={anime.data.synopsis}></ExpandableText>
+          <GameAtrributes anime={anime.data}></GameAtrributes>
+        </Box>
+        <Box>
+          <AnimeTrailer anime={anime.data}></AnimeTrailer>
+          <AnimeScreenShots animeId={anime.data.mal_id}></AnimeScreenShots>
+        </Box>
+      </SimpleGrid>
 
       {/* <SimpleGrid padding="10px" columns={2} spacing={6}>
         {gameAttributeList.map((attribute) => (

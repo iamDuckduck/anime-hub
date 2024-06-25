@@ -6,7 +6,7 @@ interface Props {
 const AnimeScreenShots = ({ animeId }: Props) => {
   const { data, isLoading, error } = useAnimeScreenShot(String(animeId));
   const imageList = data?.data;
-  console.log(imageList);
+
   if (isLoading) return <Spinner></Spinner>;
 
   if (error) throw error;
