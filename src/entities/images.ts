@@ -1,5 +1,3 @@
-
-
 export interface images {
   jpg: {
     image_url: string;

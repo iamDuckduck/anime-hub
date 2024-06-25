@@ -1,8 +1,7 @@
 import { Genre } from "./Genre";
+import { Trailer } from "./Trailer";
 import { images } from "./images";
 import { Studio } from "./studio";
-
-
 
 export interface Anime {
   mal_id: number;
@@ -16,4 +15,5 @@ export interface Anime {
   type: string;
   studios: Studio[];
   status: string;
+  trailer: Trailer;
 }
