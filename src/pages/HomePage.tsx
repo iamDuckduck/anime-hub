@@ -20,7 +20,8 @@ const HomePage = () => {
         }}
       >
         <Show above="lg">
-          <GridItem area="aside" paddingX={5}>
+          <GridItem area="aside">
+            {/* {paddingX={5} was applied here not sure why} */}
             <GenreList></GenreList>
           </GridItem>
         </Show>
