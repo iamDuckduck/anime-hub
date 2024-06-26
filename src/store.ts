@@ -6,6 +6,7 @@ export interface AnimeQuery {
   status?: string;
   sortOrder?: string;
   searchText?: string;
+  sortDirection?: 'desc' | 'asc'
 }
 
 interface AnimeQueryStore {
@@ -14,6 +15,7 @@ interface AnimeQueryStore {
   setStatus: (status: string) => void;
   setSortorder: (sortOrder: string) => void;
   setSearchText: (searchText: string) => void;
+  setSortDirection: (sort: 'desc' | 'asc') => void;
 }
 
 
@@ -23,6 +25,7 @@ const useAnimeQueryStore = create<AnimeQueryStore>(set => ({
     setGenreId: (genreId) => set(store=>({animeQuery: {...store.animeQuery, genreId}})),
     setStatus: (status) => set(store=>({animeQuery: {...store.animeQuery, status}})),
     setSortorder: (sortOrder) => set(store=>({animeQuery:{...store.animeQuery, sortOrder}})),
+    setSortDirection: (sortDirection) => set((store)=>({animeQuery:{...store.animeQuery, sortDirection}}))
 }))
 
 

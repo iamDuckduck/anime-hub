@@ -4,6 +4,7 @@ import GameHeading from "../component/GameHeading";
 import StatusSelector from "../component/StatusSelector";
 import SortSelector from "../component/SortSelector";
 import GameGrid from "../component/GameGrid";
+import SortDirection from "../component/SortDirection";
 
 const HomePage = () => {
   return (
@@ -31,6 +32,7 @@ const HomePage = () => {
                 <StatusSelector></StatusSelector>
               </Box>
               <SortSelector></SortSelector>
+              <SortDirection></SortDirection>
             </Flex>
           </Box>
           <GameGrid></GameGrid>

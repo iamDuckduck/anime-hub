@@ -20,7 +20,8 @@ const useAnimes = () => {
           status: animeQuery.status,
           order_by: animeQuery.sortOrder,
           q: animeQuery.searchText,
-          page: pageParam
+          page: pageParam,
+          sort: animeQuery.sortDirection,
         } 
       }),   
       getNextPageParam: (lastPage, allPages) => {
