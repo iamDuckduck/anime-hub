@@ -1,4 +1,4 @@
-export interface images {
+export default interface Image {
   jpg: {
     image_url: string;
   };

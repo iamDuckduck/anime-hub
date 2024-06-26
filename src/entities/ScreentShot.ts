@@ -1,4 +1,4 @@
-export interface ScreenShot {
+export default interface ScreenShot {
     jpg: {
       image_url: string;
       large_image_url: string

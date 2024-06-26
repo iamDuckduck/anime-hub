@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Anime } from "../entities/Anime";
+import  Anime from "../entities/Anime";
 import ms from 'ms';
 import APIClient from '../services/api-client';
 

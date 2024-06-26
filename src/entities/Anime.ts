@@ -1,9 +1,9 @@
-import { Genre } from "./Genre";
-import { Trailer } from "./Trailer";
-import { images } from "./images";
-import { Studio } from "./studio";
+import Genre from "./Genre";
+import images from "./Image";
+import Trailer from "./Trailer";
+import Studio from "./studio";
 
-export interface Anime {
+export default interface Anime {
   mal_id: number;
   title: string;
   images: images;

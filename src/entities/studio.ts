@@ -1,5 +1,5 @@
-import { Genre } from "./Genre";
+import Genre from "./Genre";
 
-export interface Studio extends Genre {
+export default interface Studio extends Genre {
     
   }

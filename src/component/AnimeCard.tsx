@@ -1,4 +1,4 @@
-import { Anime } from "../entities/Anime";
+import Anime from "../entities/Anime";
 import { Card, CardBody, HStack, Heading, Image, Text } from "@chakra-ui/react";
 import CriticScore from "./CriticScore";
 import { Link, useNavigate } from "react-router-dom";

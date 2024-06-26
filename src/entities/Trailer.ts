@@ -1,4 +1,4 @@
-export interface Trailer {
+export default interface Trailer {
     youtube_id: string | null;
     url: string | null;
     embed_url: string | null;
