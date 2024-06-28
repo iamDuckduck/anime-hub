@@ -39,13 +39,10 @@ const SearchInput = () => {
         <Box position="relative">
           <Input
             ref={ref}
-            borderRadius={
-              isInputFocused && searchBarText ? "20px 20px 0 0" : 20
-            }
+            borderRadius={20}
             placeholder="Search games..."
             variant="filled"
             padding={2}
-            backgroundColor="#3b3b3b"
             onFocus={() => setIsInputFocused(!isInputFocused)}
             onBlur={() => setIsInputFocused(!isInputFocused)}
             onChange={() => {

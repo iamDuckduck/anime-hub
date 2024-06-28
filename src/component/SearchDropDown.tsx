@@ -1,4 +1,4 @@
-import { Box, HStack, Img, Spinner, Text } from "@chakra-ui/react";
+import { Box, HStack, Heading, Img, Spinner, Text } from "@chakra-ui/react";
 import useSearchBarAnime from "../hooks/useSearchBarAnime";
 
 const SearchDropDown = () => {
@@ -11,16 +11,18 @@ const SearchDropDown = () => {
   return (
     <Box
       position="absolute"
+      marginTop="10px"
       width="100%"
       backgroundColor="#3b3b3b"
-      padding={3}
-      borderRadius="0 0 20px 20px"
+      padding={5}
+      borderRadius={20}
       zIndex={1}
       maxH="300px"
       overflowY="auto"
     >
+      <Heading>Animes</Heading>
       {animes?.data.map((anime, index) => (
-        <HStack padding={3} key={index}>
+        <HStack paddingBottom={3} key={index}>
           <Img
             boxSize="70px"
             objectFit="cover"
