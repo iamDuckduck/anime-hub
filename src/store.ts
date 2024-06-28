@@ -19,7 +19,7 @@ interface AnimeQueryStore {
 }
 
 interface SearchBarAnimeStore {
-  searchText: String;
+  searchText: String ;
   setSearchText: (text: string) => void;
 }
 

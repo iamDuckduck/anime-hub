@@ -1,4 +1,5 @@
 import { Box, HStack, Heading, Img, Spinner, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import useSearchBarAnime from "../hooks/useSearchBarAnime";
 
 const SearchDropDown = () => {
@@ -22,14 +23,25 @@ const SearchDropDown = () => {
     >
       <Heading>Animes</Heading>
       {animes?.data.map((anime, index) => (
-        <HStack paddingBottom={3} key={index}>
-          <Img
-            boxSize="70px"
-            objectFit="cover"
-            src={anime.images.jpg.image_url}
-          ></Img>
-          <Text>{anime.title}</Text>
-        </HStack>
+        <Link to={`/animes/${anime.mal_id}/${anime.title}`} key={index}>
+          <Box
+            paddingBottom={3}
+            _hover={{
+              backgroundColor: "#4a4a4a",
+              cursor: "pointer",
+              borderRadius: "10px",
+            }}
+          >
+            <HStack key={index}>
+              <Img
+                boxSize="70px"
+                objectFit="cover"
+                src={anime.images.jpg.image_url}
+              ></Img>
+              <Text>{anime.title}</Text>
+            </HStack>
+          </Box>
+        </Link>
       ))}
     </Box>
   );
