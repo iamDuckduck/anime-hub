@@ -18,6 +18,10 @@ interface AnimeQueryStore {
   setSortDirection: (sort: 'desc' | 'asc') => void;
 }
 
+interface SearchBarAnimeStore {
+  searchText: String;
+  setSearchText: (text: string) => void;
+}
 
 const useAnimeQueryStore = create<AnimeQueryStore>(set => ({
     animeQuery: {},
@@ -26,6 +30,11 @@ const useAnimeQueryStore = create<AnimeQueryStore>(set => ({
     setStatus: (status) => set(store=>({animeQuery: {...store.animeQuery, status}})),
     setSortorder: (sortOrder) => set(store=>({animeQuery:{...store.animeQuery, sortOrder}})),
     setSortDirection: (sortDirection) => set((store)=>({animeQuery:{...store.animeQuery, sortDirection}}))
+}))
+
+export const useSearchBarAnimeStore = create<SearchBarAnimeStore>(set => ({
+  searchText: '',
+  setSearchText: (text) => set(()=>({ searchText:text})),
 }))
 
 
