@@ -58,9 +58,9 @@ const SearchInput = () => {
           <Input
             ref={ref}
             borderRadius={20}
-            placeholder="Search games..."
+            placeholder="Search Anime..."
             variant="filled"
-            padding={2}
+            padding={3}
             onFocus={handleInputFocus}
             onBlur={handleInputBlur}
             onChange={handleOnChnage}

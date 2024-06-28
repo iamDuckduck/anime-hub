@@ -24,6 +24,11 @@ const SearchDropDown = () => {
       outline="2px solid #4a4a4a"
       opacity={isVisible ? 1 : 0} // Control visibility for fade effect
       transition="opacity 0.3s ease-in-out" // Fade transition
+      sx={{
+        "::-webkit-scrollbar": {
+          display: "none",
+        },
+      }}
     >
       <SearchAnimeResult></SearchAnimeResult>
     </Box>
