@@ -33,7 +33,7 @@ const GenreList = () => {
   if (isLoading) return <Spinner></Spinner>;
 
   return (
-    <>
+    <Box paddingTop={2}>
       <HStack>
         <Box fontSize="2xl">Genres</Box>
         <IconButton
@@ -74,7 +74,7 @@ const GenreList = () => {
           ))}
         </List>
       </Collapse>
-    </>
+    </Box>
   );
 };
 

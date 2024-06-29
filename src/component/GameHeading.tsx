@@ -16,7 +16,7 @@ const GameHeading = () => {
   const heading = `${capFirst(status) || ""} ${genre || ""} Animes`;
 
   return (
-    <Heading as="h1" marginY={5} fontSize="5xl">
+    <Heading as="h1" marginBottom={5} fontSize="5xl">
       {heading}
     </Heading>
   );
