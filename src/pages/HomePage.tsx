@@ -1,10 +1,10 @@
 import { Box, Button, Flex, Grid, GridItem, Show } from "@chakra-ui/react";
 import GenreList from "../component/GenreList";
-import GameHeading from "../component/GameHeading";
-import StatusSelector from "../component/StatusSelector";
-import SortSelector from "../component/SortSelector";
-import GameGrid from "../component/GameGrid";
-import SortDirection from "../component/SortDirection";
+import AnimeHeading from "../component/AnimeHeading";
+import StatusSelector from "../component/Sorting/StatusSelector";
+import SortSelector from "../component/Sorting/SortSelector";
+import AnimeGrid from "../component/AnimeGrid";
+import SortDirection from "../component/Sorting/SortDirection";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
@@ -30,7 +30,7 @@ const HomePage = () => {
         </Show>
         <GridItem area="main">
           <Box paddingLeft={2}>
-            <GameHeading></GameHeading>
+            <AnimeHeading></AnimeHeading>
             <Flex marginBottom={5}>
               <Box marginRight={5}>
                 <StatusSelector></StatusSelector>
@@ -39,7 +39,7 @@ const HomePage = () => {
               <SortDirection></SortDirection>
             </Flex>
           </Box>
-          <GameGrid></GameGrid>
+          <AnimeGrid></AnimeGrid>
         </GridItem>
       </Grid>
     </>

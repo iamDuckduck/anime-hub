@@ -1,8 +1,9 @@
 import { Box, Input } from "@chakra-ui/react";
 import { useCallback, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import debounce from "../hooks/useDebounce";
-import useAnimeQueryStore, { useSearchBarAnimeStore } from "../store";
+
+import debounce from "../../hooks/useDebounce";
+import useAnimeQueryStore, { useSearchBarAnimeStore } from "../../store";
 import SearchDropDown from "./SearchDropDown";
 
 const SearchInput = () => {

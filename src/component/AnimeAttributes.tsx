@@ -7,7 +7,7 @@ interface Props {
   anime: Anime;
 }
 
-const GameAttributes = ({ anime }: Props) => {
+const AnimeAttributes = ({ anime }: Props) => {
   return (
     <SimpleGrid columns={2} as="dl">
       <DefinitionItem term="Status">
@@ -28,4 +28,4 @@ const GameAttributes = ({ anime }: Props) => {
   );
 };
 
-export default GameAttributes;
+export default AnimeAttributes;

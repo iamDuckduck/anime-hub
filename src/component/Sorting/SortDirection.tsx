@@ -1,6 +1,6 @@
 import { ArrowDownIcon, ArrowUpIcon, MinusIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
-import useAnimeQueryStore from "../store";
+import useAnimeQueryStore from "../../store";
 const SortDirection = () => {
   const setSortDirection = useAnimeQueryStore((s) => s.setSortDirection);
   const sortDirection = useAnimeQueryStore((s) => s.animeQuery.sortDirection);

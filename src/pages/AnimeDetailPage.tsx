@@ -8,7 +8,7 @@ import {
 import { useParams } from "react-router-dom";
 import useAnime from "../hooks/useAnime";
 import ExpandableText from "../component/ExpandableText";
-import GameAtrributes from "../component/GameAttributes";
+import GameAtrributes from "../component/AnimeAttributes";
 import AnimeTrailer from "../component/AnimeTrailer";
 import AnimeScreenShots from "../component/AnimeScreenShots";
 

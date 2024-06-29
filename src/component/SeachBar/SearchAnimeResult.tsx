@@ -1,6 +1,6 @@
 import { Box, HStack, Heading, Img, Spinner, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import useSearchBarAnime from "../hooks/useSearchBarAnime";
+import useSearchBarAnime from "../../hooks/useSearchBarAnime";
 
 const SearchAnimeResult = () => {
   const { data: animes, error, isLoading } = useSearchBarAnime();

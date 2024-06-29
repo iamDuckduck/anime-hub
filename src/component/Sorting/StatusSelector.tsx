@@ -1,6 +1,6 @@
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
-import useAnimeQueryStore from "../store";
+import useAnimeQueryStore from "../../store";
 
 //refactor needed here?
 const statusList: string[] = ["airing", "complete", "upcoming"];
