@@ -1,10 +1,11 @@
-import { Box, Flex, Grid, GridItem, Show } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, GridItem, Show } from "@chakra-ui/react";
 import GenreList from "../component/GenreList";
 import GameHeading from "../component/GameHeading";
 import StatusSelector from "../component/StatusSelector";
 import SortSelector from "../component/SortSelector";
 import GameGrid from "../component/GameGrid";
 import SortDirection from "../component/SortDirection";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
@@ -21,7 +22,9 @@ const HomePage = () => {
       >
         <Show above="lg">
           <GridItem area="aside">
-            {/* {paddingX={5} was applied here not sure why} */}
+            <Link to="/animes/schedules">
+              <Box fontSize="2xl">Schedules</Box>
+            </Link>
             <GenreList></GenreList>
           </GridItem>
         </Show>
