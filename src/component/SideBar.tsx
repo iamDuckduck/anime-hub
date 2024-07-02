@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import GenreList from "./GenreList";
 
-const sideBar = () => {
+const SideBar = () => {
   const location = useLocation();
   const isRootRoute = location.pathname === "/";
   return (
@@ -15,4 +15,4 @@ const sideBar = () => {
   );
 };
 
-export default sideBar;
+export default SideBar;
