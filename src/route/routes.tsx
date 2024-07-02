@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage";
 import AnimeDetails from "../pages/AnimeDetailPage";
 import ErrorPage from "../pages/errorPage";
 import AnimeSchedules from "../pages/AnimeSchedules";
+import HomeLayOut from "../pages/HomeLayout";
 
 const router = createBrowserRouter([
   {
@@ -11,9 +12,15 @@ const router = createBrowserRouter([
     element: <Layout></Layout>,
     errorElement: <ErrorPage></ErrorPage>,
     children: [
-      { path: "", element: <HomePage /> },
+      {
+        path: "",
+        element: <HomeLayOut />,
+        children: [
+          { path: "", element: <HomePage /> },
+          { path: "/animes/schedules", element: <AnimeSchedules /> },
+        ],
+      },
       { path: "/animes/:id/:title", element: <AnimeDetails /> },
-      { path: "/animes/schedules", element: <AnimeSchedules /> },
     ],
   },
 ]);
