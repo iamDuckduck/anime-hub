@@ -1,5 +1,23 @@
+import AnimeSchedule from "../component/AnimeSchedule";
+
 const AnimeSchedules = () => {
-  return <div>AnimeSchedules</div>;
+  const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+
+  return (
+    <>
+      {days.map((d) => (
+        <AnimeSchedule day={d} key={d}></AnimeSchedule>
+      ))}
+    </>
+  );
 };
 
 export default AnimeSchedules;
