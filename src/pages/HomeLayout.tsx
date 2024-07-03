@@ -1,7 +1,6 @@
 import { Box, Grid, GridItem, Show } from "@chakra-ui/react";
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
-import GenreList from "../component/GenreList";
-import SideBar from "../component/sideBar";
+import SideBar from "../component/SideBar";
 
 const HomeLayout = () => {
   const location = useLocation();
