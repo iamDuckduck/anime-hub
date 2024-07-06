@@ -1,29 +1,22 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import ms from "ms";
+import { useQuery } from "@tanstack/react-query";
 import Anime from "../entities/Anime";
 import APIClient, { FetchResponse } from "../services/api-client";
-
+import { useSearchScheduleStore } from "../store";
 
 const apiClient = new APIClient<Anime>("/schedules");
 
+const useSchedule = (day: string) => {
+  const pageParam = useSearchScheduleStore((s) => s.page);
 
-const useSchedule = (day:string) => {
-
-  return useInfiniteQuery<FetchResponse<Anime>, Error>({
-    queryKey: ["animes", day ],
-    queryFn: ({ pageParam = 1}) =>
+  return useQuery<FetchResponse<Anime>, Error>({
+    queryKey: ["animes", { day: day, page: pageParam }],
+    queryFn: () =>
       apiClient.getAll({
-          params:{
-            filter: day,
-            page: pageParam
-        } 
-      }),   
-      getNextPageParam: (lastPage, allPages) => {
-        return lastPage.pagination?.has_next_page ? allPages.length + 1 : undefined;
-      },
-    staleTime: ms("24h"), 
+        params: {
+          filter: day,
+          page: pageParam,
+        },
+      }),
   });
 };
-
 export default useSchedule;
-
