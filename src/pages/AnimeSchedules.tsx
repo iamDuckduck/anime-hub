@@ -2,13 +2,13 @@ import AnimeSchedule from "../component/AnimeSchedule";
 
 const AnimeSchedules = () => {
   const days = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
   ];
 
   return (
