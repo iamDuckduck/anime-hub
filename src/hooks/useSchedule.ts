@@ -9,12 +9,12 @@ const useSchedule = (day: string) => {
   const pageParam = useSearchScheduleStore((s) => s.page);
 
   return useQuery<FetchResponse<Anime>, Error>({
-    queryKey: ["animes", { day: day, page: pageParam }],
+    queryKey: ["animes", { day: day, page: pageParam[day] }],
     queryFn: () =>
       apiClient.getAll({
         params: {
           filter: day,
-          page: pageParam,
+          page: pageParam[day],
         },
       }),
   });

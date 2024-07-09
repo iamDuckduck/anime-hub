@@ -9,7 +9,7 @@ const AnimeSchedules = () => {
     "Friday",
     "Saturday",
     "Sunday",
-  ];
+  ];  
 
   return (
     <>

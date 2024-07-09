@@ -41,13 +41,22 @@ export const useSearchBarAnimeStore = create<SearchBarAnimeStore>((set) => ({
 }));
 
 interface SearchScheduleStore {
-  page: number;
-  setPage: (text: number) => void;
+  page: { [key: string]: number };
+  setPage: (updates: { [key: string]: number }) => void;
 }
 
 export const useSearchScheduleStore = create<SearchScheduleStore>((set) => ({
-  page: 1,
-  setPage: (p) => set(() => ({ page: p })),
+  page: {
+    Monday: 1,
+    Tuesday: 1,
+    Wednesday: 1,
+    Thursday: 1,
+    Friday: 1,
+    Saturday: 1,
+    Sunday: 1,
+  },
+  setPage: (updates) =>
+    set((state) => ({ ...state, page: { ...state.page, ...updates } })),
 }));
 
 // if(process.env.NODE_ENV === 'development')
