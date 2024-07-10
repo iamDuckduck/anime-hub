@@ -44,7 +44,7 @@ const AnimeSchedule = ({ day }: Props) => {
         ))}
       </SimpleGrid>
 
-      {anime?.pagination?.has_next_page && (
+      {pagination?.has_next_page && (
         <HStack padding={2}>
           <Button
             isDisabled={pagination?.current_page === 1 || isLoading}
