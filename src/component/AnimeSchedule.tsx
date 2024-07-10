@@ -16,11 +16,15 @@ const AnimeSchedule = ({ day }: Props) => {
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   const pagination = anime?.pagination;
+  const filteredAnime = anime?.data.filter((value, index, self) => {
+    return self.findIndex((obj) => obj.mal_id === value.mal_id) === index;
+  });
+
   if (error) return <Text>{error.message}</Text>;
 
   return (
     <>
-      <Heading>{day}</Heading>
+      <Heading padding={5}>{day}</Heading>
       <SimpleGrid
         padding="10px"
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
@@ -33,7 +37,7 @@ const AnimeSchedule = ({ day }: Props) => {
             </AnimeCardContainer>
           ))}
 
-        {anime?.data.map((anime, index) => (
+        {filteredAnime?.map((anime, index) => (
           <AnimeCardContainer key={index}>
             <AnimeCard anime={anime}></AnimeCard>
           </AnimeCardContainer>
