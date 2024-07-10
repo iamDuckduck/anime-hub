@@ -25,6 +25,7 @@ const AnimeSchedule = ({ day }: Props) => {
   return (
     <>
       <Heading padding={5}>{day}</Heading>
+
       <SimpleGrid
         padding="10px"
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}

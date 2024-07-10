@@ -8,14 +8,18 @@ const apiClient = new APIClient<Anime>("/schedules");
 
 const useSchedule = (day: string) => {
   const pageParam = useSearchScheduleStore((s) => s.page);
-
+  const kidContent = useSearchScheduleStore((s) => s.kidContent);
   return useQuery<FetchResponse<Anime>, Error>({
-    queryKey: ["animes", { day: day, page: pageParam[day] }],
+    queryKey: [
+      "animes",
+      { date: day, page: pageParam[day], kidContent: kidContent },
+    ],
     queryFn: () =>
       apiClient.getAll({
         params: {
           filter: day,
           page: pageParam[day],
+          kids: kidContent,
         },
       }),
     staleTime: ms("24h"),

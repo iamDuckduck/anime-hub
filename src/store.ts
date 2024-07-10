@@ -42,7 +42,9 @@ export const useSearchBarAnimeStore = create<SearchBarAnimeStore>((set) => ({
 
 interface SearchScheduleStore {
   page: { [key: string]: number };
+  kidContent: boolean | null;
   setPage: (updates: { [key: string]: number }) => void;
+  setKidContent: (kid: boolean | null) => void;
 }
 
 export const useSearchScheduleStore = create<SearchScheduleStore>((set) => ({
@@ -55,8 +57,10 @@ export const useSearchScheduleStore = create<SearchScheduleStore>((set) => ({
     Saturday: 1,
     Sunday: 1,
   },
+  kidContent: false,
   setPage: (updates) =>
     set((state) => ({ ...state, page: { ...state.page, ...updates } })),
+  setKidContent: (kid) => set(() => ({ kidContent: kid })),
 }));
 
 // if(process.env.NODE_ENV === 'development')
