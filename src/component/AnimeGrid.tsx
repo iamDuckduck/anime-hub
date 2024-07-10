@@ -17,9 +17,22 @@ const AnimeGrid = () => {
   } = useAnimes();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
+  // it filters the duplicate anime from useAnimes
+  const filteredPage = {
+    ...animes,
+    pages: animes?.pages.map((page) => ({
+      ...page,
+      data: page.data.filter((value, index, self) => {
+        return self.findIndex((obj) => obj.mal_id === value.mal_id) === index;
+      }),
+    })),
+  };
+
   const fetchedGamesCount =
     animes?.pages.reduce((total, page) => (total += page.data.length), 0) || 0;
+
   if (error) return <Text>{error.message}</Text>;
+
   return (
     <InfiniteScroll
       dataLength={fetchedGamesCount} //This is important field to render the next data
@@ -40,15 +53,16 @@ const AnimeGrid = () => {
             </AnimeCardContainer>
           ))}
 
-        {animes?.pages.map((page, index) => (
-          <React.Fragment key={index}>
-            {page.data.map((anime) => (
-              <AnimeCardContainer key={anime.mal_id}>
-                <AnimeCard anime={anime}></AnimeCard>
-              </AnimeCardContainer>
-            ))}
-          </React.Fragment>
-        ))}
+        {filteredPage.pages &&
+          filteredPage?.pages.map((page, index) => (
+            <React.Fragment key={index}>
+              {page.data.map((anime) => (
+                <AnimeCardContainer key={anime.mal_id}>
+                  <AnimeCard anime={anime}></AnimeCard>
+                </AnimeCardContainer>
+              ))}
+            </React.Fragment>
+          ))}
       </SimpleGrid>
     </InfiniteScroll>
   );

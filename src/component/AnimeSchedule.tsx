@@ -37,8 +37,8 @@ const AnimeSchedule = ({ day }: Props) => {
             </AnimeCardContainer>
           ))}
 
-        {filteredAnime?.map((anime, index) => (
-          <AnimeCardContainer key={index}>
+        {filteredAnime?.map((anime) => (
+          <AnimeCardContainer key={anime.mal_id}>
             <AnimeCard anime={anime}></AnimeCard>
           </AnimeCardContainer>
         ))}
