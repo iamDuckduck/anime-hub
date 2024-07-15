@@ -1,5 +1,13 @@
 import Anime from "../../entities/Anime";
-import { Card, CardBody, HStack, Heading, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardBody,
+  HStack,
+  Heading,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import CriticScore from "../CriticScore";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,7 +18,13 @@ interface Props {
 const AnimeCard = ({ anime }: Props) => {
   return (
     <Card>
-      <Image src={anime.images.jpg.image_url} />
+      <Image
+        src={anime.images.jpg.image_url}
+        width="100%"
+        height="auto"
+        objectFit="cover"
+      />
+
       <CardBody>
         <HStack justifyContent="space-between" marginBottom={3}>
           <Text>Released: {anime.year ? anime.year : "NA"}</Text>
