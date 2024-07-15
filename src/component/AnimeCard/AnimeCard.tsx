@@ -23,6 +23,7 @@ const AnimeCard = ({ anime }: Props) => {
         width="100%"
         height="auto"
         objectFit="cover"
+        borderRadius="10px 10px 0 0"
       />
 
       <CardBody>
