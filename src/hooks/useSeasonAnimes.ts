@@ -5,7 +5,7 @@ import ms from "ms";
 
 const apiClient = new APIClient<Anime>("/seasons");
 
-const useSeasonAnimes = (year: string, season: string) => {
+const useAnimeSeaons = (year: string, season: string) => {
   return useQuery({
     queryKey: ["SeasonAnimes", { year: year, season: season }],
     queryFn: () => apiClient.getSeasonAnime(year, season),
@@ -13,4 +13,4 @@ const useSeasonAnimes = (year: string, season: string) => {
   });
 };
 
-export default useSeasonAnimes;
+export default useAnimeSeaons;
