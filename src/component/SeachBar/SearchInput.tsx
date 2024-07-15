@@ -7,37 +7,44 @@ import useAnimeQueryStore, { useSearchBarAnimeStore } from "../../store";
 import SearchDropDown from "./SearchDropDown";
 
 const SearchInput = () => {
-  // setSearchText is for the searching for entire page
+  // for entire page searching
   const setSearchText = useAnimeQueryStore((s) => s.setSearchText);
 
-  // for searching of dropdown box
+  // for dropdown box searching
   const setSearchBarText = useSearchBarAnimeStore((s) => s.setSearchText);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // control dropdown box  manually
+  const [isDropdownClicked, setIsDropdownClicked] = useState(false);
 
+  // for re-rendering when inputbar value changes
+  const [inputBoxValue, setInputBoxValue] = useState("");
+
+  // search bar value
   const ref = useRef<HTMLInputElement>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
   const isRootRoute = location.pathname === "/";
 
-  const handleInputFocus = () => {
-    if (ref.current?.value) setIsDropdownOpen(true);
-  };
-
-  const handleInputBlur = () => {
-    setTimeout(() => {
-      setIsDropdownOpen(false);
-    }, 150);
-  };
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!isRootRoute) navigate("/");
     if (ref.current) setSearchText(ref.current.value);
+    handleInputBlur();
   };
 
-  // delay searching
+  // logic for dropdown box searching
+  const handleInputFocus = () => {
+    setIsDropdownClicked(true);
+  };
+
+  const handleInputBlur = () => {
+    setTimeout(() => {
+      setIsDropdownClicked(false);
+    }, 150);
+  };
+
+  // delay dropdown box searching ()
   const debounceSearch = useCallback(
     debounce((value: string) => {
       setSearchBarText(value);
@@ -46,10 +53,12 @@ const SearchInput = () => {
   );
 
   const handleOnChnage = () => {
-    if (ref.current?.value !== "" && ref.current?.value) {
+    if (ref.current?.value) {
       debounceSearch(ref.current?.value);
-      setIsDropdownOpen(true);
-    } else setIsDropdownOpen(false);
+    }
+
+    // ensure ref.current?.value is a string and re render when value changed
+    if (ref.current?.value !== undefined) setInputBoxValue(ref.current?.value);
   };
 
   return (
@@ -67,7 +76,7 @@ const SearchInput = () => {
             onChange={handleOnChnage}
           ></Input>
 
-          {ref.current?.value && isDropdownOpen && (
+          {ref.current?.value && isDropdownClicked && (
             <SearchDropDown></SearchDropDown>
           )}
         </Box>
