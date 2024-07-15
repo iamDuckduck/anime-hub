@@ -37,9 +37,13 @@ class APIClient<T> {
       .then((res) => res.data);
   };
 
-  getSeasonAnime = (year: string, season: string) => {
+  getSeasonAnime = (
+    year: string,
+    season: string,
+    config: AxiosRequestConfig
+  ) => {
     return axiosInstance
-      .get<FetchResponse<T>>(this.endpoint + "/" + year + "/" + season)
+      .get<FetchResponse<T>>(this.endpoint + "/" + year + "/" + season, config)
       .then((res) => res.data);
   };
 }
