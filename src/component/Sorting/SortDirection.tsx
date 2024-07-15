@@ -19,9 +19,7 @@ const SortDirection = () => {
   };
   return (
     <>
-      <Button marginLeft={5} onClick={toggleDirection}>
-        {renderSortIcon()}
-      </Button>
+      <Button onClick={toggleDirection}>{renderSortIcon()}</Button>
     </>
   );
 };

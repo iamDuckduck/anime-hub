@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Grid, GridItem, Show } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  HStack,
+  Show,
+} from "@chakra-ui/react";
 import GenreList from "../component/GenreList";
 import AnimeHeading from "../component/AnimeHeading";
 import StatusSelector from "../component/Sorting/StatusSelector";
@@ -10,15 +18,13 @@ import { Link } from "react-router-dom";
 const HomePage = () => {
   return (
     <>
-      <Box paddingLeft={2}>
+      <Box>
         <AnimeHeading></AnimeHeading>
-        <Flex marginBottom={5}>
-          <Box marginRight={5}>
-            <StatusSelector></StatusSelector>
-          </Box>
+        <HStack marginBottom={5}>
+          <StatusSelector></StatusSelector>
           <SortSelector></SortSelector>
           <SortDirection></SortDirection>
-        </Flex>
+        </HStack>
       </Box>
       <AnimeGrid></AnimeGrid>
     </>
