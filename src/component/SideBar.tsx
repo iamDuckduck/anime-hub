@@ -7,6 +7,9 @@ const SideBar = () => {
   const isRootRoute = location.pathname === "/";
   return (
     <>
+      <Link to="/animes/seasons">
+        <Box fontSize="2xl">Season</Box>
+      </Link>
       <Link to="/animes/schedules">
         <Box fontSize="2xl">Schedules</Box>
       </Link>
