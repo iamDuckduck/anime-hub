@@ -43,13 +43,13 @@ const AnimeSeaons = () => {
       <Tabs paddingY={5} onChange={(index) => setTabIndex(index)}>
         <TabList>
           {seasons.map((s) => (
-            <Tab>{s}</Tab>
+            <Tab key={s}>{s}</Tab>
           ))}
         </TabList>
 
         <TabPanels>
           {seasons.map((s, i) => (
-            <TabPanel>
+            <TabPanel key={i}>
               {tabIndex == i && (
                 <AnimeSeason year={year.toString()} season={s}></AnimeSeason>
               )}
