@@ -1,19 +1,9 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  GridItem,
-  HStack,
-  Show,
-} from "@chakra-ui/react";
-import GenreList from "../component/GenreList";
-import AnimeHeading from "../component/AnimeHeading";
-import StatusSelector from "../component/Sorting/StatusSelector";
-import SortSelector from "../component/Sorting/SortSelector";
+import { Box, HStack } from "@chakra-ui/react";
 import AnimeGrid from "../component/AnimeGrid";
+import AnimeHeading from "../component/AnimeHeading";
 import SortDirection from "../component/Sorting/SortDirection";
-import { Link } from "react-router-dom";
+import SortSelector from "../component/Sorting/SortSelector";
+import StatusSelector from "../component/Sorting/StatusSelector";
 
 const HomePage = () => {
   return (
