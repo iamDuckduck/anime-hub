@@ -39,7 +39,7 @@ class APIClient<T> {
 
   getSeasonAnime = (year: string, season: string) => {
     return axiosInstance
-      .get<FetchAnimeResponse<T>>(this.endpoint + "/" + year + "/" + season)
+      .get<FetchResponse<T>>(this.endpoint + "/" + year + "/" + season)
       .then((res) => res.data);
   };
 }
