@@ -26,7 +26,7 @@ const navBar = () => {
 
       <SearchInput></SearchInput>
       <Show below="lg">
-        <Button onClick={isOpen}>
+        <Button onClick={() => isOpen(true)}>
           <HamburgerIcon color="grey"></HamburgerIcon>
         </Button>
       </Show>

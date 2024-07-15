@@ -12,16 +12,18 @@ const SideBar = () => {
   return (
     <Flex justifyContent="space-between">
       <VStack paddingY={2} align="flex-start">
-        <Link onClick={setIsOpen} to="/animes/seasons">
+        <Link onClick={() => setIsOpen(false)} to="/animes/seasons">
           <Box fontSize="2xl">Season</Box>
         </Link>
-        <Link onClick={setIsOpen} to="/animes/schedules">
+        <Link onClick={() => setIsOpen(false)} to="/animes/schedules">
           <Box fontSize="2xl">Schedules</Box>
         </Link>
         {isRootRoute && <GenreList></GenreList>}
       </VStack>
 
-      {isOpen && <CloseButton onClick={setIsOpen} justifyContent="end" />}
+      {isOpen && (
+        <CloseButton onClick={() => setIsOpen(false)} justifyContent="end" />
+      )}
     </Flex>
   );
 };

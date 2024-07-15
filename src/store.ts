@@ -65,12 +65,12 @@ export const useSearchScheduleStore = create<SearchScheduleStore>((set) => ({
 
 interface MenuBarToggleStore {
   isOpen: boolean;
-  setIsOpen: () => void;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export const useMenuBarToggleStore = create<MenuBarToggleStore>((set) => ({
   isOpen: false,
-  setIsOpen: () => set((store) => ({ isOpen: !store.isOpen })),
+  setIsOpen: (isOpen) => set(() => ({ isOpen: isOpen })),
 }));
 
 // if(process.env.NODE_ENV === 'development')
