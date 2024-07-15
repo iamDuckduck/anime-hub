@@ -33,7 +33,7 @@ const GenreList = () => {
   if (isLoading) return <Spinner></Spinner>;
 
   return (
-    <Box paddingTop={2}>
+    <Box>
       <HStack>
         <Box fontSize="2xl">Genres</Box>
         <IconButton

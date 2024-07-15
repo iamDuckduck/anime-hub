@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, VStack } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import GenreList from "./GenreList";
 
@@ -6,7 +6,7 @@ const SideBar = () => {
   const location = useLocation();
   const isRootRoute = location.pathname === "/";
   return (
-    <>
+    <VStack paddingY={2} align="flex-start">
       <Link to="/animes/seasons">
         <Box fontSize="2xl">Season</Box>
       </Link>
@@ -14,7 +14,7 @@ const SideBar = () => {
         <Box fontSize="2xl">Schedules</Box>
       </Link>
       {isRootRoute && <GenreList></GenreList>}
-    </>
+    </VStack>
   );
 };
 

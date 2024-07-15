@@ -5,6 +5,7 @@ import AnimeDetails from "../pages/AnimeDetailPage";
 import ErrorPage from "../pages/errorPage";
 import AnimeSchedules from "../pages/AnimeSchedules";
 import HomeLayOut from "../pages/HomeLayout";
+import AnimeSeaons from "../pages/AnimeSeaons";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
         children: [
           { path: "", element: <HomePage /> },
           { path: "/animes/schedules", element: <AnimeSchedules /> },
+          { path: "/animes/seasons", element: <AnimeSeaons /> },
         ],
       },
       { path: "/animes/:id/:title", element: <AnimeDetails /> },
