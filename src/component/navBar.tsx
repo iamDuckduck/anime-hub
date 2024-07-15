@@ -21,7 +21,7 @@ const navBar = () => {
       </Link>
 
       <SearchInput></SearchInput>
-      <ColorModeSwitch></ColorModeSwitch>
+      {/* <ColorModeSwitch></ColorModeSwitch> */}
     </HStack>
   );
 };
