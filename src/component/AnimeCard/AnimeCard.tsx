@@ -21,7 +21,6 @@ const AnimeCard = ({ anime }: Props) => {
       <Image
         src={anime.images.jpg.image_url}
         width="100%"
-        height="auto"
         objectFit="cover"
         borderRadius="10px 10px 0 0"
       />

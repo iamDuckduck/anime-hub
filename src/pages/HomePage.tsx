@@ -20,7 +20,7 @@ const HomePage = () => {
     <>
       <Box>
         <AnimeHeading></AnimeHeading>
-        <HStack marginBottom={5}>
+        <HStack marginBottom={5} wrap="wrap">
           <StatusSelector></StatusSelector>
           <SortSelector></SortSelector>
           <SortDirection></SortDirection>
