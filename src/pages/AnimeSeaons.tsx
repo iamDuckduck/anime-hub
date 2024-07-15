@@ -11,22 +11,28 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
 import { useState } from "react";
+import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
+import AnimeSeason from "../component/AnimeSeason";
 
 const AnimeSeaons = () => {
-  const { data: seasons, isLoading, error } = useAnimeSeasonList();
-  const currentYear = new Date().getFullYear();
-  const [year, setYear] = useState(0);
+  // a list of years
+  const { data: AnimeSeasonList, isLoading, error } = useAnimeSeasonList();
 
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear);
+
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const seasons = ["Spring", "Summer", "Fall", "Winter"];
   return (
     <>
       <Menu>
         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-          {year == 0 ? currentYear : year}
+          {year}
         </MenuButton>
         <MenuList maxHeight="200px" overflowY="scroll">
-          {seasons?.data.map((s) => (
+          {AnimeSeasonList?.data.map((s) => (
             <MenuItem key={s.year} onClick={() => setYear(s.year)}>
               {s.year}
             </MenuItem>
@@ -34,24 +40,21 @@ const AnimeSeaons = () => {
         </MenuList>
       </Menu>
 
-      <Tabs paddingY={5}>
+      <Tabs paddingY={5} onChange={(index) => setTabIndex(index)}>
         <TabList>
-          <Tab>Spring</Tab>
-          <Tab>Summer</Tab>
-          <Tab>Fall</Tab>
-          <Tab>Winter</Tab>
+          {seasons.map((s) => (
+            <Tab>{s}</Tab>
+          ))}
         </TabList>
 
         <TabPanels>
-          <TabPanel>
-            <p>one!</p>
-          </TabPanel>
-          <TabPanel>
-            <p>two!</p>
-          </TabPanel>
-          <TabPanel>
-            <p>three!</p>
-          </TabPanel>
+          {seasons.map((s, i) => (
+            <TabPanel>
+              {tabIndex == i && (
+                <AnimeSeason year={year.toString()} season={s}></AnimeSeason>
+              )}
+            </TabPanel>
+          ))}
         </TabPanels>
       </Tabs>
     </>
