@@ -1,14 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Anime from "../entities/Anime";
-import APIClient from "../services/api-client";
+import APIClient, { FetchResponse } from "../services/api-client";
 import ms from "ms";
 
 const apiClient = new APIClient<Anime>("/seasons");
 
 const useAnimeSeaons = (year: string, season: string) => {
-  return useQuery({
-    queryKey: ["SeasonAnimes", { year: year, season: season }],
-    queryFn: () => apiClient.getSeasonAnime(year, season),
+  return useInfiniteQuery<FetchResponse<Anime>, Error>({
+    queryKey: ["animes", , { year: year, season: season }],
+    queryFn: ({ pageParam = 1 }) =>
+      apiClient.getSeasonAnime(year, season, {
+        params: {
+          page: pageParam,
+          sfw: true,
+        },
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.pagination?.has_next_page
+        ? allPages.length + 1
+        : undefined;
+    },
     staleTime: ms("24h"),
   });
 };
