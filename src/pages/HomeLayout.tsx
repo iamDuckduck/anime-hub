@@ -1,12 +1,27 @@
 import { Box, Grid, GridItem, Show } from "@chakra-ui/react";
-import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import SideBar from "../component/SideBar";
+import { useMenuBarToggleStore } from "../store";
 
 const HomeLayout = () => {
-  const location = useLocation();
-  const isRootRoute = location.pathname === "/";
+  const isOpen = useMenuBarToggleStore((s) => s.isOpen);
+
   return (
     <>
+      {isOpen && (
+        <Box
+          position="fixed"
+          zIndex="1"
+          backgroundColor="black"
+          width="100vw"
+          height="100vh"
+          top="0"
+          left="0"
+          padding={5}
+        >
+          <SideBar></SideBar>
+        </Box>
+      )}
       <Grid
         templateAreas={{
           base: `"main"`,
