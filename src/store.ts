@@ -63,6 +63,16 @@ export const useSearchScheduleStore = create<SearchScheduleStore>((set) => ({
   setKidContent: (kid) => set(() => ({ kidContent: kid })),
 }));
 
+interface MenuBarToggleStore {
+  isOpen: boolean;
+  setIsOpen: () => void;
+}
+
+export const useMenuBarToggleStore = create<MenuBarToggleStore>((set) => ({
+  isOpen: false,
+  setIsOpen: () => set((store) => ({ isOpen: !store.isOpen })),
+}));
+
 // if(process.env.NODE_ENV === 'development')
 //     mountStoreDevtool('anime query store', useAnimeQueryStore)
 export default useAnimeQueryStore;
