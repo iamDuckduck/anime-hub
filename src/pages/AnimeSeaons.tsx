@@ -11,20 +11,26 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
+import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
+import { useState } from "react";
 
 const AnimeSeaons = () => {
+  const { data: seasons, isLoading, error } = useAnimeSeasonList();
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(0);
+
   return (
     <>
       <Menu>
         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-          Seasons
+          {year == 0 ? currentYear : year}
         </MenuButton>
         <MenuList maxHeight="200px" overflowY="scroll">
-          <MenuItem>Download</MenuItem>
-          <MenuItem>Create a Copy</MenuItem>
-          <MenuItem>Mark as Draft</MenuItem>
-          <MenuItem>Delete</MenuItem>
-          <MenuItem>Attend a Workshop</MenuItem>
+          {seasons?.data.map((s) => (
+            <MenuItem key={s.year} onClick={() => setYear(s.year)}>
+              {s.year}
+            </MenuItem>
+          ))}
         </MenuList>
       </Menu>
 
