@@ -15,8 +15,8 @@ const AnimeCardContainer = ({ children }: Props) => {
         cursor: "pointer",
       }}
       width="100%"
-      borderRadius={10}
-      overflow="hidden"
+      // borderRadius={10}
+      // overflow="hidden"
     >
       {children}
     </Box>
