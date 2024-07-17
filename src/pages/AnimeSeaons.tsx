@@ -16,7 +16,7 @@ import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
 import AnimeSeason from "../component/AnimeSeason";
 
 const AnimeSeaons = () => {
-  // a list of years
+  // get a list of years
   const { data: AnimeSeasonList, error } = useAnimeSeasonList();
 
   if (error) return error;
