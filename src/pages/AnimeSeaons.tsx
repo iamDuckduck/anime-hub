@@ -17,7 +17,9 @@ import AnimeSeason from "../component/AnimeSeason";
 
 const AnimeSeaons = () => {
   // a list of years
-  const { data: AnimeSeasonList, isLoading, error } = useAnimeSeasonList();
+  const { data: AnimeSeasonList, error } = useAnimeSeasonList();
+
+  if (error) return error;
 
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
