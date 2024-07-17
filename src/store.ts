@@ -42,9 +42,9 @@ export const useSearchBarAnimeStore = create<SearchBarAnimeStore>((set) => ({
 
 interface SearchScheduleStore {
   page: { [key: string]: number };
-  kidContent: boolean | null;
+  kidContent: boolean;
   setPage: (updates: { [key: string]: number }) => void;
-  setKidContent: (kid: boolean | null) => void;
+  setKidContent: (kid: boolean) => void;
 }
 
 export const useSearchScheduleStore = create<SearchScheduleStore>((set) => ({

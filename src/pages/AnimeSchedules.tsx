@@ -33,8 +33,8 @@ const AnimeSchedules = () => {
     <>
       <HStack justifyContent="end" padding={5}>
         <Checkbox
-          isChecked={kidContent == null ? false : true}
-          onChange={() => setKidContent(!kidContent ? null : false)}
+          isChecked={!kidContent}
+          onChange={() => setKidContent(kidContent ? false : true)}
         >
           Filter KidContent
         </Checkbox>
