@@ -11,6 +11,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
@@ -30,7 +31,7 @@ const AnimeSeasons = () => {
   const [typeFilter, setTypeFilter] = useState("tv");
   const typeFilters = ["tv", "movie", "ova", "special", "ona", "music"];
 
-  if (error) return error;
+  if (error) return <Text>error</Text>;
 
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
