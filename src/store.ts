@@ -73,6 +73,18 @@ export const useMenuBarToggleStore = create<MenuBarToggleStore>((set) => ({
   setIsOpen: (isOpen) => set(() => ({ isOpen: isOpen })),
 }));
 
+interface AnimeSeasonSortOrderStore {
+  sortOrder: String;
+  setOrder: (order: String) => void;
+}
+
+export const useAnimeSeasonSortOrderStore = create<AnimeSeasonSortOrderStore>(
+  (set) => ({
+    sortOrder: "Relevance",
+    setOrder: (newOrder) => set(() => ({ sortOrder: newOrder })),
+  })
+);
+
 // if(process.env.NODE_ENV === 'development')
 //     mountStoreDevtool('anime query store', useAnimeQueryStore)
 export default useAnimeQueryStore;

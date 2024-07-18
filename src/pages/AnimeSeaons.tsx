@@ -14,10 +14,17 @@ import {
 import { useState } from "react";
 import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
 import AnimeSeason from "../component/AnimeSeason";
+import { BsChevronDown } from "react-icons/bs";
+import { useAnimeSeasonSortOrderStore } from "../store";
 
-const AnimeSeaons = () => {
+const AnimeSeasons = () => {
   // get a list of years
   const { data: AnimeSeasonList, error } = useAnimeSeasonList();
+
+  const sortOrder = useAnimeSeasonSortOrderStore((s) => s.sortOrder);
+  const setOrder = useAnimeSeasonSortOrderStore((s) => s.setOrder);
+
+  const sortOrders = ["Relevance", "Rank", "Score"];
 
   if (error) return error;
 
@@ -37,6 +44,19 @@ const AnimeSeaons = () => {
           {AnimeSeasonList?.data.map((s) => (
             <MenuItem key={s.year} onClick={() => setYear(s.year)}>
               {s.year}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
+
+      <Menu>
+        <MenuButton as={Button} rightIcon={<BsChevronDown></BsChevronDown>}>
+          Order by: {sortOrder || "Relevance"}
+        </MenuButton>
+        <MenuList>
+          {sortOrders.map((order) => (
+            <MenuItem onClick={() => setOrder(order)} key={order} value={order}>
+              {order}
             </MenuItem>
           ))}
         </MenuList>
@@ -63,4 +83,4 @@ const AnimeSeaons = () => {
   );
 };
 
-export default AnimeSeaons;
+export default AnimeSeasons;
