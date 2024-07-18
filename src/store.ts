@@ -74,8 +74,8 @@ export const useMenuBarToggleStore = create<MenuBarToggleStore>((set) => ({
 }));
 
 interface AnimeSeasonSortOrderStore {
-  sortOrder: String;
-  setOrder: (order: String) => void;
+  sortOrder: string;
+  setOrder: (order: string) => void;
 }
 
 export const useAnimeSeasonSortOrderStore = create<AnimeSeasonSortOrderStore>(
