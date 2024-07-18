@@ -1,6 +1,7 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
+  HStack,
   Menu,
   MenuButton,
   MenuItem,
@@ -16,6 +17,7 @@ import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
 import AnimeSeason from "../component/AnimeSeason";
 import { BsChevronDown } from "react-icons/bs";
 import { useAnimeSeasonSortOrderStore } from "../store";
+import { SortFilter } from "../component/Sorting/SortFilter";
 
 const AnimeSeasons = () => {
   // get a list of years
@@ -26,41 +28,42 @@ const AnimeSeasons = () => {
 
   const sortOrders = ["Relevance", "Rank", "Score"];
 
+  const [typeFilter, setTypeFilter] = useState("tv");
+  const typeFilters = ["tv", "movie", "ova", "special", "ona", "music"];
+
   if (error) return error;
 
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
 
+  // 0 = Spring, 1 = Summer ...
   const [tabIndex, setTabIndex] = useState(0);
-
   const seasons = ["Spring", "Summer", "Fall", "Winter"];
+
   return (
     <>
-      <Menu>
-        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-          {year}
-        </MenuButton>
-        <MenuList maxHeight="200px" overflowY="scroll">
-          {AnimeSeasonList?.data.map((s) => (
-            <MenuItem key={s.year} onClick={() => setYear(s.year)}>
-              {s.year}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
+      <HStack>
+        <Menu>
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            {year}
+          </MenuButton>
+          <MenuList maxHeight="200px" overflowY="scroll">
+            {AnimeSeasonList?.data.map((s) => (
+              <MenuItem key={s.year} onClick={() => setYear(s.year)}>
+                {s.year}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
 
-      <Menu>
-        <MenuButton as={Button} rightIcon={<BsChevronDown></BsChevronDown>}>
-          Order by: {sortOrder || "Relevance"}
-        </MenuButton>
-        <MenuList>
-          {sortOrders.map((order) => (
-            <MenuItem onClick={() => setOrder(order)} key={order} value={order}>
-              {order}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
+        <SortFilter optionList={sortOrders} setFilter={setOrder}>
+          {"Order by: " + (sortOrder || "Relevance")}
+        </SortFilter>
+
+        <SortFilter optionList={typeFilters} setFilter={setTypeFilter}>
+          {"Type: " + typeFilter}
+        </SortFilter>
+      </HStack>
 
       <Tabs paddingY={5} onChange={(index) => setTabIndex(index)}>
         <TabList>
