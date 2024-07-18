@@ -80,8 +80,20 @@ interface AnimeSeasonSortOrderStore {
 
 export const useAnimeSeasonSortOrderStore = create<AnimeSeasonSortOrderStore>(
   (set) => ({
-    sortOrder: "Relevance",
+    sortOrder: "Rank",
     setOrder: (newOrder) => set(() => ({ sortOrder: newOrder })),
+  })
+);
+
+interface AnimeSeasonTypeFilterStore {
+  typeFilter: string;
+  setTypeFilter: (type: string) => void;
+}
+
+export const useAnimeSeasonTypeFilterStore = create<AnimeSeasonTypeFilterStore>(
+  (set) => ({
+    typeFilter: "tv",
+    setTypeFilter: (newType) => set(() => ({ typeFilter: newType })),
   })
 );
 

@@ -16,7 +16,10 @@ import {
 import { useState } from "react";
 import useAnimeSeasonList from "../hooks/useAnimeSeasonList";
 import AnimeSeason from "../component/AnimeSeason";
-import { useAnimeSeasonSortOrderStore } from "../store";
+import {
+  useAnimeSeasonSortOrderStore,
+  useAnimeSeasonTypeFilterStore,
+} from "../store";
 import { SortFilter } from "../component/Sorting/SortFilter";
 
 const AnimeSeasons = () => {
@@ -26,9 +29,10 @@ const AnimeSeasons = () => {
   const sortOrder = useAnimeSeasonSortOrderStore((s) => s.sortOrder);
   const setOrder = useAnimeSeasonSortOrderStore((s) => s.setOrder);
 
-  const sortOrders = ["Relevance", "Rank", "Score"];
+  const sortOrders = ["Rank", "Score"];
 
-  const [typeFilter, setTypeFilter] = useState("tv");
+  const typefilter = useAnimeSeasonTypeFilterStore((s) => s.typeFilter);
+  const setTypeFilter = useAnimeSeasonTypeFilterStore((s) => s.setTypeFilter);
   const typeFilters = ["tv", "movie", "ova", "special", "ona", "music"];
 
   if (error) return <Text>error</Text>;
@@ -56,12 +60,13 @@ const AnimeSeasons = () => {
           </MenuList>
         </Menu>
 
+        {/* //default ordered by rank */}
         <SortFilter optionList={sortOrders} setFilter={setOrder}>
-          {"Order by: " + (sortOrder || "Relevance")}
+          {"Order by: " + sortOrder}
         </SortFilter>
 
         <SortFilter optionList={typeFilters} setFilter={setTypeFilter}>
-          {"Type: " + typeFilter}
+          {"Type: " + typefilter}
         </SortFilter>
       </HStack>
 
