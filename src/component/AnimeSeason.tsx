@@ -44,10 +44,6 @@ const AnimeSeason = ({ year, season }: Props) => {
     allAnimes?.sort((a, b) => b.score - a.score);
   }
 
-  if (sortOrder == "Rank") {
-    allAnimes?.sort((a, b) => a.popularity - b.popularity);
-  }
-
   if (error) return <Text>error</Text>;
 
   return (

@@ -23,6 +23,7 @@ export const SortFilter = ({
       <MenuButton as={Button} rightIcon={<BsChevronDown></BsChevronDown>}>
         {children}
       </MenuButton>
+
       {optionList && (
         <MenuList>
           {optionList?.map((order) => (
@@ -36,6 +37,7 @@ export const SortFilter = ({
           ))}
         </MenuList>
       )}
+
       {optionObject && (
         <MenuList>
           {optionObject?.map((order) => (
