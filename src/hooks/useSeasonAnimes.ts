@@ -6,13 +6,14 @@ import ms from "ms";
 const apiClient = new APIClient<Anime>("/seasons");
 
 const useAnimeSeaons = (year: string, season: string) => {
-  return useInfiniteQuery<FetchResponse<Anime>, Error>({
+  const queryResult = useInfiniteQuery<FetchResponse<Anime>, Error>({
     queryKey: ["animes", , { year: year, season: season }],
     queryFn: ({ pageParam = 1 }) =>
       apiClient.getSeasonAnime(year, season, {
         params: {
           page: pageParam,
           sfw: true,
+          filter: "TV",
         },
       }),
     getNextPageParam: (lastPage, allPages) => {
@@ -22,6 +23,8 @@ const useAnimeSeaons = (year: string, season: string) => {
     },
     staleTime: ms("24h"),
   });
+
+  return queryResult;
 };
 
 export default useAnimeSeaons;
