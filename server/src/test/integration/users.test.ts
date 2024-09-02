@@ -1,6 +1,8 @@
 import request from "supertest";
 import { User } from "../../models/users";
 import { app } from "../../index";
+import bcrypt from "bcrypt";
+import { UserDoc } from "../../models/users";
 
 interface templateUser {
   userName: string;
@@ -14,6 +16,14 @@ describe("/api/users", () => {
 
   describe("GET /me ", () => {
     let token: string;
+    let user: templateUser;
+    beforeEach(async () => {
+      user = new User({
+        userName: "12345",
+        email: "12345@gmail.com",
+        password: "12345",
+      });
+    });
 
     const exec = function () {
       return request(app).get("/api/users/me").set("x-auth-token", token);
@@ -26,14 +36,10 @@ describe("/api/users", () => {
     });
 
     it("should return user info if a valid token is passed", async () => {
-      const user = new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      });
-      await user.save();
+      const userInDB = new User(user);
+      await userInDB.save();
 
-      token = user.generateAuthToken();
+      token = userInDB.generateAuthToken();
       const res = await exec();
 
       expect(res.status).toBe(200);
@@ -104,18 +110,20 @@ describe("/api/users", () => {
 
   describe("Put /", () => {
     let user: templateUser;
-    let userInDB;
+    let userInDB: UserDoc; //idk what is the returned type of User(user).save()
     let token: string;
     let newInfo: object;
+    let salt: string;
     beforeEach(async () => {
+      salt = await bcrypt.genSalt(10);
       user = {
         userName: "12345",
         email: "12345@gmail.com",
-        password: "12345",
+        password: await bcrypt.hash("12345", salt),
       };
 
-      userInDB = new User(user).save();
-      token = (await userInDB).generateAuthToken();
+      userInDB = await new User(user).save();
+      token = userInDB.generateAuthToken();
     });
 
     const exec = function () {
@@ -144,6 +152,7 @@ describe("/api/users", () => {
       expect(res.status).toBe(400);
     });
 
+    //do we implement validate logic in mongoose schema too?
     it("should return 400 if the email is invaild", async () => {
       user.email = "12345";
       newInfo = user;
@@ -151,6 +160,7 @@ describe("/api/users", () => {
       expect(res.status).toBe(400);
     });
 
+    //the passwords passed below are encrypted
     it("should return 400 if the password is less than 5 character", async () => {
       user.password = "1";
       newInfo = user;
@@ -159,11 +169,81 @@ describe("/api/users", () => {
     });
 
     it("should return 400 if the password is larger than 255 character", async () => {
-      //should be hashed password
       user.password = new Array(257).join("a");
       newInfo = user;
       const res = await exec();
       expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if same info passed", async () => {
+      newInfo = user;
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+
+    it("should update the user if passed info is valid", async () => {
+      user.userName = "123456";
+      newInfo = user;
+      const res = await exec();
+      const updatedUser = await User.findById(userInDB._id);
+
+      expect(res.status).toBe(200);
+      expect(updatedUser).toHaveProperty("userName", user.userName);
+    });
+
+    it("should return the updated user if passed info is valid", async () => {
+      user.userName = "123456";
+      newInfo = user;
+      const res = await exec();
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("userName", user.userName);
+      expect(res.body).toHaveProperty("email", user.email);
+      expect(res.body).toHaveProperty("password", user.password);
+    });
+  });
+
+  describe("Delete /", () => {
+    let token: string;
+    let user: templateUser;
+    let userInDB: UserDoc;
+    beforeEach(async () => {
+      user = {
+        userName: "12345",
+        email: "12345@gmail.com",
+        password: "12345",
+      };
+
+      userInDB = await new User(user).save();
+      token = userInDB.generateAuthToken();
+    });
+
+    const exec = function () {
+      return request(app).delete("/api/users/").set("x-auth-token", token);
+    };
+
+    it("should return 401 if the user did not login", async () => {
+      token = "";
+      const res = await exec();
+      expect(res.status).toBe(401);
+    });
+
+    it("should delete the user", async () => {
+      const res = await exec();
+
+      const deletedUser = await User.findById(userInDB._id);
+
+      expect(res.status).toBe(200);
+      expect(deletedUser).toBe(null);
+    });
+
+    it("should return the deleted the user", async () => {
+      const res = await exec();
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("userName", user.userName);
+      expect(res.body).toHaveProperty("email", user.email);
+      expect(res.body).toHaveProperty("password", user.password);
     });
   });
 });

@@ -7,7 +7,7 @@ const router = Express.Router();
 
 router.get("/me", auth, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
-  res.send(user);
+  res.status(200).send(user);
 });
 
 router.post("/", async (req, res) => {
@@ -32,7 +32,29 @@ router.post("/", async (req, res) => {
 
 router.put("/", auth, async (req, res) => {
   const { error } = validate(req.body);
-  console.log(error);
   if (error) return res.status(400).send("invalid info");
+
+  const user = await User.findById(req.user._id).select({
+    userName: 1,
+    email: 1,
+    password: 1,
+    _id: 0, // Exclude the _id field from the query result
+  });
+
+  if (JSON.stringify(req.body) === JSON.stringify(user))
+    return res.status(400).send("updating same info");
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: req.user._id }, // Update user with matching userId
+    req.body, // New user data to update
+    { new: true } // Return the updated user data
+  );
+
+  res.status(200).send(updatedUser);
+});
+
+router.delete("/", auth, async (req, res) => {
+  const deletedUser = await User.findOneAndDelete({ _id: req.user._id });
+  res.status(200).send(deletedUser);
 });
 export { router };
