@@ -1,0 +1,4 @@
+{
+  "db": "anime_db",
+  "jwtPrivateKey": "anime_jwtPrivateKey"
+}
