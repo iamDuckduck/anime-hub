@@ -2,7 +2,7 @@ const { logger } = require("../startup/logger");
 import { Request, Response, NextFunction } from "express";
 
 export default function (
-  err: Error,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
