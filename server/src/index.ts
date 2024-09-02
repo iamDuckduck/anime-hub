@@ -1,17 +1,14 @@
 import express from "express";
-import bodyParser from "body-parser";
 import config from "config";
-import mongoose from "mongoose";
+import "express-async-errors";
 import { logger, handleRejection } from "./startup/logger";
-import { router as users } from "./route/users";
-handleRejection();
+import routes from "./startup/routes";
+import mongodb from "./startup/mongodb";
+
 const app = express();
-app.use(bodyParser.json());
-
-app.use("/api/users", users);
-
-const db: string = config.get("db");
-mongoose.connect(db).then(() => logger.info(`Connected to ${db}`));
+handleRejection();
+routes(app);
+mongodb();
 
 const port: number = config.get("port");
 port
