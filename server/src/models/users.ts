@@ -4,7 +4,7 @@ import config from "config";
 import Joi from "joi";
 
 //extend the document interface,
-interface UserDoc extends Document {
+export interface UserDoc extends Document {
   userName: string;
   email: string;
   password: string;
@@ -24,6 +24,7 @@ const userSchema = new Schema<UserDoc>({
     minlength: 5,
     maxlength: 50,
   },
+  //index ?
   email: {
     type: String,
     index: true,
