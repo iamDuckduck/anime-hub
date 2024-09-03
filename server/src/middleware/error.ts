@@ -1,4 +1,4 @@
-const { logger } = require("../startup/logger");
+import { logger } from "../startup/logger";
 import { Request, Response, NextFunction } from "express";
 
 export default function (
