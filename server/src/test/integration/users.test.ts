@@ -18,11 +18,11 @@ describe("/api/users", () => {
     let token: string;
     let user: templateUser;
     beforeEach(async () => {
-      user = new User({
+      user = {
         userName: "12345",
         email: "12345@gmail.com",
         password: "12345",
-      });
+      };
     });
 
     const exec = function () {
