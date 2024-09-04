@@ -22,7 +22,7 @@ import Joi from "joi";
 
 //extend the document interface,
 export interface watchListDoc extends Document {
-  _id: string;
+  _id: Types.ObjectId;
   userId: string;
   name: string;
   created_at: Date;
@@ -60,7 +60,7 @@ const WatchList = model<watchListDoc, Model<watchListDoc>>(
 
 const validateWatchList = (WatchList: object) => {
   const schema = Joi.object({
-    userID: Joi.string().custom(
+    userId: Joi.string().custom(
       (value: string, helpers: Joi.CustomHelpers<any>) => {
         if (mongoose.Types.ObjectId.isValid(value)) return value;
         else
