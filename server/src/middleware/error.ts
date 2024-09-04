@@ -7,7 +7,7 @@ export default function (
   res: Response,
   next: NextFunction
 ) {
-  // logger.error(err.message, err);
+  // logger.error(err.message, err); // doesn't log in test env
   //Log the exception
   res.status(500).send("Something failed.");
 }
