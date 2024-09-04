@@ -9,7 +9,7 @@ export interface UserDoc extends Document {
   email: string;
   password: string;
   isAdmin: boolean;
-  _id: string;
+  _id: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
   generateAuthToken: () => string;
