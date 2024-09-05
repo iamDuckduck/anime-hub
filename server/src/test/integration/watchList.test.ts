@@ -5,12 +5,6 @@ import request from "supertest";
 import { app } from "../../index";
 import { User, UserDoc } from "../../models/users";
 
-interface templateUser {
-  userName: string;
-  email: string;
-  password: string;
-}
-
 describe("/api/watchList", () => {
   afterEach(async () => {
     await WatchList.deleteMany({});
