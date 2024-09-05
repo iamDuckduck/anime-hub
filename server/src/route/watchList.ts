@@ -23,35 +23,42 @@ router.post("/", auth, async (req, res) => {
   res.send(newWatchList);
 });
 
-router.put("/", auth, async (req, res) => {
-  if (!(await WatchList.findById(req.header("watchListId"))))
+router.put("/:id", auth, async (req, res) => {
+  const { error } = validate(req.body.newWatchList);
+  if (error) return res.status(400).send(error.message);
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id))
     return res.status(400).send("invalid watchListId");
 
-  if (req.body.userId !== req.user._id)
+  const watchListId = await WatchList.findById(req.params.id);
+  if (!watchListId)
+    return res.status(400).send("provided watchListId not found");
+
+  if (req.body.newWatchList.userId !== req.user._id)
     return res.status(401).send("you can't modify other user's watchList");
 
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send("invalid info");
-
   const updatedUser = await WatchList.findOneAndUpdate(
-    { _id: req.header("watchListId") }, // Update user with matching userId
-    req.body, // New user data Userto update
-    { new: true } // Return the updated user data
+    { _id: req.params.id },
+    req.body.newWatchList,
+    { new: true }
   );
 
-  return res.status(200).send(updatedUser);
+  res.send(updatedUser);
 });
 
-router.delete("/", auth, async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.body.watchListId))
+router.delete("/:id", auth, async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id))
     return res.status(400).send("invalid watchListId");
 
-  const watchListInDb = await WatchList.findById(req.body.watchListId);
-  if (!watchListInDb) return res.status(400).send("invalid watchListId");
+  const watchListInDb = await WatchList.findById(req.params.id);
+
+  if (!watchListInDb) return res.status(400).send("watchList not found");
+
   if (watchListInDb.userId !== req.user._id)
     return res.status(401).send("unauthorized");
 
-  const deletedWatchList = await WatchList.findByIdAndDelete(watchListInDb._id);
-  res.status(200).send(deletedWatchList);
+  const deletedWatchList = await WatchList.findByIdAndDelete(req.params.id);
+
+  res.send(deletedWatchList);
 });
 export { router };

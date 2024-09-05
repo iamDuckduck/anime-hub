@@ -19,16 +19,14 @@ describe("/api/watchList", () => {
 
   describe("GET /myList", () => {
     let token: string;
-    let user: templateUser;
     let userInDb: UserDoc;
+
     beforeEach(async () => {
-      user = {
+      userInDb = await new User({
         userName: "12345",
         email: "12345@gmail.com",
         password: "12345",
-      };
-
-      userInDb = await new User(user).save();
+      }).save();
       token = userInDb.generateAuthToken();
     });
 
@@ -37,6 +35,7 @@ describe("/api/watchList", () => {
         .get("/api/watchList/myList")
         .set("x-auth-token", token);
     };
+
     it("should return 401 if the user didn't login", async () => {
       token = "";
       const res = await exec();
@@ -58,19 +57,18 @@ describe("/api/watchList", () => {
 
   describe("Post /", () => {
     let token: string;
-    let user: templateUser;
     let userInDb: UserDoc;
     let newWatchList: {
       userId: Types.ObjectId;
       name: string;
     };
+
     beforeEach(async () => {
-      user = {
+      userInDb = await new User({
         userName: "12345",
         email: "12345@gmail.com",
         password: "12345",
-      };
-      userInDb = await new User(user).save();
+      }).save();
       token = userInDb.generateAuthToken();
     });
 
@@ -88,14 +86,14 @@ describe("/api/watchList", () => {
     });
 
     it("should return 401 if the user trying to add watchList to another user", async () => {
-      const userAInDb = await new User({
+      const newUserInDb = await new User({
         userName: "12345A",
         email: "12345A@gmail.com",
         password: "12345",
       }).save();
 
       newWatchList = {
-        userId: userAInDb._id,
+        userId: newUserInDb._id,
         name: "1",
       };
 
@@ -124,47 +122,30 @@ describe("/api/watchList", () => {
     });
 
     it("should return 400 if the user created duplicated anime", async () => {
-      await new WatchList({
-        userId: userInDb._id,
-        name: "summer 2024",
-      }).save();
-
       newWatchList = {
         userId: userInDb._id,
         name: "summer 2024",
       };
-      const res = await exec();
+      await new WatchList(newWatchList).save();
 
+      const res = await exec();
       expect(res.status).toBe(400);
     });
 
     it("should add the watchList", async () => {
-      await new WatchList({
-        userId: userInDb._id,
-        name: "summer 2024",
-      }).save();
-
       newWatchList = {
         userId: userInDb._id,
         name: "summer 2025",
       };
-      const res = await exec();
 
-      const userInDB = await WatchList.find({
-        userId: userInDb._id,
-        name: "summer 2025",
-      });
+      const res = await exec();
+      const watchListInDb = await WatchList.find(newWatchList);
 
       expect(res.status).toBe(200);
-      expect(userInDB).not.toBeNull();
+      expect(watchListInDb).not.toBeNull();
     });
 
     it("should return the watchList", async () => {
-      await new WatchList({
-        userId: userInDb._id,
-        name: "summer 2024",
-      }).save();
-
       newWatchList = {
         userId: userInDb._id,
         name: "summer 2025",
@@ -177,13 +158,14 @@ describe("/api/watchList", () => {
     });
   });
 
-  describe("Put /", () => {
+  describe("Put /:id", () => {
     let token: string;
     let userInDb: UserDoc;
+
     let watchListInDb: watchListDoc;
-    let watchListId: Types.ObjectId;
+    let watchListId: Types.ObjectId | string;
     let newWatchList: {
-      userId: Types.ObjectId;
+      userId: Types.ObjectId | string;
       name: string;
     };
 
@@ -200,15 +182,18 @@ describe("/api/watchList", () => {
       }).save();
 
       watchListId = watchListInDb._id;
+      newWatchList = {
+        userId: userInDb._id,
+        name: "summer 2025",
+      };
       token = userInDb.generateAuthToken();
     });
 
     const exec = function () {
       return request(app)
-        .put("/api/watchList")
+        .put(`/api/watchList/${watchListId}`)
         .set("x-auth-token", token)
-        .set("watchListId", watchListId.toString())
-        .send(newWatchList);
+        .send({ newWatchList });
     };
 
     it("should return 401 if the user didn't login", async () => {
@@ -217,54 +202,48 @@ describe("/api/watchList", () => {
       expect(res.status).toBe(401);
     });
 
-    it("should return 400 if no valid watchListId provided", async () => {
-      watchListId = new mongoose.Types.ObjectId();
+    it("should return 400 if provided userId invalid ", async () => {
+      newWatchList.userId = "";
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if name is null", async () => {
+      newWatchList.name = "";
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if name is more than 80 characters", async () => {
+      newWatchList.name = new Array(82).join();
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if provided watchListId invalid", async () => {
+      watchListId = "1";
+
       const res = await exec();
       expect(res.status).toBe(400);
       expect(res.text).toBe("invalid watchListId");
     });
 
-    it("should return 401 if the user trying to modify watchList of another user", async () => {
-      const userAInDb = await new User({
-        userName: "12345A",
-        email: "12345A@gmail.com",
-        password: "12345",
-      }).save();
+    it("should return 400 if provided watchListId not found", async () => {
+      watchListId = new mongoose.Types.ObjectId();
 
-      newWatchList = {
-        userId: userAInDb._id,
-        name: "1",
-      };
+      const res = await exec();
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("provided watchListId not found");
+    });
+
+    it("should return 401 if the user trying to modify watchList of another user", async () => {
+      newWatchList.userId = new mongoose.Types.ObjectId();
 
       const res = await exec();
       expect(res.status).toBe(401);
     });
 
-    it("should return 400 if name is null", async () => {
-      newWatchList = {
-        userId: userInDb._id,
-        name: "",
-      };
-      const res = await exec();
-      expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid info");
-    });
-
-    it("should return 400 if name is more than 80 characters", async () => {
-      newWatchList = {
-        userId: userInDb._id,
-        name: new Array(82).join(),
-      };
-      const res = await exec();
-      expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid info");
-    });
-
     it("should update and return the watchList if valid", async () => {
-      newWatchList = {
-        userId: userInDb._id,
-        name: "summer 2025",
-      };
       const res = await exec();
 
       const updatedWatchList = await WatchList.findById(watchListInDb._id);
@@ -275,9 +254,10 @@ describe("/api/watchList", () => {
     });
   });
 
-  describe("DELETE /", () => {
+  describe("DELETE /:id", () => {
     let token: string;
     let userInDb: UserDoc;
+
     let watchListInDb: watchListDoc;
     let watchListId: Types.ObjectId | string;
 
@@ -298,10 +278,10 @@ describe("/api/watchList", () => {
     });
     const exec = function () {
       return request(app)
-        .delete("/api/watchList/")
-        .set("x-auth-token", token)
-        .send({ watchListId: watchListId });
+        .delete(`/api/watchList/${watchListId}`)
+        .set("x-auth-token", token);
     };
+
     it("should return 401 if not login", async () => {
       token = "";
       const res = await exec();
@@ -315,31 +295,25 @@ describe("/api/watchList", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return 400 if invalid watchId is sent", async () => {
+    it("should return 400 if watchListId not found", async () => {
       watchListId = new mongoose.Types.ObjectId();
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid watchListId");
+      expect(res.text).toBe("watchList not found");
     });
 
     it("should return 401 if the user trying to delete watchList of another user", async () => {
-      const userAInDb = await new User({
-        userName: "12345A",
-        email: "12345A@gmail.com",
-        password: "12345",
-      }).save();
-
-      const user_A_watch_list = await new WatchList({
-        userId: userAInDb._id,
+      const newUserWatchList = await new WatchList({
+        userId: new mongoose.Types.ObjectId(),
         name: "1",
       }).save();
 
-      watchListId = user_A_watch_list._id;
+      watchListId = newUserWatchList._id;
       const res = await exec();
       expect(res.status).toBe(401);
     });
 
-    it("should detele the watchllist", async () => {
+    it("should detele the watchList", async () => {
       const res = await exec();
       const watchListInDb = await WatchList.findById(watchListId);
       expect(res.status).toBe(200);
