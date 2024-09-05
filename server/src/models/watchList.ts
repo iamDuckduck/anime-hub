@@ -23,21 +23,21 @@ import Joi from "joi";
 //extend the document interface,
 export interface watchListDoc extends Document {
   _id: Types.ObjectId;
-  userId: string;
+  userId: Types.ObjectId;
   name: string;
   created_at: Date;
 }
 
 const watchListSchema = new Schema<watchListDoc>({
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
-    validate: {
-      validator: function (value: string) {
-        return mongoose.Types.ObjectId.isValid(value);
-      },
-      message: (props) => `${props.value} is not a valid ObjectId!`,
-    },
+    // validate: {
+    //   validator: function (value: string) {
+    //     return mongoose.Types.ObjectId.isValid(value);
+    //   },
+    //   message: (props) => `${props.value} is not a valid ObjectId!`,
+    // },
   },
   name: {
     type: String,
@@ -61,6 +61,7 @@ const WatchList = model<watchListDoc, Model<watchListDoc>>(
 const validateWatchList = (WatchList: object) => {
   const schema = Joi.object({
     userId: Joi.string().custom(
+      //objectID will be converted to string in http requests
       (value: string, helpers: Joi.CustomHelpers<any>) => {
         if (mongoose.Types.ObjectId.isValid(value)) return value;
         else

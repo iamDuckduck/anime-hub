@@ -45,7 +45,10 @@ describe("/api/watchList", () => {
       const res = await exec();
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("name", watchListInDb.name);
-      expect(res.body).toHaveProperty("userId", watchListInDb.userId);
+      expect(res.body).toHaveProperty(
+        "userId",
+        watchListInDb.userId.toString()
+      );
     });
   });
 
@@ -144,6 +147,7 @@ describe("/api/watchList", () => {
         userId: userInDb._id,
         name: "summer 2025",
       };
+
       const res = await exec();
 
       expect(res.status).toBe(200);

@@ -54,7 +54,7 @@ router.delete("/:id", auth, async (req, res) => {
 
   if (!watchListInDb) return res.status(400).send("watchList not found");
 
-  if (watchListInDb.userId !== req.user._id)
+  if (watchListInDb.userId.toString() !== req.user._id)
     return res.status(401).send("unauthorized");
 
   const deletedWatchList = await WatchList.findByIdAndDelete(req.params.id);
