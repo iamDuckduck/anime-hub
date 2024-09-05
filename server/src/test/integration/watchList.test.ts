@@ -274,4 +274,82 @@ describe("/api/watchList", () => {
       expect(res.body).toHaveProperty("name", newWatchList.name);
     });
   });
+
+  describe("DELETE /", () => {
+    let token: string;
+    let userInDb: UserDoc;
+    let watchListInDb: watchListDoc;
+    let watchListId: Types.ObjectId | string;
+
+    beforeEach(async () => {
+      userInDb = await new User({
+        userName: "12345",
+        email: "12345@gmail.com",
+        password: "12345",
+      }).save();
+
+      watchListInDb = await new WatchList({
+        userId: userInDb._id,
+        name: "summer 2024",
+      }).save();
+
+      watchListId = watchListInDb._id;
+      token = userInDb.generateAuthToken();
+    });
+    const exec = function () {
+      return request(app)
+        .delete("/api/watchList/")
+        .set("x-auth-token", token)
+        .send({ watchListId: watchListId });
+    };
+    it("should return 401 if not login", async () => {
+      token = "";
+      const res = await exec();
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 400 if watchListId's Types.ObjectId is inValid", async () => {
+      watchListId = "1";
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if invalid watchId is sent", async () => {
+      watchListId = new mongoose.Types.ObjectId();
+      const res = await exec();
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid watchListId");
+    });
+
+    it("should return 401 if the user trying to delete watchList of another user", async () => {
+      const userAInDb = await new User({
+        userName: "12345A",
+        email: "12345A@gmail.com",
+        password: "12345",
+      }).save();
+
+      const user_A_watch_list = await new WatchList({
+        userId: userAInDb._id,
+        name: "1",
+      }).save();
+
+      watchListId = user_A_watch_list._id;
+      const res = await exec();
+      expect(res.status).toBe(401);
+    });
+
+    it("should detele the watchllist", async () => {
+      const res = await exec();
+      const watchListInDb = await WatchList.findById(watchListId);
+      expect(res.status).toBe(200);
+      expect(watchListInDb).toBeNull();
+    });
+
+    it("should return the deteled the watchllist", async () => {
+      const res = await exec();
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("name", "summer 2024");
+    });
+  });
 });

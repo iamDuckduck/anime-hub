@@ -1,6 +1,7 @@
 import Express from "express";
 import { auth } from "../middleware/auth";
 import { WatchList, validateWatchList as validate } from "../models/watchList";
+import mongoose from "mongoose";
 const router = Express.Router();
 
 router.get("/myList", auth, async (req, res) => {
@@ -39,5 +40,20 @@ router.put("/", auth, async (req, res) => {
   );
 
   return res.status(200).send(updatedUser);
+});
+
+router.delete("/", auth, async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.body.watchListId))
+    return res.status(400).send("invalid watchListId");
+  const watchListInDb = await WatchList.findById(req.body.watchListId);
+  if (!watchListInDb) return res.status(400).send("invalid watchListId");
+  if (watchListInDb.userId !== req.user._id)
+    return res.status(401).send("unauthorized");
+
+  const deletedWatchList = await WatchList.findByIdAndDelete(
+    watchListInDb._id,
+    {}
+  );
+  res.status(200).send(deletedWatchList);
 });
 export { router };
