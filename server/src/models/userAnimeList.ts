@@ -122,8 +122,8 @@ const validateUserAnimeList = (userAnimeList: object) => {
     currentEpisode: Joi.number().required(),
     expectedFinishDate: Joi.date(),
     favorite: Joi.boolean().required(),
-    created_at: Joi.date().required(),
-    updated_at: Joi.date().required(),
+    created_at: Joi.date(),
+    updated_at: Joi.date(),
   });
 
   return schema.validate(userAnimeList);

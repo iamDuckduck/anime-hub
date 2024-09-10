@@ -12,7 +12,7 @@ router.get("/me", auth, async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send("invalid info");
+  if (error) return res.status(400).send(error.message);
 
   if (await User.findOne({ userName: req.body.userName }))
     return res.status(400).send("duplicated userName");
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
   const user = new User(req.body);
   await user.save();
 
-  const savedUser = _.pick(user, ["_id", "userName", "email", "password"]);
+  const savedUser = _.pick(user, ["_id", "userName", "email"]);
   res.status(200).send(savedUser);
 });
 
