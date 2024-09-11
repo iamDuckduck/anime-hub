@@ -1,12 +1,14 @@
-import { Button, HStack, Image, Show } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Show, Text } from "@chakra-ui/react";
 import logo from "../assets/logo.webp";
-import ColorModeSwitch from "./ColorModeSwitch";
 import { Link } from "react-router-dom";
+
 import SearchInput from "./SeachBar/SearchInput";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { useMenuBarToggleStore } from "../store";
+import { useIsLoggedInStore, useMenuBarToggleStore } from "../store";
 
 const navBar = () => {
+  // Accessing the store state
+  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   const isOpen = useMenuBarToggleStore((s) => s.setIsOpen);
 
   return (
@@ -25,6 +27,23 @@ const navBar = () => {
       </Link>
 
       <SearchInput></SearchInput>
+
+      {isLoggedIn && (
+        <Box padding={2}>
+          <Link to="/profile">
+            <Text fontWeight="bold">Profile</Text>
+          </Link>
+        </Box>
+      )}
+
+      {!isLoggedIn && (
+        <Box padding={2}>
+          <Link to="/login">
+            <Text fontWeight="bold">Login</Text>
+          </Link>
+        </Box>
+      )}
+
       <Show below="lg">
         <Button onClick={() => isOpen(true)}>
           <HamburgerIcon color="grey"></HamburgerIcon>

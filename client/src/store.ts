@@ -97,6 +97,16 @@ export const useAnimeSeasonTypeFilterStore = create<AnimeSeasonTypeFilterStore>(
   })
 );
 
+interface IsLoggedInStore {
+  isLoggedIn: Boolean;
+  setIsLoggedIn: () => void;
+}
+
+export const useIsLoggedInStore = create<IsLoggedInStore>((set) => ({
+  isLoggedIn: false,
+  setIsLoggedIn: () => set((state) => ({ isLoggedIn: !state.isLoggedIn })),
+}));
+
 // if(process.env.NODE_ENV === 'development')
 //     mountStoreDevtool('anime query store', useAnimeQueryStore)
 export default useAnimeQueryStore;

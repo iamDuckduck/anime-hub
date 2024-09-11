@@ -1,33 +1,44 @@
-import { useRef, useState } from "react";
-import { Alert, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
+import React, { useRef, useState } from "react";
+import useAnimeTop from "../hooks/useAnimeTop";
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  Flex,
+  Input,
+  Spinner,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { useMutation } from "@tanstack/react-query";
-import { AuthData } from "../entities/SignUp";
 import APIClient from "../services/userService";
+import { AuthData } from "../entities/SignUp";
+import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useIsLoggedInStore } from "../store";
 
-const SignUpPage = () => {
-  const userNameInputRef = useRef<HTMLInputElement>(null);
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const passwordInputRef = useRef<HTMLInputElement>(null);
+const LoginPage = () => {
+  const navigate = useNavigate(); // Initialize navigate
 
   // Accessing the store action
   const setIsLoggedIn = useIsLoggedInStore((state) => state.setIsLoggedIn);
 
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
+
   const [hasResponseError, setHasResponseError] = useState(false);
   const [hasNonResponseError, setHasNonResponseError] = useState(false);
-  const navigate = useNavigate();
+  const userAPIClient = new APIClient<AuthData, string>(`auth`);
 
-  const userAPIClient = new APIClient<AuthData, AuthData>(`users`);
-
-  const signUpMutation = useMutation<AuthData, AxiosError<string>, AuthData>({
+  const signUpMutation = useMutation<string, AxiosError<string>, AuthData>({
     mutationFn: (signUpData: AuthData) => userAPIClient.post(signUpData),
-    onSuccess: () => {
+    onSuccess: (token: string) => {
       // Save token to localStorage
-      if (signUpMutation.data?.token)
-        localStorage.setItem("token", signUpMutation.data?.token);
-      setIsLoggedIn();
+
+      if (token) {
+        localStorage.setItem("token", token);
+        setIsLoggedIn();
+      }
+
       navigate("/profile");
     },
     onError: (error) => {
@@ -61,7 +72,7 @@ const SignUpPage = () => {
           shadow="lg"
           bg="gray.700" // Light grey background for the form
           width={["90%", "500px"]} // Responsive width, 90% for mobile, 500px for larger screens
-          height={["50%", "400px"]}
+          height={["50%", "350px"]}
           justifyContent="center"
         >
           <form
@@ -69,18 +80,11 @@ const SignUpPage = () => {
             onSubmit={(event) => {
               event.preventDefault();
               signUpMutation.mutate({
-                userName: userNameInputRef.current?.value || "",
                 email: emailInputRef.current?.value || "",
                 password: passwordInputRef.current?.value || "",
               });
             }}
           >
-            <Input
-              ref={userNameInputRef}
-              placeholder="User Name"
-              type="userName"
-              mb={4}
-            />
             <Input
               ref={emailInputRef}
               placeholder="Email"
@@ -102,21 +106,21 @@ const SignUpPage = () => {
               _hover={{ bg: "gray.900" }} // Light grey on hover
               type="submit" // Add type="submit" to the button
             >
-              Sign Up
+              Login
             </Button>
           </form>
 
-          <Box mb={2}>Already have account?</Box>
           <Button
-            variant="solid"
+            disabled={signUpMutation.isLoading}
+            variant="outline"
             colorScheme="blackAlpha"
-            bg="black"
-            color="white"
+            borderColor="whiteAlpha.800"
+            color="whiteAlpha.900"
             mb={4}
-            _hover={{ bg: "gray.900" }} // Slightly lighter black on hover
-            onClick={() => navigate("/login")} // Navigate to signup page on click
+            _hover={{ bg: "gray.900" }} // Light grey on hover
+            onClick={() => navigate("/signup")} // Navigate to signup page on click
           >
-            Login
+            Sign Up
           </Button>
         </Flex>
       </Box>
@@ -124,4 +128,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default LoginPage;
