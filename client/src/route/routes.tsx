@@ -6,6 +6,9 @@ import ErrorPage from "../pages/errorPage";
 import AnimeSchedules from "../pages/AnimeSchedules";
 import HomeLayOut from "../pages/HomeLayout";
 import AnimeSeasons from "../pages/AnimeSeasons";
+import LoginPage from "../pages/LoginPage";
+import SignUpPage from "../pages/SignUpPage";
+import UserProfilePage from "../pages/UserProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +26,9 @@ const router = createBrowserRouter([
         ],
       },
       { path: "/animes/:id/:title", element: <AnimeDetails /> },
+      { path: "/login", element: <LoginPage /> },
+      { path: "/signup", element: <SignUpPage /> },
+      { path: "/profile", element: <UserProfilePage /> },
     ],
   },
 ]);
