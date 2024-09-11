@@ -3,6 +3,14 @@ import Express from "express";
 import { auth } from "../middleware/auth";
 import bcrypt from "bcrypt";
 import _ from "lodash";
+import { Types } from "mongoose";
+
+interface savedUser {
+  _id: Types.ObjectId;
+  userName: string;
+  email: string;
+  token: string;
+}
 const router = Express.Router();
 
 router.get("/me", auth, async (req, res) => {
@@ -26,7 +34,10 @@ router.post("/", async (req, res) => {
   const user = new User(req.body);
   await user.save();
 
-  const savedUser = _.pick(user, ["_id", "userName", "email"]);
+  const savedUser: savedUser = {
+    ..._.pick(user, ["_id", "userName", "email"]),
+    token: user.generateAuthToken(), // Add token property
+  };
   res.status(200).send(savedUser);
 });
 
