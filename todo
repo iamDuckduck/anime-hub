@@ -1,0 +1,16 @@
+backend
+-general
+should return error message when validating failed
+should create a middleware for validating req.body
+
+-user
+if a user deleted, should delete other related db data
+
+- userAnimeList
+  when current ep is 12/12 should change the status to Completed
+  should validate the watchListIds in userAnimeList
+
+frontend
+-user login icon
+
+-refactor layout -> mainLayout, homeLayout -> sideBarLayout
