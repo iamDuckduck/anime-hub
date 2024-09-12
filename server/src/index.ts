@@ -4,22 +4,15 @@ import "express-async-errors";
 import { logger, handleRejection } from "./startup/logger";
 import routes from "./startup/routes";
 import mongodb from "./startup/mongodb";
-const cors = require("cors");
+import { enableCors } from "startup/cors";
 
 const app = express();
 
-// Set up CORS with custom options
-const corsOptions = {
-  origin: "http://localhost:5173", // Allow requests from this origin
-  methods: "GET,PUT,POST,DELETE", // Allow these HTTP methods
-  allowedHeaders: "Content-Type,Authorization", // Allow these headers
-};
-app.use(cors(corsOptions));
 handleRejection(); //it handles unhandled rejected promise
+enableCors(app); //enable cors so i can test it (need to be deleted in production)
 routes(app); //set up all the routes
 mongodb(); // connect to mongodb
 
-console.log("key" + config.get("jwtPrivateKey"));
 const port: number = config.get("port");
 //port will be null if in test env
 port
