@@ -1,5 +1,4 @@
 {
   "db": "mongodb://localhost/anime_hub",
-  "port": 3000,
   "jwtPrivateKey": ""
 }
