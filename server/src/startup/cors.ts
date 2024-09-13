@@ -1,5 +1,5 @@
 import { Express } from "express";
-const cors = require("cors");
+import cors from "cors";
 
 export const enableCors = function (app: Express) {
   // Set up CORS with custom options
@@ -8,6 +8,5 @@ export const enableCors = function (app: Express) {
     methods: "GET,PUT,POST,DELETE", // Allow these HTTP methods
     allowedHeaders: "Content-Type,Authorization,x-auth-token", // Allow these headers
   };
-
   app.use(cors(corsOptions));
 };
