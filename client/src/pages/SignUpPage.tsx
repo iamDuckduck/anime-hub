@@ -1,58 +1,30 @@
 import { useRef, useState } from "react";
 import { Alert, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { useMutation } from "@tanstack/react-query";
-import { AuthData } from "../entities/SignUp";
-import APIClient from "../services/userService";
-import { AxiosError } from "axios";
-import { useIsLoggedInStore } from "../store";
-
+import useSignUpMutation from "../hooks/useSignUp";
 const SignUpPage = () => {
   const userNameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
-  // Accessing the store action
-  const setIsLoggedIn = useIsLoggedInStore((state) => state.setIsLoggedIn);
-
-  const [hasResponseError, setHasResponseError] = useState(false);
-  const [hasNonResponseError, setHasNonResponseError] = useState(false);
   const navigate = useNavigate();
 
-  const userAPIClient = new APIClient<AuthData, AuthData>(`users`);
-
-  const signUpMutation = useMutation<AuthData, AxiosError<string>, AuthData>({
-    mutationFn: (signUpData: AuthData) => userAPIClient.post(signUpData),
-    onSuccess: () => {
-      // Save token to localStorage
-      if (signUpMutation.data?.token)
-        localStorage.setItem("token", signUpMutation.data?.token);
-      setIsLoggedIn();
-      navigate("/profile");
-    },
-    onError: (error) => {
-      if (error.response?.data) {
-        setHasResponseError(true);
-      } else {
-        setHasNonResponseError(true);
-      }
-    },
-  });
+  const signUpMutation = useSignUpMutation();
 
   return (
     <Box>
-      {hasResponseError && ( //return the response if exist
+      {signUpMutation.error && ( //return the response if exist
         <Alert status="error" marginBottom={10}>
           <AlertIcon />
           {signUpMutation.error?.response?.data}
         </Alert>
       )}
-      {hasNonResponseError && ( //return the error message if response not exist
+      {/* {hasNonResponseError && ( //return the error message if response not exist
         <Alert status="error" marginBottom={10}>
           <AlertIcon />
           {signUpMutation.error?.message}
         </Alert>
-      )}
+      )} */}
       <Box display="flex" justifyContent="center">
         <Flex
           direction="column"
