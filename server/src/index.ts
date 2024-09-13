@@ -4,19 +4,19 @@ import "express-async-errors";
 import { logger, handleRejection } from "./startup/logger";
 import routes from "./startup/routes";
 import mongodb from "./startup/mongodb";
-import { enableCors } from "startup/cors";
+import { enableCors } from "./startup/cors";
 
 const app = express();
+const env = process.env.NODE_ENV;
 
 handleRejection(); //it handles unhandled rejected promise
-enableCors(app); //enable cors so i can test it (need to be deleted in production)
 routes(app); //set up all the routes
 mongodb(); // connect to mongodb
 
-const port: number = config.get("port");
-//port will be null if in test env
-port
-  ? app.listen(port, () => logger.info(`Listening on port ${port}...`))
-  : logger.info(`not listening to any port`);
+env == "development" ? enableCors(app) : ""; //enable cors so i can test it in localhost (need to be deleted in production)
+
+env == ("development" || "production")
+  ? app.listen(3000, () => logger.info(`Listening on port 3000...`))
+  : logger.info(`not listening to any port (test env)`);
 
 export { app };

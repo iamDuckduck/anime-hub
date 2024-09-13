@@ -5,6 +5,7 @@ import { router as watchList } from "../router/watchList";
 import { router as test } from "../router/tests";
 import { router as animeList } from "../router/userAnimeList";
 import { router as auth } from "../router/auth";
+import { router as uploadImage } from "../router/uploadImage";
 import error from "../middleware/error";
 
 export default function (app: Express) {
@@ -14,5 +15,6 @@ export default function (app: Express) {
   app.use("/api/tests", test);
   app.use("/api/userAnimeList", animeList);
   app.use("/api/auth", auth);
+  app.use("/api/imageUpload", uploadImage);
   app.use(error);
 }
