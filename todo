@@ -14,3 +14,11 @@ frontend
 -user login icon
 
 -refactor layout -> mainLayout, homeLayout -> sideBarLayout
+
+
+importnat
+for api address in api client in react, need to be refactored using env in production and fixed in development
+for cloudinary config, reset it to env in production
+
+if not private key setted it still register the user but not returning the token
+  -temp fixed with checking the private before the app runs
