@@ -1,18 +1,8 @@
-import {
-  Box,
-  HStack,
-  Menu,
-  MenuItem,
-  MenuList,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from "@chakra-ui/react";
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useIsLoggedInStore } from "../store";
+import ImageUpload from "../component/ImageUpload";
 
 const UserProfilePage = () => {
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
@@ -27,6 +17,7 @@ const UserProfilePage = () => {
           <TabList>
             <Tab>My animeList</Tab>
             <Tab>Favorite</Tab>
+            <Tab>Setting</Tab>
           </TabList>
 
           <TabPanels>
@@ -35,6 +26,9 @@ const UserProfilePage = () => {
             </TabPanel>
             <TabPanel>
               <p>two!</p>
+            </TabPanel>
+            <TabPanel>
+              <ImageUpload></ImageUpload>
             </TabPanel>
           </TabPanels>
         </Tabs>
