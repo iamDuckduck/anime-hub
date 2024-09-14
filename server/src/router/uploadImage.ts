@@ -25,12 +25,15 @@ router.post(
     }
     // Upload the image to Cloudinary
     await cloudinary.v2.uploader
-      .upload_stream({ resource_type: "image" }, (error, result) => {
-        if (error) {
-          return res.status(500).json({ message: "Failed to upload image." });
+      .upload_stream(
+        { public_id: req.user._id + "_profile_pic", resource_type: "image" },
+        (error, result) => {
+          if (error) {
+            return res.status(500).json({ message: "Failed to upload image." });
+          }
+          res.json({ imageUrl: result?.secure_url });
         }
-        res.json({ imageUrl: result?.secure_url });
-      })
+      )
       .end(req.file.buffer); // Send file buffer to Cloudinary
   }
 );
