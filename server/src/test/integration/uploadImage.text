@@ -1,0 +1,74 @@
+// import request from "supertest";
+// import { Response } from "supertest"; // Import Response type
+// import { app } from "../../index";
+// import { User, UserDoc } from "../../models/users";
+// import supertest from "supertest";
+// import fs from "fs";
+// const path = require("path");
+
+// //config for cloudinary is empty
+// //image file type incorrect it will be checked in frontend
+// //
+// describe("cloudinary imageUpload api test", () => {
+//   beforeEach(async () => {
+//     userInDb = await new User({
+//       userName: "12345",
+//       email: "12345@gmail.com",
+//       password: "12345",
+//     }).save();
+//     token = userInDb.generateAuthToken();
+//   });
+
+//   afterEach(async () => {
+//     await User.deleteMany({});
+//   });
+
+//   let token: string;
+//   let userInDb: UserDoc;
+
+//   let filePath = path.resolve(__dirname, "../asset/test.jpg");
+//   // Function to execute the request with a delay
+//   const exec = function () {
+//     return new Promise<supertest.Response>((resolve, reject) => {
+//       const file = fs.createReadStream(filePath);
+//       setTimeout(() => {
+//         supertest(app)
+//           .post("/api/imageUpload")
+//           .set("x-auth-token", token)
+//           .attach("image", file)
+//           .expect(401)
+//           .end((err, res: supertest.Response) => {
+//             if (err) return reject(err);
+//             resolve(res);
+//           });
+//       }, 4000); // 1 second delay
+//     });
+//   };
+
+//   it("should return 401 if the user did not login", async () => {
+//     token = "";
+//     const res: supertest.Response = await exec();
+//     expect(res.status).toBe(401);
+//   });
+
+//   //   it("should return 500 if the user provide invalid image ", async () => {
+//   //     filePath = "";
+//   //     const res = await exec();
+//   //     expect(res.status).toBe(500);
+//   //   });
+
+//   //   it("should upload a file and return the URL", async () => {
+//   //   const response = await request(app)
+//   //     .post("/api/upload")
+//   //     .attach(
+//   //       "image",
+//   //       path.resolve(__dirname, "../../../../client/src/assets/logo.webp")
+//   //     ) // Path to a test image file
+//   //     .expect(200); // Expect a successful response
+
+//   //     expect(response.body).toHaveProperty("imageUrl");
+//   //     expect(response.body.imageUrl).toBe("https://mockurl.com/image.jpg");
+//   //   });
+
+//   //   it("config for cloudinary is empty", async () => {});
+// });

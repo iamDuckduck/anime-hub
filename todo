@@ -1,17 +1,17 @@
 backend
 -general
-should return error message to frontend when validating failed
-should create a middleware for validating req.body
+  should return error message to frontend when validating failed
+  should create a middleware for validating req.body
 
 -user
-if a user deleted, should delete other related db data
-add session feature
-  -implemented in backend*
-  -frontend needed to be adjust for session feature
+  if a user deleted, should delete other related db data
+  add session feature
+    -implemented in backend*
+    -frontend needed to be adjust for session feature
 
 -cloudinary
-should limit the size
-should crop the image
+  should limit the size
+  should crop the image
 
 
 
@@ -20,15 +20,16 @@ should crop the image
   should validate the watchListIds in userAnimeList
 
 frontend
--user login icon
+  -user login icon
 
--refactor layout -> mainLayout, homeLayout -> sideBarLayout
+  -refactor layout -> mainLayout, homeLayout -> sideBarLayout
 
 
+others
+  for api address in api client in react, need to be refactored using env in production and fixed in development
+  for cloudinary config, reset it to env in production
 
-importnat
-for api address in api client in react, need to be refactored using env in production and fixed in development
-for cloudinary config, reset it to env in production
 
+problems
 if no private key setted it still register the user but not returning the token
   -temp fixed with checking the private before the app runs
