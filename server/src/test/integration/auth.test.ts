@@ -1,41 +1,51 @@
 import request from "supertest";
-import { User } from "../../models/users";
-import { app } from "../../index";
+import { app } from "../../index"; // Your Express app
+import { User } from "../../models/users"; // Your User model
+import bcrypt from "bcrypt";
+describe("/api/auth", () => {
+  let email: string;
+  let password: string;
+  let userName: string;
+  let loginInfo: { email: string; password: string };
+  let user: any;
 
-let token: string;
+  beforeEach(async () => {
+    // Create a test user
+    email = "test@example.com";
+    password = "password123";
+    userName = "test123";
 
-describe("auth middleware", () => {
-  const exec = function () {
-    return request(app).get("/api/users/me").set("x-auth-token", token);
-  };
+    loginInfo = { email, password };
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    user = new User({ userName, email, password: hashedPassword });
+    await user.save();
+  });
 
   afterEach(async () => {
+    // Clean up after each test
     await User.deleteMany({});
   });
 
-  it("should return 401 if the user did not login", async () => {
-    token = "";
-    const res = await exec();
-    expect(res.status).toBe(401);
-  });
+  const exec = () => {
+    return request(app).post("/api/auth").send(loginInfo);
+  };
 
-  it("should return 400 if the token is invaild", async () => {
-    token = "invaild token";
+  it("should return 400 if invalid body req", async () => {
+    loginInfo.email = "";
     const res = await exec();
     expect(res.status).toBe(400);
   });
 
-  it("should return 200 if a valid token is passed", async () => {
-    const user = new User({
-      userName: "123451",
-      email: "123451@gmail.com",
-      password: "12345",
-    });
-    await user.save();
-
-    token = user.generateAuthToken();
+  it("should return 400 if incorrect email", async () => {
+    loginInfo.email = "wrong@gmail.com";
     const res = await exec();
+    expect(res.status).toBe(400);
+  });
 
-    expect(res.status).toBe(200);
+  it("should return a cookie if valid", async () => {
+    const res = await exec();
+    expect(res.headers["set-cookie"]).toBeDefined();
   });
 });

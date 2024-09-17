@@ -1,15 +1,15 @@
 import request from "supertest";
 import { User, UserDoc } from "../../models/users";
-import {
-  Anime,
-  userAnimeList,
-  userAnimeListDoc,
-} from "../../models/userAnimeList";
+import { userAnimeList, userAnimeListDoc } from "../../models/userAnimeList";
 import { app } from "../../index";
 import _ from "lodash";
 import mongoose, { Types } from "mongoose";
+import bcrypt from "bcrypt";
 
 describe("/api/animeList", () => {
+  let email: string = "123451@gmail.com";
+  let password: string = "12345";
+
   const animeListTemplate = {
     userId: new mongoose.Types.ObjectId(),
     watchListIds: [],
@@ -31,38 +31,58 @@ describe("/api/animeList", () => {
     updated_at: new Date(1632751161874),
   };
 
+  //get auth
+  const login = async () => {
+    const authRes = await request(app)
+      .post("/api/auth")
+      .send({ email, password });
+
+    return authRes.headers["set-cookie"][0];
+  };
+
+  //save user
+  const saveUser = async () => {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = new User({
+      userName: "123451",
+      email,
+      password: hashedPassword,
+    });
+    return await user.save();
+  };
+
   afterEach(async () => {
     await userAnimeList.deleteMany({});
     await User.deleteMany({});
   });
 
   describe("Get /myList", () => {
-    let token: string;
+    let cookie: string = "";
     let userInDb: UserDoc;
     let userAnimeListInDb: userAnimeListDoc;
 
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
-      token = userInDb.generateAuthToken();
+      userInDb = await saveUser();
+      cookie = await login();
 
+      //save animeList
       userAnimeListInDb = new userAnimeList(
         JSON.parse(JSON.stringify(animeListTemplate))
       );
       userAnimeListInDb.userId = userInDb._id;
       await userAnimeListInDb.save();
     });
+
     const exec = function () {
       return request(app)
         .get("/api/userAnimeList/myList")
-        .set("x-auth-token", token);
+        .set("Cookie", cookie);
     };
 
     it("should return 401 if the user did not login", async () => {
-      token = "";
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -79,7 +99,6 @@ describe("/api/animeList", () => {
         "watchListIds",
         userAnimeListInDb.watchListIds
       );
-
       expect(res.body).toHaveProperty("anime", userAnimeListInDb.anime);
       expect(res.body).toHaveProperty("status", userAnimeListInDb.status);
       expect(res.body).toHaveProperty(
@@ -103,17 +122,13 @@ describe("/api/animeList", () => {
   });
 
   describe("Post /", () => {
-    let token: string;
+    let cookie: string = "";
     let userInDb: UserDoc;
     let newAnimeList: any;
 
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
-      token = userInDb.generateAuthToken();
+      userInDb = await saveUser();
+      cookie = await login();
 
       newAnimeList = JSON.parse(JSON.stringify(animeListTemplate));
       newAnimeList.userId = userInDb._id;
@@ -121,12 +136,12 @@ describe("/api/animeList", () => {
     const exec = function () {
       return request(app)
         .post("/api/userAnimeList")
-        .set("x-auth-token", token)
+        .set("Cookie", cookie)
         .send(newAnimeList);
     };
 
     it("should return 401 if the user did not login", async () => {
-      token = "";
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -199,7 +214,7 @@ describe("/api/animeList", () => {
 
       const res = await exec();
       expect(res.status).toBe(401);
-      expect(res.text).toBe("unauthorized");
+      expect(res.text).toBe("unauthorized you can't post animeList for others");
     });
 
     it("should return 400 if duplicated animeList", async () => {
@@ -241,19 +256,15 @@ describe("/api/animeList", () => {
   });
 
   describe("Put /:id", () => {
-    let token: string;
+    let cookie = "";
     let userInDb: UserDoc;
     let id: string;
     let newAnimeList: any;
 
     let userAnimeListInDb: userAnimeListDoc;
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
-      token = userInDb.generateAuthToken();
+      userInDb = await saveUser();
+      cookie = await login();
 
       userAnimeListInDb = new userAnimeList(
         JSON.parse(JSON.stringify(animeListTemplate))
@@ -269,12 +280,12 @@ describe("/api/animeList", () => {
     const exec = function () {
       return request(app)
         .put(`/api/userAnimeList/${id}`)
-        .set("x-auth-token", token)
+        .set("Cookie", cookie)
         .send(newAnimeList);
     };
 
-    it("should return 400 if user no login", async () => {
-      token = "";
+    it("should return 401 if user no login", async () => {
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -306,7 +317,9 @@ describe("/api/animeList", () => {
 
       const res = await exec();
       expect(res.status).toBe(401);
-      expect(res.text).toBe("unathorized");
+      expect(res.text).toBe(
+        "unauthorized you can't edit other people's animeList"
+      );
     });
 
     //data valid
@@ -398,35 +411,32 @@ describe("/api/animeList", () => {
   });
 
   describe("Delete /:id", () => {
-    let token: string;
+    let cookie = "";
     let userInDb: UserDoc;
     let id: string;
 
     let userAnimeListInDb: userAnimeListDoc;
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
-      token = userInDb.generateAuthToken();
+      userInDb = await saveUser();
+      cookie = await login();
 
       userAnimeListInDb = new userAnimeList(
         JSON.parse(JSON.stringify(animeListTemplate))
       );
       userAnimeListInDb.userId = userInDb._id;
       await userAnimeListInDb.save();
+
       id = userAnimeListInDb._id.toString();
     });
 
     const exec = function () {
       return request(app)
         .delete(`/api/userAnimeList/${id}`)
-        .set("x-auth-token", token);
+        .set("Cookie", cookie);
     };
 
     it("should return 400 if user no login", async () => {
-      token = "";
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -457,7 +467,9 @@ describe("/api/animeList", () => {
 
       const res = await exec();
       expect(res.status).toBe(401);
-      expect(res.text).toBe("unathorized");
+      expect(res.text).toBe(
+        "unauthorized you can't delete other people's animeList"
+      );
     });
 
     //return data

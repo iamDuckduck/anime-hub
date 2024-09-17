@@ -20,9 +20,9 @@ router.post("/", async (req, res) => {
 
   if (!validPassword) return res.status(400).send("Invalid email or password.");
 
-  const token = user.generateAuthToken();
-
-  res.send(token);
+  req.session.user = { id: user._id };
+  // Send session info
+  res.status(200).send("successfully login");
 });
 
 const validate = (req: Request) => {

@@ -4,34 +4,54 @@ import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../index";
 import { User, UserDoc } from "../../models/users";
+import bcrypt from "bcrypt";
 
 describe("/api/watchList", () => {
+  const email: string = "123451@gmail.com";
+  const password: string = "12345";
+  const userName: string = "12345";
+
+  //get auth
+  const login = async () => {
+    const authRes = await request(app)
+      .post("/api/auth")
+      .send({ email, password });
+
+    return authRes.headers["set-cookie"][0];
+  };
+
+  //save user
+  const saveUser = async () => {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = new User({
+      userName,
+      email,
+      password: hashedPassword,
+    });
+    return await user.save();
+  };
+
   afterEach(async () => {
     await WatchList.deleteMany({});
     await User.deleteMany({});
   });
 
   describe("GET /myList", () => {
-    let token: string;
+    let cookie = "";
     let userInDb: UserDoc;
 
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
-      token = userInDb.generateAuthToken();
+      userInDb = await saveUser();
+      cookie = await login();
     });
 
     const exec = function () {
-      return request(app)
-        .get("/api/watchList/myList")
-        .set("x-auth-token", token);
+      return request(app).get("/api/watchList/myList").set("Cookie", cookie);
     };
 
     it("should return 401 if the user didn't login", async () => {
-      token = "";
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -53,7 +73,7 @@ describe("/api/watchList", () => {
   });
 
   describe("Post /", () => {
-    let token: string;
+    let cookie = "";
     let userInDb: UserDoc;
     let newWatchList: {
       userId: Types.ObjectId;
@@ -61,23 +81,19 @@ describe("/api/watchList", () => {
     };
 
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
-      token = userInDb.generateAuthToken();
+      userInDb = await saveUser();
+      cookie = await login();
     });
 
     const exec = function () {
       return request(app)
         .post("/api/watchList/")
-        .set("x-auth-token", token)
+        .set("Cookie", cookie)
         .send(newWatchList);
     };
 
     it("should return 401 if the user didn't login", async () => {
-      token = "";
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -157,7 +173,7 @@ describe("/api/watchList", () => {
   });
 
   describe("Put /:id", () => {
-    let token: string;
+    let cookie = "";
     let userInDb: UserDoc;
 
     let watchListInDb: watchListDoc;
@@ -168,11 +184,8 @@ describe("/api/watchList", () => {
     };
 
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
+      userInDb = await saveUser();
+      cookie = await login();
 
       watchListInDb = await new WatchList({
         userId: userInDb._id,
@@ -184,18 +197,17 @@ describe("/api/watchList", () => {
         userId: userInDb._id,
         name: "summer 2025",
       };
-      token = userInDb.generateAuthToken();
     });
 
     const exec = function () {
       return request(app)
         .put(`/api/watchList/${watchListId}`)
-        .set("x-auth-token", token)
+        .set("Cookie", cookie)
         .send({ newWatchList });
     };
 
     it("should return 401 if the user didn't login", async () => {
-      token = "";
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -253,18 +265,15 @@ describe("/api/watchList", () => {
   });
 
   describe("DELETE /:id", () => {
-    let token: string;
+    let cookie = "";
     let userInDb: UserDoc;
 
     let watchListInDb: watchListDoc;
     let watchListId: Types.ObjectId | string;
 
     beforeEach(async () => {
-      userInDb = await new User({
-        userName: "12345",
-        email: "12345@gmail.com",
-        password: "12345",
-      }).save();
+      userInDb = await saveUser();
+      cookie = await login();
 
       watchListInDb = await new WatchList({
         userId: userInDb._id,
@@ -272,16 +281,15 @@ describe("/api/watchList", () => {
       }).save();
 
       watchListId = watchListInDb._id;
-      token = userInDb.generateAuthToken();
     });
     const exec = function () {
       return request(app)
         .delete(`/api/watchList/${watchListId}`)
-        .set("x-auth-token", token);
+        .set("Cookie", cookie);
     };
 
     it("should return 401 if not login", async () => {
-      token = "";
+      cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
