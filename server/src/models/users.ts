@@ -50,6 +50,7 @@ const userSchema = new Schema<UserDoc>({
     required: true,
   },
   isAdmin: Boolean,
+  // add profileImg
 });
 
 // Add generateAuthToken method to the schema
@@ -69,7 +70,7 @@ const validateUser = (user: object) => {
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(255).required(),
   });
-
+  // use joi img extension to validate profileImg
   return schema.validate(user);
 };
 

@@ -13,7 +13,7 @@ interface savedUser {
 const router = Express.Router();
 
 router.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.session.user.id).select("-password");
+  const user = await User.findById(req.session.user?.id).select("-password");
   res.status(200).send(user);
 });
 
@@ -43,7 +43,7 @@ router.put("/", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send("invalid info");
 
-  const user = await User.findById(req.session.user.id).select({
+  const user = await User.findById(req.session.user?.id).select({
     userName: 1,
     email: 1,
     password: 1,
@@ -60,7 +60,7 @@ router.put("/", auth, async (req, res) => {
       return res.status(400).send("updating same info");
 
   const updatedUser = await User.findOneAndUpdate(
-    { _id: req.session.user.id }, // Update user with matching userId
+    { _id: req.session.user?.id }, // Update user with matching userId
     req.body, // New user data to update
     { new: true } // Return the updated user data
   );
@@ -69,7 +69,9 @@ router.put("/", auth, async (req, res) => {
 });
 
 router.delete("/", auth, async (req, res) => {
-  const deletedUser = await User.findOneAndDelete({ _id: req.session.user.id });
+  const deletedUser = await User.findOneAndDelete({
+    _id: req.session.user?.id,
+  });
   res.status(200).send(deletedUser);
 });
 export { router };

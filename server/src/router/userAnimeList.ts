@@ -10,7 +10,7 @@ const router = Express.Router();
 
 router.get("/myList", auth, async (req, res) => {
   const userAnimeListInDb = await userAnimeList.findOne({
-    userId: req.session.user.id,
+    userId: req.session.user?.id,
   });
   return res.send(userAnimeListInDb);
 });
@@ -19,7 +19,7 @@ router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  if (req.session.user.id !== req.body.userId)
+  if (req.session.user?.id !== req.body.userId)
     return res
       .status(401)
       .send("unauthorized you can't post animeList for others");
@@ -42,7 +42,7 @@ router.put("/:id", auth, async (req, res) => {
 
   if (!AnimeListInDb) return res.status(400).send("invalid animeListId");
 
-  if (req.session.user.id !== AnimeListInDb.userId.toString())
+  if (req.session.user?.id !== AnimeListInDb.userId.toString())
     return res
       .status(401)
       .send("unauthorized you can't edit other people's animeList");
@@ -63,7 +63,7 @@ router.delete("/:id", auth, async (req, res) => {
   const AnimeListInDb = await userAnimeList.findById(req.params.id);
   if (!AnimeListInDb) return res.status(400).send("invalid animeListId");
 
-  if (req.session.user.id !== AnimeListInDb.userId.toString())
+  if (req.session.user?.id !== AnimeListInDb.userId.toString())
     return res
       .status(401)
       .send("unauthorized you can't delete other people's animeList");
