@@ -1,5 +1,4 @@
-import React, { useRef, useState } from "react";
-import useAnimeTop from "../hooks/useAnimeTop";
+import React, { useRef } from "react";
 import {
   Alert,
   AlertIcon,
@@ -9,61 +8,47 @@ import {
   Input,
   Spinner,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import APIClient from "../services/userService";
-import { AuthData } from "../entities/SignUp";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { useIsLoggedInStore } from "../store";
+import { Navigate, useNavigate } from "react-router-dom"; // Import useNavigate
+import useGetUser from "../hooks/useGetUser";
+import useLogin from "../hooks/useLogin";
 
 const LoginPage = () => {
-  const navigate = useNavigate(); // Initialize navigate
-
-  // Accessing the store action
-  const setIsLoggedIn = useIsLoggedInStore((state) => state.setIsLoggedIn);
-
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
-  const [hasResponseError, setHasResponseError] = useState(false);
-  const [hasNonResponseError, setHasNonResponseError] = useState(false);
-  const userAPIClient = new APIClient<AuthData, string>(`auth`);
+  const { isLoading: authIsLoading, error: authError } = useGetUser(); // it returns error if user not auth
+  const navigate = useNavigate(); // Initialize navigate
 
-  const signUpMutation = useMutation<string, AxiosError<string>, AuthData>({
-    mutationFn: (signUpData: AuthData) => userAPIClient.post(signUpData),
-    onSuccess: (token: string) => {
-      // Save token to localStorage
+  const {
+    mutate,
+    error: mutateErr,
+    isLoading: mutateIsloading,
+  } = useLogin(navigate);
 
-      if (token) {
-        localStorage.setItem("token", token);
-        setIsLoggedIn();
-      }
+  if (authIsLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
 
-      navigate("/profile");
-    },
-    onError: (error) => {
-      if (error.response?.data) {
-        setHasResponseError(true);
-      } else {
-        setHasNonResponseError(true);
-      }
-    },
-  });
+  if (!authError) return <Navigate to="/profile" replace />;
 
   return (
     <Box>
-      {hasResponseError && ( //return the response if exist
+      {mutateErr && ( //return the response if exist
         <Alert status="error" marginBottom={10}>
           <AlertIcon />
-          {signUpMutation.error?.response?.data}
+          {mutateErr?.response?.data || mutateErr?.message}
         </Alert>
       )}
-      {hasNonResponseError && ( //return the error message if response not exist
-        <Alert status="error" marginBottom={10}>
-          <AlertIcon />
-          {signUpMutation.error?.message}
-        </Alert>
-      )}
+
       <Box display="flex" justifyContent="center">
         <Flex
           direction="column"
@@ -77,9 +62,9 @@ const LoginPage = () => {
         >
           <form
             className="row mb-3"
-            onSubmit={(event) => {
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
-              signUpMutation.mutate({
+              mutate({
                 email: emailInputRef.current?.value || "",
                 password: passwordInputRef.current?.value || "",
               });
@@ -111,7 +96,7 @@ const LoginPage = () => {
           </form>
 
           <Button
-            disabled={signUpMutation.isLoading}
+            disabled={mutateIsloading}
             variant="outline"
             colorScheme="blackAlpha"
             borderColor="whiteAlpha.800"

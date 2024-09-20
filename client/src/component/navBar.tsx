@@ -5,11 +5,13 @@ import { Link } from "react-router-dom";
 import SearchInput from "./SeachBar/SearchInput";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useIsLoggedInStore, useMenuBarToggleStore } from "../store";
+import useUserInfo from "../hooks/useGetUser";
 
 const navBar = () => {
-  // Accessing the store state
-  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   const isOpen = useMenuBarToggleStore((s) => s.setIsOpen);
+  const { isLoading, error } = useUserInfo(); // should avoid auto retrying
+
+  if (isLoading) return <></>;
 
   return (
     <HStack justifyContent="space-between" padding="10px">
@@ -28,21 +30,11 @@ const navBar = () => {
 
       <SearchInput></SearchInput>
 
-      {isLoggedIn && (
-        <Box padding={2}>
-          <Link to="/profile">
-            <Text fontWeight="bold">Profile</Text>
-          </Link>
-        </Box>
-      )}
-
-      {!isLoggedIn && (
-        <Box padding={2}>
-          <Link to="/login">
-            <Text fontWeight="bold">Login</Text>
-          </Link>
-        </Box>
-      )}
+      <Box padding={2}>
+        <Link to={error ? "/login" : "/profile"}>
+          <Text fontWeight="bold">{error ? "Login" : "Profile"}</Text>
+        </Link>
+      </Box>
 
       <Show below="lg">
         <Button onClick={() => isOpen(true)}>

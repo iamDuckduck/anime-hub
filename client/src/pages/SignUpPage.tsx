@@ -1,7 +1,16 @@
-import { useRef, useState } from "react";
-import { Alert, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useRef } from "react";
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  Flex,
+  Input,
+  Spinner,
+} from "@chakra-ui/react";
+import { Navigate, useNavigate } from "react-router-dom"; // Import useNavigate
 import useSignUpMutation from "../hooks/useSignUp";
+import useGetUser from "../hooks/useGetUser";
 const SignUpPage = () => {
   const userNameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -9,22 +18,34 @@ const SignUpPage = () => {
 
   const navigate = useNavigate();
 
-  const signUpMutation = useSignUpMutation();
+  const { mutate, error: signupErr } = useSignUpMutation();
+
+  const { isLoading: authIsLoading, error: authError } = useGetUser(); // it returns error if user not auth
+
+  if (authIsLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
+
+  if (!authError) return <Navigate to="/profile" replace />;
 
   return (
     <Box>
-      {signUpMutation.error && ( //return the response if exist
+      {signupErr && ( //return the response if exist
         <Alert status="error" marginBottom={10}>
           <AlertIcon />
-          {signUpMutation.error?.response?.data}
+          {signupErr?.response?.data}
         </Alert>
       )}
-      {/* {hasNonResponseError && ( //return the error message if response not exist
-        <Alert status="error" marginBottom={10}>
-          <AlertIcon />
-          {signUpMutation.error?.message}
-        </Alert>
-      )} */}
+
       <Box display="flex" justifyContent="center">
         <Flex
           direction="column"
@@ -40,7 +61,7 @@ const SignUpPage = () => {
             className="row mb-3"
             onSubmit={(event) => {
               event.preventDefault();
-              signUpMutation.mutate({
+              mutate({
                 userName: userNameInputRef.current?.value || "",
                 email: emailInputRef.current?.value || "",
                 password: passwordInputRef.current?.value || "",

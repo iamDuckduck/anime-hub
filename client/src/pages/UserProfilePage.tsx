@@ -1,41 +1,72 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-
-import { Link } from "react-router-dom";
-import { useIsLoggedInStore } from "../store";
+import {
+  Box,
+  Button,
+  Spinner,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
+import { Navigate, useNavigate } from "react-router-dom";
 import ImageUpload from "../component/ImageUpload";
+import useGetUser from "../hooks/useGetUser";
+import useLogout from "../hooks/useLogout";
 
 const UserProfilePage = () => {
-  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
-  if (isLoggedIn)
+  const { isLoading: authIsLoading, error: authError } = useGetUser(); // it returns error if user not auth
+
+  const navigate = useNavigate(); // Initialize navigate
+
+  const {
+    mutate,
+    isLoading: logoutIsLoading,
+    error: logoutError,
+  } = useLogout(navigate);
+
+  if (authIsLoading) {
     return (
-      <Box>
-        <Link to="/" onClick={() => localStorage.removeItem("token")}>
-          Logout
-        </Link>
-
-        <Tabs>
-          <TabList>
-            <Tab>My animeList</Tab>
-            <Tab>Favorite</Tab>
-            <Tab>Setting</Tab>
-          </TabList>
-
-          <TabPanels>
-            <TabPanel>
-              <p>one!</p>
-            </TabPanel>
-            <TabPanel>
-              <p>two!</p>
-            </TabPanel>
-            <TabPanel>
-              <ImageUpload></ImageUpload>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Spinner size="xl" />
       </Box>
     );
+  }
 
-  return <Link to="/login">You should login first, click here to login</Link>;
+  if (authError) return <Navigate to="/login" replace />;
+  if (logoutError) return <p>logout error</p>;
+
+  return (
+    <Box>
+      <Button isDisabled={logoutIsLoading} onClick={() => mutate()}>
+        Logout
+      </Button>
+
+      <Tabs>
+        <TabList>
+          <Tab>My animeList</Tab>
+          <Tab>Favorite</Tab>
+          <Tab>Setting</Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <p>one!</p>
+          </TabPanel>
+          <TabPanel>
+            <p>two!</p>
+          </TabPanel>
+          <TabPanel>
+            <ImageUpload></ImageUpload>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </Box>
+  );
 };
 
 export default UserProfilePage;
