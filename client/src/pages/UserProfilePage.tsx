@@ -61,7 +61,16 @@ const UserProfilePage = () => {
             <p>two!</p>
           </TabPanel>
           <TabPanel>
-            <ImageUpload></ImageUpload>
+            <ImageUpload
+              fileType="profileImg"
+              title="Avatar"
+              imageSize={{ width: "200px", height: "200px" }}
+            ></ImageUpload>
+            <ImageUpload
+              fileType="bannerImg"
+              title="Banner"
+              imageSize={{ width: "500px", height: "300px" }}
+            ></ImageUpload>
           </TabPanel>
         </TabPanels>
       </Tabs>
