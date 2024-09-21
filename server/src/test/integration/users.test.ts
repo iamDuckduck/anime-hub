@@ -8,6 +8,10 @@ describe("/api/users", () => {
   const email: string = "123451@gmail.com";
   const password: string = "12345";
   const userName: string = "12345";
+  const profileImage: string =
+    "https://res.cloudinary.com/drbighiyo/image/upload/v1726897677/user/ehbo9vd8kbxpfpmtfykl.jpg";
+  const bannerImage: string =
+    "https://res.cloudinary.com/drbighiyo/image/upload/v1726910174/user/ayctbuje418140gbij5z.jpg";
 
   //get auth
   const login = async () => {
@@ -26,6 +30,8 @@ describe("/api/users", () => {
       userName,
       email,
       password: hashedPassword,
+      profileImage,
+      bannerImage,
     });
     return await user.save();
   };
@@ -90,7 +96,7 @@ describe("/api/users", () => {
 
     it("should return 400 if duplicated userName", async () => {
       await saveUser();
-      user.email = "post123456@gmail.com";
+      user.email = "post123456@gmail.com"; // aviod duplicated email
 
       const res = await exec();
 
@@ -100,7 +106,7 @@ describe("/api/users", () => {
 
     it("should return 400 if duplicated email", async () => {
       await saveUser();
-      user.userName = "post123456";
+      user.userName = "post123456"; // aviod duplicated userName
 
       const res = await exec();
 
@@ -132,7 +138,9 @@ describe("/api/users", () => {
     let newUserInfo: {
       userName: string;
       email: string;
-      password: string;
+      password: string | undefined;
+      profileImage: string;
+      bannerImage: string;
     };
 
     beforeEach(async () => {
@@ -142,6 +150,10 @@ describe("/api/users", () => {
         userName: userName,
         email: email,
         password: "12345",
+        profileImage:
+          "https://res.cloudinary.com/drbighiyo/image/upload/v1726897677/user/ehbo9vd8kbxpfpmtfykl.jpg",
+        bannerImage:
+          "https://res.cloudinary.com/drbighiyo/image/upload/v1726910174/user/ayctbuje418140gbij5z.jpg",
       };
     });
 
@@ -151,6 +163,7 @@ describe("/api/users", () => {
         .set("Cookie", cookie)
         .send(newUserInfo);
     };
+
     it("should return 401 if the user did not login", async () => {
       cookie = "";
       const res = await exec();
@@ -162,6 +175,7 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid body info");
     });
 
     it("should return 400 if the name is larger than 50 character", async () => {
@@ -169,6 +183,7 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid body info");
     });
 
     //do we implement validate logic in mongoose schema too?
@@ -177,14 +192,16 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid body info");
     });
 
-    //the passwords passed below are encrypted
+    //the passwords passed below are encrypted, but i just hard code here
     it("should return 400 if the password is less than 5 character", async () => {
       newUserInfo.password = "1";
 
       const res = await exec();
       expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid body info");
     });
 
     it("should return 400 if the password is larger than 255 character", async () => {
@@ -192,43 +209,68 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid body info");
     });
 
-    it("should return 400 if same info passed", async () => {
+    it("should return 400 if profileImage format is invalid", async () => {
+      newUserInfo.profileImage = new Array(257).join("a");
+
       const res = await exec();
       expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid body info");
     });
 
-    it("should update the user if passed info is valid", async () => {
-      newUserInfo.userName = "123456";
+    it("should return 400 if bannerImg format is invalid", async () => {
+      newUserInfo.profileImage = new Array(257).join("a");
+
+      const res = await exec();
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("invalid body info");
+    });
+
+    it("should return 400 if same info passed (with password)", async () => {
+      const res = await exec();
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("updating same info");
+    });
+
+    it("should return 400 if same info passed (without password)", async () => {
+      newUserInfo.password = undefined;
+      const res = await exec();
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("updating same info");
+    });
+
+    it("should update the user if passed info is valid (with password)", async () => {
+      newUserInfo.password = "123456";
 
       const res = await exec();
       const updatedUser = await User.findById(userInDb._id);
+      const passwordCompare = await bcrypt.compare(
+        newUserInfo.password,
+        updatedUser!.password
+      );
 
       expect(res.status).toBe(200);
-      expect(updatedUser).toHaveProperty("userName", newUserInfo.userName);
+      expect(passwordCompare).toBe(true);
     });
 
-    it("should return the updated user if passed info is valid", async () => {
-      newUserInfo.userName = "123456";
+    it("should return the updated user if password is not passed", async () => {
+      newUserInfo.profileImage = "123456";
 
       const res = await exec();
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("userName", newUserInfo.userName);
       expect(res.body).toHaveProperty("email", newUserInfo.email);
-      expect(res.body).toHaveProperty("password", newUserInfo.password);
+      expect(res.body).toHaveProperty("profileImage", newUserInfo.profileImage);
+      expect(res.body).toHaveProperty("bannerImage", newUserInfo.bannerImage);
     });
   });
 
   describe("Delete /", () => {
     let cookie = "";
     let userInDb: UserDoc; //idk what is the returned type of User(user).save()
-    let newUserInfo: {
-      userName: string;
-      email: string;
-      password: string;
-    };
 
     beforeEach(async () => {
       userInDb = await saveUser();
