@@ -6,10 +6,9 @@ import { auth } from "../middleware/auth";
 const router = Express.Router();
 
 cloudinary.v2.config({
-  //hard code for now
-  cloud_name: "drbighiyo",
-  api_key: "211846568947739",
-  api_secret: "GV8vFUH_DL8mgqRpeiKrt6OD_w4",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 //init Multer
@@ -20,14 +19,14 @@ router.post(
   "/",
   [auth, upload.single("image")],
   async (req: Request, res: Response) => {
-    if (!req.file) {
+    if (!req.file)
       return res.status(400).json({ message: "No file uploaded." });
-    }
+
     // Upload the image to Cloudinary
     await cloudinary.v2.uploader
       .upload_stream(
         {
-          public_id: req.session.user?.id + "_profile_pic",
+          public_id: `${req.session.user?.id}_${req.file.originalname}`,
           resource_type: "image",
         },
         (error, result) => {
