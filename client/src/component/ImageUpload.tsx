@@ -11,13 +11,17 @@ import {
 } from "@chakra-ui/react";
 import useUploadImage from "../hooks/useUploadImage";
 
-const ImageUpload = () => {
+interface ImageUploadProps {
+  fileType: string;
+  title: string;
+  imageSize: { width: string; height: string };
+}
+
+const ImageUpload = ({ fileType, title, imageSize }: ImageUploadProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const token = localStorage.getItem("token");
 
-  const uploadImage = useUploadImage(setImageUrl);
+  const uploadImage = useUploadImage();
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -30,18 +34,12 @@ const ImageUpload = () => {
   // Handle form submission
   // Handle file upload
   const handleSubmit = async () => {
-    if (!file || !token) return;
+    if (!file) return;
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("image", file, fileType);
 
-    uploadImage.mutate({
-      imageFile: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "x-auth-token": token,
-      },
-    });
+    uploadImage.mutate(formData);
   };
 
   return (
@@ -57,12 +55,13 @@ const ImageUpload = () => {
         outline="2px solid grey"
         padding={2}
         borderRadius={2}
+        margin={5}
       >
-        <Heading>Avatar</Heading>
+        <Heading>{title}</Heading>
         <Flex marginTop={5} alignSelf="center">
           <Flex
-            height="200px"
-            width="200px"
+            height={imageSize.height}
+            width={imageSize.width}
             position="relative"
             alignItems="center"
             justifyContent="center"
@@ -86,7 +85,8 @@ const ImageUpload = () => {
               marginLeft={10}
               src={preview}
               alt="Image Preview"
-              boxSize="200px"
+              height={imageSize.height}
+              width={imageSize.width}
             />
           )}
         </Flex>
