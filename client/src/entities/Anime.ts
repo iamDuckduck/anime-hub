@@ -16,4 +16,5 @@ export default interface Anime {
   studios: Studio[];
   status: string;
   trailer: Trailer;
+  episodes: number;
 }
