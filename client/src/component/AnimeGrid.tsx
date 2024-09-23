@@ -5,17 +5,22 @@ import useAnimes from "../hooks/useAnimes";
 import AnimeCard from "./AnimeCard/AnimeCard";
 import AnimeCardContainer from "./AnimeCard/AnimeCardContainer";
 import AnimeCardSkeleton from "./AnimeCard/AnimeCardSkeleton";
+import useAnimeList from "../hooks/useAnimeList";
+import { useIsLoggedInStore } from "../store";
 
 const AnimeGrid = () => {
+  const skeletons = [1, 2, 3, 4, 5, 6];
+
+  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
+  const { data: animeList } = useAnimeList(isLoggedIn); // only fetch when logged in
+
   const {
     data: animes,
     error,
     isLoading,
-    isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
   } = useAnimes();
-  const skeletons = [1, 2, 3, 4, 5, 6];
 
   // it filters the duplicate anime from useAnimes
   const filteredPage = {
@@ -54,7 +59,7 @@ const AnimeGrid = () => {
             <React.Fragment key={index}>
               {page.data.map((anime) => (
                 <AnimeCardContainer key={anime.mal_id}>
-                  <AnimeCard anime={anime}></AnimeCard>
+                  <AnimeCard anime={anime} animeList={animeList}></AnimeCard>
                 </AnimeCardContainer>
               ))}
             </React.Fragment>
