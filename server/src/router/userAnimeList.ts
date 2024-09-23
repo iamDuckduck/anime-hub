@@ -3,13 +3,14 @@ import { auth } from "../middleware/auth";
 import {
   userAnimeList,
   validateUserAnimeList as validate,
+  validatePatch,
 } from "../models/userAnimeList";
 
 import mongoose from "mongoose";
 const router = Express.Router();
 
 router.get("/myList", auth, async (req, res) => {
-  const userAnimeListInDb = await userAnimeList.findOne({
+  const userAnimeListInDb = await userAnimeList.find({
     userId: req.session.user?.id,
   });
   return res.send(userAnimeListInDb);
@@ -32,7 +33,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.put("/:id", auth, async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validatePatch(req.body);
   if (error) return res.status(400).send(error.message);
 
   if (!mongoose.Types.ObjectId.isValid(req.params.id))
