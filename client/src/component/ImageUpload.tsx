@@ -12,17 +12,22 @@ import {
 import useUploadImage from "../hooks/useUploadImage";
 
 interface ImageUploadProps {
-  fileType: string;
-  title: string;
-  imageSize: { width: string; height: string };
+  imageCategory: "profileImage" | "bannerImage";
+  imageTitle: string;
+  dimensions: { width: string; height: string };
 }
 
-const ImageUpload = ({ fileType, title, imageSize }: ImageUploadProps) => {
+const ImageUpload = ({
+  imageCategory,
+  imageTitle,
+  dimensions,
+}: ImageUploadProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const uploadImage = useUploadImage();
-  // Handle file selection
+  const { error, isLoading, mutate } = useUploadImage(imageCategory); // hook for uploading image to cloudinary
+
+  // Handle file selection, and preview uploaded image
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
@@ -37,17 +42,17 @@ const ImageUpload = ({ fileType, title, imageSize }: ImageUploadProps) => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("image", file, fileType);
+    formData.append("image", file, imageCategory);
 
-    uploadImage.mutate(formData);
+    mutate(formData);
   };
 
   return (
     <>
-      {uploadImage.error && (
+      {error && (
         <Alert status="error" marginBottom={10}>
           <AlertIcon />
-          {uploadImage.error.message}
+          {error.message}
         </Alert>
       )}
       <Flex
@@ -57,11 +62,11 @@ const ImageUpload = ({ fileType, title, imageSize }: ImageUploadProps) => {
         borderRadius={2}
         margin={5}
       >
-        <Heading>{title}</Heading>
+        <Heading>{imageTitle}</Heading>
         <Flex marginTop={5} alignSelf="center">
           <Flex
-            height={imageSize.height}
-            width={imageSize.width}
+            height={dimensions.height}
+            width={dimensions.width}
             position="relative"
             alignItems="center"
             justifyContent="center"
@@ -85,8 +90,8 @@ const ImageUpload = ({ fileType, title, imageSize }: ImageUploadProps) => {
               marginLeft={10}
               src={preview}
               alt="Image Preview"
-              height={imageSize.height}
-              width={imageSize.width}
+              height={dimensions.height}
+              width={dimensions.width}
             />
           )}
         </Flex>
@@ -97,7 +102,7 @@ const ImageUpload = ({ fileType, title, imageSize }: ImageUploadProps) => {
           onClick={handleSubmit}
           isDisabled={!file}
         >
-          {uploadImage.isLoading ? <Spinner size="sm" /> : "Upload Image"}
+          {isLoading ? <Spinner size="sm" /> : "Upload Image"}
         </Button>
       </Flex>
     </>
