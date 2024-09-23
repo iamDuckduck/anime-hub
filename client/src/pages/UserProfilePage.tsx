@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Spinner,
+  SimpleGrid,
   Tab,
   TabList,
   TabPanel,
@@ -10,13 +10,16 @@ import {
 } from "@chakra-ui/react";
 import { Navigate, useNavigate } from "react-router-dom";
 import ImageUpload from "../component/ImageUpload";
-import useGetUser from "../hooks/useGetUser";
 import useLogout from "../hooks/useLogout";
+import { useIsLoggedInStore } from "../store";
+import useAnimeList from "../hooks/useAnimeList";
+import AnimeCardContainer from "../component/AnimeCard/AnimeCardContainer";
+import AnimeCardInProfile from "../component/AnimeCard/AnimeCardInProfile";
 
 const UserProfilePage = () => {
-  const { isLoading: authIsLoading, error: authError } = useGetUser(); // it returns error if user not auth
-
+  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   const navigate = useNavigate(); // Initialize navigate
+  const { data: animeLists, isLoading: isAnimeListLoading } = useAnimeList();
 
   const {
     mutate,
@@ -24,20 +27,7 @@ const UserProfilePage = () => {
     error: logoutError,
   } = useLogout(navigate);
 
-  if (authIsLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Spinner size="xl" />
-      </Box>
-    );
-  }
-
-  if (authError) return <Navigate to="/login" replace />;
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
   if (logoutError) return <p>logout error</p>;
 
   return (
@@ -58,18 +48,32 @@ const UserProfilePage = () => {
             <p>one!</p>
           </TabPanel>
           <TabPanel>
-            <p>two!</p>
+            <SimpleGrid
+              padding="10px"
+              columns={{ sm: 1, md: 3, lg: 5, xl: 7 }}
+              spacing={6}
+            >
+              {!isAnimeListLoading &&
+                animeLists
+                  ?.filter((animeList) => animeList.favorite) // Filter only favorite anime
+                  .map((animeList) => (
+                    <AnimeCardContainer key={animeList._id}>
+                      <AnimeCardInProfile animeList={animeList} />
+                    </AnimeCardContainer>
+                  ))}
+            </SimpleGrid>
           </TabPanel>
+
           <TabPanel>
             <ImageUpload
-              fileType="profileImg"
-              title="Avatar"
-              imageSize={{ width: "200px", height: "200px" }}
+              imageCategory="profileImage"
+              imageTitle="Avatar"
+              dimensions={{ width: "200px", height: "200px" }}
             ></ImageUpload>
             <ImageUpload
-              fileType="bannerImg"
-              title="Banner"
-              imageSize={{ width: "500px", height: "300px" }}
+              imageCategory="bannerImage"
+              imageTitle="Banner"
+              dimensions={{ width: "500px", height: "300px" }}
             ></ImageUpload>
           </TabPanel>
         </TabPanels>
