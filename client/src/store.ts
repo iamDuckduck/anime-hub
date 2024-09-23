@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { userData } from "./services/userService";
 
 export interface AnimeQuery {
   genreId?: number;
@@ -98,14 +99,32 @@ export const useAnimeSeasonTypeFilterStore = create<AnimeSeasonTypeFilterStore>(
 );
 
 interface IsLoggedInStore {
-  isLoggedIn: Boolean;
-  setIsLoggedIn: () => void;
+  isLoggedIn: boolean;
+  userData: userData;
+  setIsLoggedIn: (state: boolean) => void;
+  setUserData: (userData: userData) => void;
 }
 
 export const useIsLoggedInStore = create<IsLoggedInStore>((set) => ({
   isLoggedIn: false,
-  setIsLoggedIn: () => set((state) => ({ isLoggedIn: !state.isLoggedIn })),
+  userData: {} as userData,
+  setIsLoggedIn: (state: boolean) => set(() => ({ isLoggedIn: state })),
+  setUserData: (userData: userData) => set(() => ({ userData: userData })),
 }));
+
+// interface IsErrorStore {
+//   error: Boolean;
+//   message: string;
+//   setError: (state: boolean) => void;
+//   setMessage: (message: string) => void;
+// }
+
+// export const useIsErrorStore = create<IsErrorStore>((set) => ({
+//   error: false,
+//   message: "",
+//   setError: (state: boolean) => set(() => ({ error: state })),
+//   setMessage: (message: string) => set(() => ({ message: message })),
+// }));
 
 // if(process.env.NODE_ENV === 'development')
 //     mountStoreDevtool('anime query store', useAnimeQueryStore)
