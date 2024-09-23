@@ -13,7 +13,7 @@ export const enableSession = (app: Express) => {
       saveUninitialized: false,
       store: MongoStore.create({ mongoUrl: db }),
       cookie: {
-        maxAge: 15 * 60 * 1000,
+        maxAge: 180 * 1000,
         // httpOnly: ?,
         // sameSite: ?,
         // secure: ?,

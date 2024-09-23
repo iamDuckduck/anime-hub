@@ -1,35 +1,74 @@
 backend
 -general
-  should return error message to frontend when validating failed
-  should create a middleware for validating req.body
+
+% should return the validating error message to frontend when validating failed
+
+- should create a middleware for validating req.body
 
 -user
-  if a user deleted, should delete other related db data
-  add session feature
-    -implemented in backend*
-    -frontend needed to be adjust for session feature
+-if a user deleted, should delete other related db data
 
--cloudinary
-  should limit the size
-  should crop the image
+%add session feature
+%implemented in backend
+%frontend needed to be adjust for session feature
+%refactor the index ts
+%user put request: password should be an optional body param only required when changing password
+%add profile_image, banner image link to user model
+%changed put api to patch, allow to patch one or more property
 
+cloudinary
 
+% handle profile and banner pic
+
+- problem when user upload image successfully to cloud but failed in saving to database
+
+-should limit the size
+
+-should crop the image
+
+jikan api
+-could return null on some property
 
 - userAnimeList
-  when current ep is 12/12 should change the status to Completed
-  should validate the watchListIds in userAnimeList
+  %should not include createdAt and updateAt when posting
+
+  %add favorite feature in frontend
+  ? add error message and success message (temp fix just navigate it to login page, and console log the error)
+  %get favorite anime in profile page
+  %data still exists after user session passed (we should delete all user data cache ) temp fix by using queryClient.setQueryData
+  -anime from jikan has different property name in our database
+  -in patching we should check same info posting or not
+  -if watchListIds exists extend it to the list
+  -when current ep is 12/12 should change the status to Completed
+  -should validate the watchListIds in userAnimeList
 
 frontend
-  -user login icon
+%user login icon
 
-  -refactor layout -> mainLayout, homeLayout -> sideBarLayout
+-refactor layout -> mainLayout, homeLayout -> sideBarLayout
 
+- screen flashing problem (getuser info before everypage not sure is this the problem?)
+
+  - moved getUser refetch logic to navbar (so it onlys re render nav when refetching) and data and login state will be shared by zustand
+
+  -when refresh on profile page, login page shows up for 1 sec due to the reset of isLoggedIn state
+  -3 renders for both logout/login
+
+  -what are the dependent variable of layout
+  -useState
+  -useAnimeList (should we add dependent variable to it?)
+
+-duplication of AnimeCard and AnimeCardInProfile
+
+-api client
+-should sperate the client for user and animeList?
+-should move the interface to entities folder
 
 others
-  for api address in api client in react, need to be refactored using env in production and fixed in development
-  for cloudinary config, reset it to env in production
 
+-for api address in api client in react, need to be refactored using env in production and fixed in development
+%for cloudinary config, reset it to env in production
 
 problems
-if no private key setted it still register the user but not returning the token
-  -temp fixed with checking the private before the app runs
+-if no private key setted it still register the user but not returning the token
+%temp fixed with checking the private before the app runs
