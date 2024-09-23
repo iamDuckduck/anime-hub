@@ -14,7 +14,7 @@ export interface UserDoc extends Document {
   bannerImage: string;
   createdAt: Date;
   updatedAt: Date;
-  generateAuthToken: () => string;
+  // generateAuthToken: () => string;
 }
 
 //Schema
@@ -71,12 +71,12 @@ const userSchema = new Schema<UserDoc>({
 });
 
 // Add generateAuthToken method to the schema
-userSchema.methods.generateAuthToken = function (this: UserDoc) {
-  return jwt.sign(
-    { _id: this._id, isAdmin: this.isAdmin },
-    config.get("jwtPrivateKey")
-  );
-};
+// userSchema.methods.generateAuthToken = function (this: UserDoc) {
+//   return jwt.sign(
+//     { _id: this._id, isAdmin: this.isAdmin },
+//     config.get("jwtPrivateKey")
+//   );
+// };
 
 // Create a Mongoose model
 const User = model<UserDoc, Model<UserDoc>>("User", userSchema);
@@ -91,17 +91,22 @@ const validatePost = (user: object) => {
   return schema.validate(user);
 };
 
-const validateUser = (user: object) => {
+const validatePut = (user: object) => {
   const schema = Joi.object({
-    userName: Joi.string().min(5).max(50).required(),
-    email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(5).max(255).optional(), //optional if the user is not trying to change pw
-    profileImage: Joi.string().min(5).max(255).required(),
-    bannerImage: Joi.string().min(5).max(255).required(),
+    userName: Joi.string().min(5).max(50).optional(),
+    email: Joi.string().min(5).max(255).optional().email(),
+    password: Joi.string().min(5).max(255).optional(),
+    profileImage: Joi.string().min(5).max(255).optional(),
+    bannerImage: Joi.string().min(5).max(255).optional(),
+  }).custom((value, helpers) => {
+    if (Object.keys(value).length === 0) {
+      return helpers.error("object.empty");
+    }
+    return value;
   });
 
   return schema.validate(user);
 };
 
 export { User };
-export { validateUser, validatePost };
+export { validatePut, validatePost };
