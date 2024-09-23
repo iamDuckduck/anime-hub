@@ -9,7 +9,6 @@ const useLogout = (navigate: NavigateFunction) =>
   useMutation({
     mutationFn: () => userAPIClient.post(),
     onSuccess: () => {
-      // Redirect after successful logout
       navigate("/login"); // Redirecting to login page after logout
     },
   });
