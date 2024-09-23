@@ -1,16 +1,8 @@
 import { useRef } from "react";
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  Flex,
-  Input,
-  Spinner,
-} from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
 import { Navigate, useNavigate } from "react-router-dom"; // Import useNavigate
 import useSignUpMutation from "../hooks/useSignUp";
-import useGetUser from "../hooks/useGetUser";
+import { useIsLoggedInStore } from "../store";
 const SignUpPage = () => {
   const userNameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -20,22 +12,9 @@ const SignUpPage = () => {
 
   const { mutate, error: signupErr } = useSignUpMutation();
 
-  const { isLoading: authIsLoading, error: authError } = useGetUser(); // it returns error if user not auth
+  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
 
-  if (authIsLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Spinner size="xl" />
-      </Box>
-    );
-  }
-
-  if (!authError) return <Navigate to="/profile" replace />;
+  if (isLoggedIn) return <Navigate to="/profile" replace />;
 
   return (
     <Box>
