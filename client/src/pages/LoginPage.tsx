@@ -11,12 +11,13 @@ import {
 import { Navigate, useNavigate } from "react-router-dom"; // Import useNavigate
 import useGetUser from "../hooks/useGetUser";
 import useLogin from "../hooks/useLogin";
+import { useIsLoggedInStore } from "../store";
 
 const LoginPage = () => {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
-  const { isLoading: authIsLoading, error: authError } = useGetUser(); // it returns error if user not auth
+  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   const navigate = useNavigate(); // Initialize navigate
 
   const {
@@ -25,20 +26,7 @@ const LoginPage = () => {
     isLoading: mutateIsloading,
   } = useLogin(navigate);
 
-  if (authIsLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Spinner size="xl" />
-      </Box>
-    );
-  }
-
-  if (!authError) return <Navigate to="/profile" replace />;
+  if (isLoggedIn) return <Navigate to="/profile" replace />;
 
   return (
     <Box>
