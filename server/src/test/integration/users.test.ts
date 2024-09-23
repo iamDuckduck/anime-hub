@@ -132,15 +132,15 @@ describe("/api/users", () => {
     });
   });
 
-  describe("Put /", () => {
+  describe("Patch /", () => {
     let cookie = "";
     let userInDb: UserDoc; //idk what is the returned type of User(user).save()
     let newUserInfo: {
-      userName: string;
-      email: string;
-      password: string | undefined;
-      profileImage: string;
-      bannerImage: string;
+      userName?: string;
+      email?: string;
+      password?: string | undefined;
+      profileImage?: string;
+      bannerImage?: string;
     };
 
     beforeEach(async () => {
@@ -159,7 +159,7 @@ describe("/api/users", () => {
 
     const exec = function () {
       return request(app)
-        .put("/api/users/")
+        .patch("/api/users/")
         .set("Cookie", cookie)
         .send(newUserInfo);
     };
@@ -175,7 +175,6 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid body info");
     });
 
     it("should return 400 if the name is larger than 50 character", async () => {
@@ -183,7 +182,6 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid body info");
     });
 
     //do we implement validate logic in mongoose schema too?
@@ -192,7 +190,6 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid body info");
     });
 
     //the passwords passed below are encrypted, but i just hard code here
@@ -201,7 +198,6 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid body info");
     });
 
     it("should return 400 if the password is larger than 255 character", async () => {
@@ -209,7 +205,6 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid body info");
     });
 
     it("should return 400 if profileImage format is invalid", async () => {
@@ -217,7 +212,6 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid body info");
     });
 
     it("should return 400 if bannerImg format is invalid", async () => {
@@ -225,46 +219,56 @@ describe("/api/users", () => {
 
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("invalid body info");
     });
 
     it("should return 400 if same info passed (with password)", async () => {
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("updating same info");
     });
 
     it("should return 400 if same info passed (without password)", async () => {
       newUserInfo.password = undefined;
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("updating same info");
     });
 
-    it("should update the user if passed info is valid (with password)", async () => {
-      newUserInfo.password = "123456";
+    it("should return 400 if partically same info passed ", async () => {
+      newUserInfo.userName = "1234554321"; //(only userName is not the same)
 
       const res = await exec();
+      expect(res.status).toBe(400);
+    });
+
+    it("should return the updated user (with password)", async () => {
+      newUserInfo = {
+        password: "1234554321",
+        email: "testtest@gmail.com",
+      };
+
+      const res = await exec();
+
       const updatedUser = await User.findById(userInDb._id);
       const passwordCompare = await bcrypt.compare(
-        newUserInfo.password,
+        "1234554321",
         updatedUser!.password
       );
 
       expect(res.status).toBe(200);
       expect(passwordCompare).toBe(true);
+      expect(res.body).toHaveProperty("email", newUserInfo.email);
     });
 
-    it("should return the updated user if password is not passed", async () => {
-      newUserInfo.profileImage = "123456";
+    it("should return the updated user (without password)", async () => {
+      newUserInfo = {
+        email: "testtest@gmail.com",
+        userName: "testtest@gmail.com",
+      };
 
       const res = await exec();
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("userName", newUserInfo.userName);
       expect(res.body).toHaveProperty("email", newUserInfo.email);
-      expect(res.body).toHaveProperty("profileImage", newUserInfo.profileImage);
-      expect(res.body).toHaveProperty("bannerImage", newUserInfo.bannerImage);
+      expect(res.body).toHaveProperty("userName", newUserInfo.userName);
     });
   });
 

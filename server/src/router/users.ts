@@ -1,10 +1,9 @@
-import { User, validateUser as validate, validatePost } from "../models/users";
+import { User, validatePut, validatePost } from "../models/users";
 import Express from "express";
 import { auth } from "../middleware/auth";
 import bcrypt from "bcrypt";
 import _ from "lodash";
 import { Types } from "mongoose";
-import { profile } from "winston";
 
 interface savedUser {
   _id: Types.ObjectId;
@@ -43,9 +42,17 @@ router.post("/", async (req, res) => {
   res.status(200).send(savedUser);
 });
 
-router.put("/", auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send("invalid body info");
+interface UpdateUserBody {
+  userName?: string;
+  email?: string;
+  profileImage?: string;
+  bannerImage?: string;
+  password?: string; // Include password if needed
+}
+
+router.patch("/", auth, async (req, res) => {
+  const { error } = validatePut(req.body);
+  if (error) return res.status(400).send(error);
 
   // we get the userfromdbv
   const userInDb = await User.findById(req.session.user?.id).select({
@@ -57,32 +64,30 @@ router.put("/", auth, async (req, res) => {
     _id: 0, // Exclude the _id field from the query result
   });
 
-  const filteredReqBody = _.pick(req.body, [
+  // Filter the request body to get only the relevant fields
+  const filteredReqBody: UpdateUserBody = _.pick(req.body, [
     "userName",
     "email",
     "profileImage",
     "bannerImage",
-  ]);
-  const filteredUserInDb = _.pick(userInDb, [
-    "userName",
-    "email",
-    "profileImage",
-    "bannerImage",
+    "password",
   ]);
 
-  if (_.isEqual(filteredReqBody, filteredUserInDb)) {
-    // when username and email are the same
-
-    // if user tries to change the same password, return 400
-    if (req.body?.password) {
-      const passwordCompare = await bcrypt.compare(
-        req.body.password,
-        userInDb!.password
-      );
-      if (passwordCompare) return res.status(400).send("updating same info");
-    } else {
-      // if user is not trying to change password but providing same info
-      return res.status(400).send("updating same info");
+  // Check if any field in the request body is the same as in the database
+  for (const key of Object.keys(filteredReqBody)) {
+    if (
+      filteredReqBody[key as keyof UpdateUserBody] ===
+      userInDb![key as keyof UpdateUserBody]
+    ) {
+      // if user tries to change the same password, return 400
+      if (key == "password") {
+        const passwordCompare = await bcrypt.compare(
+          req.body.password,
+          userInDb!.password
+        );
+        if (passwordCompare) return res.status(400).send("updating same info");
+      }
+      return res.status(400).send(`Cannot update ${key} to the same value`);
     }
   }
 
