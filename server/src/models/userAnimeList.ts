@@ -20,7 +20,7 @@ export interface Anime {
   genre: String;
   totalEpisodes: number;
   score: number;
-  year: string;
+  year: number;
 }
 
 //extend the document interface,
@@ -114,7 +114,7 @@ const validateUserAnimeList = (userAnimeList: object) => {
       genre: Joi.string().required(),
       totalEpisodes: Joi.number().required(),
       score: Joi.number().required(),
-      year: Joi.string().required(),
+      year: Joi.number().required(),
     }),
     status: Joi.string()
       .valid(...Object.values(Status))
@@ -122,8 +122,41 @@ const validateUserAnimeList = (userAnimeList: object) => {
     currentEpisode: Joi.number().required(),
     expectedFinishDate: Joi.date(),
     favorite: Joi.boolean().required(),
-    created_at: Joi.date(),
-    updated_at: Joi.date(),
+  });
+
+  return schema.validate(userAnimeList);
+};
+
+export const validatePatch = (userAnimeList: object) => {
+  const schema = Joi.object({
+    watchListIds: Joi.array()
+      .items(
+        Joi.string().custom((value, helpers) => {
+          if (!mongoose.Types.ObjectId.isValid(value)) {
+            return helpers.error("any.invalid");
+          }
+          return value;
+        })
+      )
+      .optional(),
+    anime: Joi.object().keys({
+      animeId: Joi.string().required(),
+      status: Joi.string().required(),
+      format: Joi.string().required(),
+      title: Joi.string().required(),
+      imageUrl: Joi.string().required(),
+      genre: Joi.string().required(),
+      totalEpisodes: Joi.number().required(),
+      score: Joi.number().required(),
+      year: Joi.number().required(),
+    }),
+    status: Joi.string()
+      .valid(...Object.values(Status))
+      .optional(),
+    currentEpisode: Joi.number().optional(),
+    expectedFinishDate: Joi.date(),
+    favorite: Joi.boolean().optional(),
+    updated_at: Joi.date().required(),
   });
 
   return schema.validate(userAnimeList);
