@@ -27,8 +27,6 @@ describe("/api/animeList", () => {
     status: "Completed",
     currentEpisode: 12,
     favorite: true,
-    created_at: new Date(1632751161874),
-    updated_at: new Date(1632751161874),
   };
 
   //get auth
@@ -72,7 +70,7 @@ describe("/api/animeList", () => {
         JSON.parse(JSON.stringify(animeListTemplate))
       );
       userAnimeListInDb.userId = userInDb._id;
-      await userAnimeListInDb.save();
+      userAnimeListInDb = await userAnimeListInDb.save();
     });
 
     const exec = function () {
@@ -87,8 +85,11 @@ describe("/api/animeList", () => {
       expect(res.status).toBe(401);
     });
 
-    it("should return user info if a valid token is passed", async () => {
+    it("should return animeList info if a valid session is passed", async () => {
       const res = await exec();
+      const diff =
+        new Date().getTime() - userAnimeListInDb.created_at.getTime();
+      expect(diff).toBeLessThan(10 * 1000);
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty(
@@ -110,14 +111,6 @@ describe("/api/animeList", () => {
         userAnimeListInDb.expectedFinishDate
       );
       expect(res.body).toHaveProperty("favorite", userAnimeListInDb.favorite);
-      expect(res.body).toHaveProperty(
-        "created_at",
-        userAnimeListInDb.created_at.toISOString()
-      );
-      expect(res.body).toHaveProperty(
-        "updated_at",
-        userAnimeListInDb.updated_at.toISOString()
-      );
     });
   });
 
@@ -195,20 +188,6 @@ describe("/api/animeList", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return 400 if created_at is invalid ", async () => {
-      newAnimeList.created_at = "222d" as unknown as Date; //idk how this works but it forces the type of userId to string
-
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-
-    it("should return 400 if updated_at is invalid ", async () => {
-      newAnimeList.updated_at = "222d" as unknown as Date; //idk how this works but it forces the type of userId to string
-
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-
     it("should return 401 if the user trying to add animeList to another user", async () => {
       newAnimeList.userId = new mongoose.Types.ObjectId();
 
@@ -235,6 +214,10 @@ describe("/api/animeList", () => {
     it("should return the saved anime", async () => {
       const res = await exec();
 
+      const savedAnimeList = await userAnimeList.findById(res.body._id);
+      const diff = new Date().getTime() - savedAnimeList!.created_at.getTime();
+
+      expect(diff).toBeLessThan(10 * 1000);
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("userId", newAnimeList.userId.toString());
       expect(res.body).toHaveProperty(
@@ -250,8 +233,6 @@ describe("/api/animeList", () => {
       );
       expect(res.body).toHaveProperty("expectedFinishDate", null);
       expect(res.body).toHaveProperty("favorite", newAnimeList.favorite);
-      expect(res.body).toHaveProperty("created_at", newAnimeList.created_at);
-      expect(res.body).toHaveProperty("updated_at", newAnimeList.updated_at);
     });
   });
 
@@ -274,8 +255,8 @@ describe("/api/animeList", () => {
       id = userAnimeListInDb._id.toString();
 
       newAnimeList = JSON.parse(JSON.stringify(animeListTemplate));
+      newAnimeList.updated_at = new Date();
       newAnimeList.userId = userInDb._id;
-      newAnimeList.currentEpisode = 11;
     });
     const exec = function () {
       return request(app)
@@ -380,16 +361,43 @@ describe("/api/animeList", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return 400 if updated_at is invalid ", async () => {
+    it("should return 400 if updated_at is invalid  ", async () => {
       newAnimeList.updated_at = "222d" as unknown as Date; //idk how this works but it forces the type of userId to string
 
       const res = await exec();
       expect(res.status).toBe(400);
     });
 
+    it("should return updated animeList (only uploading a part of the info) ", async () => {
+      // Remove the 'age' property
+      delete newAnimeList.currentEpisode;
+      const res = await exec();
+
+      const diff =
+        new Date().getTime() - userAnimeListInDb.updated_at.getTime();
+      expect(diff).toBeLessThan(10 * 1000);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("userId", newAnimeList.userId.toString());
+      expect(res.body).toHaveProperty(
+        "watchListIds",
+        newAnimeList.watchListIds
+      );
+
+      expect(res.body).toHaveProperty("anime", newAnimeList.anime);
+      expect(res.body).toHaveProperty("status", newAnimeList.status);
+      expect(res.body).toHaveProperty("expectedFinishDate", null);
+      expect(res.body).toHaveProperty("favorite", newAnimeList.favorite);
+    });
+
     //return data
     it("should return updated animeList ", async () => {
       const res = await exec();
+
+      const diff =
+        new Date().getTime() - userAnimeListInDb.updated_at.getTime();
+      expect(diff).toBeLessThan(10 * 1000);
+
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("userId", newAnimeList.userId.toString());
       expect(res.body).toHaveProperty(
@@ -405,8 +413,6 @@ describe("/api/animeList", () => {
       );
       expect(res.body).toHaveProperty("expectedFinishDate", null);
       expect(res.body).toHaveProperty("favorite", newAnimeList.favorite);
-      expect(res.body).toHaveProperty("created_at", newAnimeList.created_at);
-      expect(res.body).toHaveProperty("updated_at", newAnimeList.updated_at);
     });
   });
 
