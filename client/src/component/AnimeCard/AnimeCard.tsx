@@ -22,7 +22,7 @@ import useAnimeListPut from "../../hooks/useAnimeListPut";
 
 interface Props {
   anime: Anime;
-  animeList?: AnimeList[] | undefined;
+  animeList?: AnimeList[]; //only exist if user logged in
 }
 
 const AnimeCard = ({ anime, animeList }: Props) => {
@@ -35,32 +35,17 @@ const AnimeCard = ({ anime, animeList }: Props) => {
     (animeItem) => animeItem.anime.animeId === anime.mal_id.toString()
   );
 
-  const { mutate: animeListPost } = useAnimeListPost(queryClient, navigate); //created new animeList for user
+  const { mutate: animeListPost } = useAnimeListPost(
+    queryClient,
+    navigate,
+    anime,
+    userData
+  ); //created new animeList for user
   const { mutate: animeListPut } = useAnimeListPut(
     queryClient,
     matchedAnime?._id || "",
     navigate
   ); //patch the user animeList data
-
-  // for new anime list
-  const newUploadList: AnimeList = {
-    userId: userData._id,
-    watchListIds: [],
-    anime: {
-      animeId: anime.mal_id.toString(),
-      format: anime.type,
-      title: anime.title,
-      imageUrl: anime.images.jpg.image_url,
-      genre: anime.genres.length == 0 ? "" : anime.genres[0].name,
-      totalEpisodes: anime.episodes || 0,
-      score: anime.score,
-      year: anime.year || 0,
-      status: anime.status,
-    },
-    currentEpisode: 0,
-    status: "Planning",
-    favorite: true,
-  };
 
   return (
     <>
@@ -83,7 +68,7 @@ const AnimeCard = ({ anime, animeList }: Props) => {
                   favorite: !matchedAnime?.favorite,
                   updated_at: new Date(),
                 })
-              : animeListPost(newUploadList)
+              : animeListPost()
           }
           // if not exist, upload it and add it to favorite,
           // if exist, use put to set favorite to !isAnimeFavorited
