@@ -3,7 +3,7 @@ import { auth } from "../middleware/auth";
 import {
   userAnimeList,
   validateUserAnimeList as validate,
-  validatePatch,
+  validatePut,
 } from "../models/userAnimeList";
 
 import mongoose from "mongoose";
@@ -33,7 +33,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.put("/:id", auth, async (req, res) => {
-  const { error } = validatePatch(req.body);
+  const { error } = validatePut(req.body);
   if (error) return res.status(400).send(error.message);
 
   if (!mongoose.Types.ObjectId.isValid(req.params.id))

@@ -39,8 +39,9 @@ class APIClient<T, D = unknown> {
   };
 
   put = (data?: T, id?: string) => {
+    const url = id ? this.endpoint + `/${id}` : this.endpoint;
     return axiosInstance
-      .put<D>(this.endpoint + `/${id}`, data, { withCredentials: true })
+      .put<D>(url, data, { withCredentials: true })
       .then((res) => res.data);
   };
 

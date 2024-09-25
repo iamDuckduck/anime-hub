@@ -9,6 +9,7 @@ enum Status {
   Paused = "Paused",
   Dropped = "Dropped",
   Planning = "Planning",
+  Unassigned = "Unassigned", // Indicates the user favorited but hasn't added it to their anime list
 }
 
 export interface Anime {
@@ -127,8 +128,17 @@ const validateUserAnimeList = (userAnimeList: object) => {
   return schema.validate(userAnimeList);
 };
 
-export const validatePatch = (userAnimeList: object) => {
+export const validatePut = (userAnimeList: object) => {
   const schema = Joi.object({
+    userId: Joi.string()
+      .custom((value: string, helpers: Joi.CustomHelpers<any>) => {
+        if (mongoose.Types.ObjectId.isValid(value)) return value;
+        else
+          return helpers.message({
+            custom: `${value} is not a valid ObjectId!`,
+          });
+      })
+      .required(),
     watchListIds: Joi.array()
       .items(
         Joi.string().custom((value, helpers) => {
@@ -154,7 +164,7 @@ export const validatePatch = (userAnimeList: object) => {
       .valid(...Object.values(Status))
       .optional(),
     currentEpisode: Joi.number().optional(),
-    expectedFinishDate: Joi.date(),
+    expectedFinishDate: Joi.date().allow(null),
     favorite: Joi.boolean().optional(),
     updated_at: Joi.date().required(),
   });

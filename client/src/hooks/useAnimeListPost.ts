@@ -9,34 +9,12 @@ const animeListUploadClient = new APIClient<AnimeList, AnimeList>(
   "userAnimeList"
 );
 
-const useAnimeListPost = (
-  queryClient: any,
-  navigate: NavigateFunction,
-  anime: Anime,
-  userData: userData
-) => {
-  return useMutation<AnimeList, AxiosError>({
-    mutationFn: () => {
+const useAnimeListPost = (queryClient: any, navigate: NavigateFunction) => {
+  return useMutation<AnimeList, AxiosError, AnimeList>({
+    mutationFn: (animeList: AnimeList) => {
       return animeListUploadClient.post(
         // for new anime list
-        {
-          userId: userData._id,
-          watchListIds: [],
-          anime: {
-            animeId: anime.mal_id.toString(),
-            format: anime.type,
-            title: anime.title,
-            imageUrl: anime.images.jpg.image_url,
-            genre: anime.genres.length == 0 ? "" : anime.genres[0].name,
-            totalEpisodes: anime.episodes || 0,
-            score: anime.score,
-            year: anime.year || 0,
-            status: anime.status,
-          },
-          currentEpisode: 0,
-          status: "Planning",
-          favorite: true,
-        }
+        animeList
       );
     },
     onSuccess: () => {

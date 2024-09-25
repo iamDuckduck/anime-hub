@@ -50,7 +50,7 @@ interface UpdateUserBody {
   password?: string; // Include password if needed
 }
 
-router.patch("/", auth, async (req, res) => {
+router.put("/", auth, async (req, res) => {
   const { error } = validatePut(req.body);
   if (error) return res.status(400).send(error);
 

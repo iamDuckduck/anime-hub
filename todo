@@ -61,6 +61,15 @@ frontend
 
 -duplication of AnimeCard and AnimeCardInProfile
 
+-add watchList feature
+%add + icon for adding anime to watch list
+%modal in animeCard maybe better to put in other place for render effiency
+
+1. handle add animeList
+   -refactor database spearate favorite from animelist
+
+-add loading page( when refreshing , flashing problem due to different component has different loading time)
+
 api client
 
 -should sperate the client for user and animeList?

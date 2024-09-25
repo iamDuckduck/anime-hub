@@ -5,4 +5,5 @@ export interface AnimeListPutRequest {
   currentEpisode?: number;
   favorite?: boolean;
   updated_at: Date;
+  expectedFinishDate?: Date | null;
 }
