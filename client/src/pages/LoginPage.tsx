@@ -26,6 +26,7 @@ const LoginPage = () => {
     isLoading: mutateIsloading,
   } = useLogin(navigate);
 
+  if (isLoggedIn == null) return <></>; // when it is null, it means we don't know whether the user login or not
   if (isLoggedIn) return <Navigate to="/profile" replace />;
 
   return (

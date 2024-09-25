@@ -48,11 +48,12 @@ frontend
 -refactor layout -> mainLayout, homeLayout -> sideBarLayout
 
 - screen flashing problem (getuser info before everypage not sure is this the problem?)
+  %moved getUser refetch logic to navbar (so it onlys re render nav when refetching) and data and login state will be shared by zustand
 
-  - moved getUser refetch logic to navbar (so it onlys re render nav when refetching) and data and login state will be shared by zustand
+  %when refresh on profile page, login page shows up for 1 sec due to the reset of isLoggedIn state
+  (let isLoggedIn: booleen | undefined, undefined means we haven't known the user login state yet)
 
-  -when refresh on profile page, login page shows up for 1 sec due to the reset of isLoggedIn state
-  -3 renders for both logout/login
+  -3 renders for both logout/login(?)
 
   -what are the dependent variable of layout
   -useState
@@ -60,7 +61,8 @@ frontend
 
 -duplication of AnimeCard and AnimeCardInProfile
 
--api client
+api client
+
 -should sperate the client for user and animeList?
 -should move the interface to entities folder
 
