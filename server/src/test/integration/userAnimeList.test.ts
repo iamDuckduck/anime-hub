@@ -89,28 +89,32 @@ describe("/api/animeList", () => {
       const res = await exec();
       const diff =
         new Date().getTime() - userAnimeListInDb.created_at.getTime();
-      expect(diff).toBeLessThan(10 * 1000);
-
+      console.log(userAnimeListInDb.userId.toString());
+      console.log(res.body);
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty(
+      expect(diff).toBeLessThan(10 * 1000);
+      expect(res.body[0]).toHaveProperty(
         "userId",
         userAnimeListInDb.userId.toString()
       );
-      expect(res.body).toHaveProperty(
+      expect(res.body[0]).toHaveProperty(
         "watchListIds",
         userAnimeListInDb.watchListIds
       );
-      expect(res.body).toHaveProperty("anime", userAnimeListInDb.anime);
-      expect(res.body).toHaveProperty("status", userAnimeListInDb.status);
-      expect(res.body).toHaveProperty(
+      expect(res.body[0]).toHaveProperty("anime", userAnimeListInDb.anime);
+      expect(res.body[0]).toHaveProperty("status", userAnimeListInDb.status);
+      expect(res.body[0]).toHaveProperty(
         "currentEpisode",
         userAnimeListInDb.currentEpisode
       );
-      expect(res.body).toHaveProperty(
+      expect(res.body[0]).toHaveProperty(
         "expectedFinishDate",
         userAnimeListInDb.expectedFinishDate
       );
-      expect(res.body).toHaveProperty("favorite", userAnimeListInDb.favorite);
+      expect(res.body[0]).toHaveProperty(
+        "favorite",
+        userAnimeListInDb.favorite
+      );
     });
   });
 

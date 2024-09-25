@@ -132,7 +132,7 @@ describe("/api/users", () => {
     });
   });
 
-  describe("Patch /", () => {
+  describe("PUt /", () => {
     let cookie = "";
     let userInDb: UserDoc; //idk what is the returned type of User(user).save()
     let newUserInfo: {
@@ -159,7 +159,7 @@ describe("/api/users", () => {
 
     const exec = function () {
       return request(app)
-        .patch("/api/users/")
+        .put("/api/users/")
         .set("Cookie", cookie)
         .send(newUserInfo);
     };
