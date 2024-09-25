@@ -5,12 +5,10 @@ import APIClient from "../services/userService";
 import { AnimeList } from "../entities/AnimeList";
 import { AxiosError } from "axios";
 
-const apiClient = new APIClient<AnimeList[] | undefined>(
-  "userAnimeList/myList"
-);
+const apiClient = new APIClient<AnimeList[]>("userAnimeList/myList");
 
 export const useAnimeList = (isLoggedIn?: boolean) => {
-  return useQuery<AnimeList[] | undefined, AxiosError>({
+  return useQuery<AnimeList[], AxiosError>({
     queryKey: ["animeList"],
     queryFn: apiClient.getALL,
     staleTime: ms("1s"),
