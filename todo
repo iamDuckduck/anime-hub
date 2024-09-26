@@ -66,7 +66,8 @@ frontend
 %modal in animeCard maybe better to put in other place for render effiency
 
 1. handle add animeList
-   -refactor database spearate favorite from animelist
+   %refactor database, spearate favorite property from animelist
+   (the api is not perfect tested)
 
 -add loading page( when refreshing , flashing problem due to different component has different loading time)
 

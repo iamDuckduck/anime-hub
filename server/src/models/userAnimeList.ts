@@ -9,7 +9,6 @@ enum Status {
   Paused = "Paused",
   Dropped = "Dropped",
   Planning = "Planning",
-  Unassigned = "Unassigned", // Indicates the user favorited but hasn't added it to their anime list
 }
 
 export interface Anime {
@@ -33,7 +32,6 @@ export interface userAnimeListDoc extends Document {
   status: String;
   currentEpisode: number;
   expectedFinishDate: Date;
-  favorite: Boolean;
   created_at: Date;
   updated_at: Date;
 }
@@ -63,10 +61,6 @@ const userAnimeListSchema = new Schema({
   expectedFinishDate: {
     type: Date,
     default: null,
-  },
-  favorite: {
-    type: Boolean,
-    required: true,
   },
   created_at: {
     type: Date,
@@ -122,7 +116,6 @@ const validateUserAnimeList = (userAnimeList: object) => {
       .required(),
     currentEpisode: Joi.number().required(),
     expectedFinishDate: Joi.date(),
-    favorite: Joi.boolean().required(),
   });
 
   return schema.validate(userAnimeList);
@@ -165,7 +158,7 @@ export const validatePut = (userAnimeList: object) => {
       .optional(),
     currentEpisode: Joi.number().optional(),
     expectedFinishDate: Joi.date().allow(null),
-    favorite: Joi.boolean().optional(),
+
     updated_at: Joi.date().required(),
   });
 

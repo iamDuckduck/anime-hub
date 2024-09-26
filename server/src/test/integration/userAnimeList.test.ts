@@ -26,7 +26,6 @@ describe("/api/animeList", () => {
     },
     status: "Completed",
     currentEpisode: 12,
-    favorite: true,
   };
 
   //get auth
@@ -89,8 +88,7 @@ describe("/api/animeList", () => {
       const res = await exec();
       const diff =
         new Date().getTime() - userAnimeListInDb.created_at.getTime();
-      console.log(userAnimeListInDb.userId.toString());
-      console.log(res.body);
+
       expect(res.status).toBe(200);
       expect(diff).toBeLessThan(10 * 1000);
       expect(res.body[0]).toHaveProperty(
@@ -110,10 +108,6 @@ describe("/api/animeList", () => {
       expect(res.body[0]).toHaveProperty(
         "expectedFinishDate",
         userAnimeListInDb.expectedFinishDate
-      );
-      expect(res.body[0]).toHaveProperty(
-        "favorite",
-        userAnimeListInDb.favorite
       );
     });
   });
@@ -185,13 +179,6 @@ describe("/api/animeList", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return 400 if favorite is invalid ", async () => {
-      newAnimeList.favorite = "222d" as unknown as Boolean; //idk how this works but it forces the type of userId to string
-
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-
     it("should return 401 if the user trying to add animeList to another user", async () => {
       newAnimeList.userId = new mongoose.Types.ObjectId();
 
@@ -236,7 +223,6 @@ describe("/api/animeList", () => {
         newAnimeList.currentEpisode
       );
       expect(res.body).toHaveProperty("expectedFinishDate", null);
-      expect(res.body).toHaveProperty("favorite", newAnimeList.favorite);
     });
   });
 
@@ -351,13 +337,6 @@ describe("/api/animeList", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return 400 if favorite is invalid ", async () => {
-      newAnimeList.favorite = "222d" as unknown as Boolean; //idk how this works but it forces the type of userId to string
-
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-
     it("should return 400 if created_at is invalid ", async () => {
       newAnimeList.created_at = "222d" as unknown as Date; //idk how this works but it forces the type of userId to string
 
@@ -391,7 +370,6 @@ describe("/api/animeList", () => {
       expect(res.body).toHaveProperty("anime", newAnimeList.anime);
       expect(res.body).toHaveProperty("status", newAnimeList.status);
       expect(res.body).toHaveProperty("expectedFinishDate", null);
-      expect(res.body).toHaveProperty("favorite", newAnimeList.favorite);
     });
 
     //return data
@@ -416,7 +394,6 @@ describe("/api/animeList", () => {
         newAnimeList.currentEpisode
       );
       expect(res.body).toHaveProperty("expectedFinishDate", null);
-      expect(res.body).toHaveProperty("favorite", newAnimeList.favorite);
     });
   });
 
@@ -510,7 +487,7 @@ describe("/api/animeList", () => {
         userAnimeListInDb.currentEpisode
       );
       expect(res.body).toHaveProperty("expectedFinishDate", null);
-      expect(res.body).toHaveProperty("favorite", userAnimeListInDb.favorite);
+
       expect(res.body).toHaveProperty(
         "created_at",
         userAnimeListInDb.created_at.toISOString() //whY?
