@@ -20,7 +20,12 @@ router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  if (await userAnimeList.findOne({ "anime.animeId": req.body.anime.animeId }))
+  if (
+    await userAnimeList.findOne({
+      "anime.animeId": req.body.anime.animeId,
+      userId: req.session.user?.id,
+    })
+  )
     return res.status(400).send("duplicated animeList");
 
   req.body.userId = req.session.user?.id;

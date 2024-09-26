@@ -1,9 +1,7 @@
-export interface AnimeList {
+export interface UserFavorite {
   _id?: string;
   userId?: string;
-  watchListIds: string[];
-  status: string;
-  anime: {
+  anime?: {
     animeId: string;
     format: string;
     title: string;
@@ -14,5 +12,6 @@ export interface AnimeList {
     year: number;
     status: string;
   };
-  currentEpisode: number;
+  favorite: boolean;
+  updated_at?: Date;
 }

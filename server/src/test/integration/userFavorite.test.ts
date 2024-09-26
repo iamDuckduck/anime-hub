@@ -94,14 +94,17 @@ describe("api/favorite", () => {
     let cookie: string = "";
     let userInDb: UserDoc;
     let newUserFavorite: any;
-
+    let userFavoriteInDb: any;
     beforeEach(async () => {
       userInDb = await saveUser();
       cookie = await login();
 
       //save favorite
       newUserFavorite = JSON.parse(JSON.stringify(favoriteTemplate));
-      newUserFavorite.userId = userInDb._id;
+      delete newUserFavorite.userId;
+
+      userFavoriteInDb = JSON.parse(JSON.stringify(favoriteTemplate));
+      userFavoriteInDb.userId = userInDb._id;
     });
 
     const exec = function () {
@@ -138,19 +141,11 @@ describe("api/favorite", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return 401 if the user trying to add animeList to another user", async () => {
-      newUserFavorite.userId = new mongoose.Types.ObjectId();
-      const res = await exec();
-
-      expect(res.status).toBe(401);
-      expect(res.text).toBe("unauthorized you can't post animeList for others");
-    });
-
-    it("should return 400 if duplicated animeList", async () => {
-      await new userFavorite(newUserFavorite).save();
+    it("should return 400 if duplicated favorite", async () => {
+      await new userFavorite(userFavoriteInDb).save();
       const res = await exec();
       expect(res.status).toBe(400);
-      expect(res.text).toBe("duplicated animeList");
+      expect(res.text).toBe("duplicated favorite");
     });
 
     it("should save the anime", async () => {

@@ -20,14 +20,15 @@ router.post("/", auth, async (req, res) => {
   const { error } = validateFavorite(req.body);
   if (error) return res.status(400).send(error.message);
 
-  if (req.session.user?.id !== req.body.userId)
-    return res
-      .status(401)
-      .send("unauthorized you can't post animeList for others");
+  //   if (req.session.user?.id !== req.body.userId)
+  //     return res
+  //       .status(401)
+  //       .send("unauthorized you can't post animeList for others");
 
   if (await userFavorite.findOne({ "anime.animeId": req.body.anime.animeId }))
-    return res.status(400).send("duplicated animeList");
+    return res.status(400).send("duplicated favorite");
 
+  req.body.userId = req.session.user?.id;
   const savedUserFavorite = await new userFavorite(req.body).save();
   res.send(savedUserFavorite);
 });

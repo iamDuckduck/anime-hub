@@ -45,7 +45,6 @@ const userFavorite = model<userFavoriteDoc, Model<userFavoriteDoc>>(
 
 const validateFavorite = (userFavorite: object) => {
   const schema = Joi.object({
-    userId: Joi.string().required(),
     anime: Joi.object().keys({
       animeId: Joi.string().required(),
       status: Joi.string().required(),

@@ -19,13 +19,17 @@ import useAnimeListPost from "../../hooks/useAnimeListPost";
 import { useQueryClient } from "@tanstack/react-query";
 import useAnimeListPut from "../../hooks/useAnimeListPut";
 import AnimeListAddModal from "../AnimeListAddModal";
+import { UserFavorite } from "../../entities/UserFavorite";
+import useUserFavoritePost from "../../hooks/useUserFavoritePost";
+import useUserFavoritePut from "../../hooks/useUserFavoritePut";
 
 interface Props {
   anime: Anime;
   userAnimeList?: AnimeList[]; //only needed if user logged in
+  userFavorite?: UserFavorite[];
 }
 
-const AnimeCard = ({ anime, userAnimeList }: Props) => {
+const AnimeCard = ({ anime, userAnimeList, userFavorite }: Props) => {
   const userData = useIsLoggedInStore((s) => s.userData); // get user data
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
 
@@ -39,16 +43,22 @@ const AnimeCard = ({ anime, userAnimeList }: Props) => {
     (animeItem) => animeItem.anime.animeId === anime.mal_id.toString()
   );
 
-  const { mutate: animeListPost } = useAnimeListPost(queryClient, navigate); //created new animeList for user
-  const { mutate: animeListPut } = useAnimeListPut(
+  const matchedFavorite = userFavorite?.find(
+    (animeItem) => animeItem.anime?.animeId === anime.mal_id.toString()
+  );
+
+  const { mutate: userFavoritePost } = useUserFavoritePost(
     queryClient,
-    matchedAnimeList?._id || "",
+    navigate
+  ); //created new animeList for user
+
+  const { mutate: userFavoritePut } = useUserFavoritePut(
+    queryClient,
+    matchedFavorite?._id || "",
     navigate
   ); //patch the user animeList data
 
-  const newAnimeList: AnimeList = {
-    userId: userData._id,
-    watchListIds: [],
+  const newUserFavorite: UserFavorite = {
     anime: {
       animeId: anime.mal_id.toString(),
       format: anime.type,
@@ -60,8 +70,6 @@ const AnimeCard = ({ anime, userAnimeList }: Props) => {
       year: anime.year || 0,
       status: anime.status,
     },
-    currentEpisode: 0,
-    status: "NA",
     favorite: true,
   };
   return (
@@ -83,16 +91,16 @@ const AnimeCard = ({ anime, userAnimeList }: Props) => {
           position="absolute"
           right="2"
           top="2"
-          as={matchedAnimeList?.favorite ? FaHeart : FaRegHeart}
-          color={matchedAnimeList?.favorite ? "red.500" : "white"}
+          as={matchedFavorite?.favorite ? FaHeart : FaRegHeart}
+          color={matchedFavorite?.favorite ? "red.500" : "white"}
           boxSize={5}
           onClick={() =>
-            matchedAnimeList
-              ? animeListPut({
-                  favorite: !matchedAnimeList?.favorite,
+            matchedFavorite
+              ? userFavoritePut({
+                  favorite: !matchedFavorite?.favorite,
                   updated_at: new Date(),
                 })
-              : animeListPost(newAnimeList)
+              : userFavoritePost(newUserFavorite)
           }
           // if not exist, upload it and add it to favorite,
           // if exist, use put to set favorite to !isAnimeFavorited
@@ -107,18 +115,10 @@ const AnimeCard = ({ anime, userAnimeList }: Props) => {
           position="absolute"
           right="2"
           top="10"
-          as={
-            matchedAnimeList && matchedAnimeList.status !== "NA"
-              ? FaCheck
-              : FaPlus
-          }
+          as={matchedAnimeList ? FaCheck : FaPlus}
           color="white"
           boxSize={5}
-          onClick={
-            matchedAnimeList && matchedAnimeList.status !== "NA"
-              ? undefined
-              : () => (isLoggedIn ? onOpen() : navigate("/login"))
-          } // Disable click if matchedAnime is true
+          onClick={() => (isLoggedIn ? onOpen() : navigate("/login"))} // Disable click if matchedAnime is true
         />
 
         <Image

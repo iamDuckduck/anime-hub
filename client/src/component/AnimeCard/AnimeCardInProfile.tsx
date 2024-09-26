@@ -7,20 +7,23 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { AnimeList } from "../../entities/AnimeList";
 import { useQueryClient } from "@tanstack/react-query";
 import useAnimeListPut from "../../hooks/useAnimeListPut";
+import useFavorite from "../../hooks/useUserFavorite";
+import { UserFavorite } from "../../entities/UserFavorite";
+import useUserFavoritePut from "../../hooks/useUserFavoritePut";
 
 interface Props {
-  animeList: AnimeList;
+  userFavorite: UserFavorite;
 }
 
-const animeCardInProfile = ({ animeList }: Props) => {
+const animeCardInProfile = ({ userFavorite }: Props) => {
   const queryClient = useQueryClient(); // Get the query client to invalid query
   const navigate = useNavigate(); // Initialize navigate
 
-  const { mutate: animeListPut } = useAnimeListPut(
+  const { mutate: userFavoritePut } = useUserFavoritePut(
     queryClient,
-    animeList?._id || "",
+    userFavorite?._id || "",
     navigate
-  );
+  ); //patch the user animeList data
 
   return (
     <>
@@ -34,19 +37,19 @@ const animeCardInProfile = ({ animeList }: Props) => {
           position="absolute"
           right="2"
           top="2"
-          as={animeList?.favorite ? FaHeart : FaRegHeart}
-          color={animeList?.favorite ? "red.500" : "white"}
+          as={userFavorite?.favorite ? FaHeart : FaRegHeart}
+          color={userFavorite?.favorite ? "red.500" : "white"}
           boxSize={5}
           onClick={() =>
-            animeListPut({
-              favorite: !animeList?.favorite,
+            userFavoritePut({
+              favorite: !userFavorite?.favorite,
               updated_at: new Date(),
             })
           }
         />
 
         <Image
-          src={animeList.anime.imageUrl}
+          src={userFavorite.anime?.imageUrl}
           width="100%"
           objectFit="cover"
           borderRadius="10px 10px 0 0"
@@ -55,16 +58,17 @@ const animeCardInProfile = ({ animeList }: Props) => {
         <CardBody>
           <HStack justifyContent="space-between" marginBottom={3}>
             <Text>
-              Released: {animeList.anime.year ? animeList.anime.year : "NA"}
+              Released:{" "}
+              {userFavorite.anime?.year ? userFavorite.anime?.year : "NA"}
             </Text>
 
-            <CriticScore score={animeList.anime.score}></CriticScore>
+            <CriticScore score={userFavorite.anime?.score || 0}></CriticScore>
           </HStack>
           <Heading fontSize="2xl">
             <Link
-              to={`/animes/${animeList.anime.animeId}/${animeList.anime.title}`}
+              to={`/animes/${userFavorite.anime?.animeId}/${userFavorite.anime?.title}`}
             >
-              {animeList.anime.title}
+              {userFavorite.anime?.title}
             </Link>
           </Heading>
         </CardBody>

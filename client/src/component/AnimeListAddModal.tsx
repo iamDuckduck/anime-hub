@@ -39,7 +39,6 @@ const AnimeListAddModal = ({
   anime,
   matchedAnimeList,
 }: Props) => {
-  const userData = useIsLoggedInStore((s) => s.userData); // get user data
   const [episodeProgress, setEpisodeProgress] = useState<number>(0);
   const [status, setStatus] = useState("Watching");
   const [finishDate, setFinishDate] = useState<Date | null>(null); // Use state for DatePicker
@@ -53,7 +52,6 @@ const AnimeListAddModal = ({
     navigate
   ); //patch the user animeList data
   const newAnimeList: AnimeList = {
-    userId: userData._id,
     watchListIds: [],
     anime: {
       animeId: anime.mal_id.toString(),
@@ -68,10 +66,8 @@ const AnimeListAddModal = ({
     },
     currentEpisode: episodeProgress,
     status: status,
-    favorite: false,
   };
   const handleAddButton = () => {
-    console.log(status);
     if (matchedAnimeList)
       animeListPut({
         status: status,
@@ -96,7 +92,9 @@ const AnimeListAddModal = ({
           <FormControl>
             <FormLabel>Status</FormLabel>
             <Select
-              defaultValue="Watching"
+              defaultValue={
+                matchedAnimeList ? matchedAnimeList.status : "Watching"
+              }
               onChange={(e) => setStatus(e.target.value)}
             >
               <option>Watching</option>
@@ -113,7 +111,9 @@ const AnimeListAddModal = ({
             <NumberInput
               max={anime.episodes}
               min={0}
-              defaultValue={0}
+              defaultValue={
+                matchedAnimeList ? matchedAnimeList.currentEpisode : 0
+              }
               onChange={(valueString) =>
                 setEpisodeProgress(parseInt(valueString) || 0)
               }

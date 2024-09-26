@@ -15,11 +15,13 @@ import { useIsLoggedInStore } from "../store";
 import useAnimeList from "../hooks/useAnimeList";
 import AnimeCardContainer from "../component/AnimeCard/AnimeCardContainer";
 import AnimeCardInProfile from "../component/AnimeCard/AnimeCardInProfile";
+import useFavorite from "../hooks/useUserFavorite";
 
 const UserProfilePage = () => {
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   const navigate = useNavigate(); // Initialize navigate
   const { data: animeLists, isLoading: isAnimeListLoading } = useAnimeList();
+  const { data: userFavorites, isLoading: isFavoriteLoading } = useFavorite(); // only fetch when logged in
 
   const {
     mutate,
@@ -53,14 +55,12 @@ const UserProfilePage = () => {
               columns={{ sm: 1, md: 3, lg: 5, xl: 7 }}
               spacing={6}
             >
-              {!isAnimeListLoading &&
-                animeLists
-                  ?.filter((animeList) => animeList.favorite) // Filter only favorite anime
-                  .map((animeList) => (
-                    <AnimeCardContainer key={animeList._id}>
-                      <AnimeCardInProfile animeList={animeList} />
-                    </AnimeCardContainer>
-                  ))}
+              {!isFavoriteLoading &&
+                userFavorites?.map((userFavorite) => (
+                  <AnimeCardContainer key={userFavorite._id}>
+                    <AnimeCardInProfile userFavorite={userFavorite} />
+                  </AnimeCardContainer>
+                ))}
             </SimpleGrid>
           </TabPanel>
 

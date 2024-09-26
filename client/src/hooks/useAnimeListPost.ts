@@ -3,7 +3,6 @@ import { AxiosError } from "axios";
 import APIClient, { userData } from "../services/userService";
 import { AnimeList } from "../entities/AnimeList";
 import { NavigateFunction } from "react-router-dom";
-import Anime from "../entities/Anime";
 
 const animeListUploadClient = new APIClient<AnimeList, AnimeList>(
   "userAnimeList"

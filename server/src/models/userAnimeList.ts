@@ -81,15 +81,6 @@ const userAnimeList = model<userAnimeListDoc, Model<userAnimeListDoc>>(
 
 const validateUserAnimeList = (userAnimeList: object) => {
   const schema = Joi.object({
-    userId: Joi.string()
-      .custom((value: string, helpers: Joi.CustomHelpers<any>) => {
-        if (mongoose.Types.ObjectId.isValid(value)) return value;
-        else
-          return helpers.message({
-            custom: `${value} is not a valid ObjectId!`,
-          });
-      })
-      .required(),
     watchListIds: Joi.array()
       .items(
         Joi.string().custom((value, helpers) => {
@@ -123,15 +114,6 @@ const validateUserAnimeList = (userAnimeList: object) => {
 
 export const validatePut = (userAnimeList: object) => {
   const schema = Joi.object({
-    userId: Joi.string()
-      .custom((value: string, helpers: Joi.CustomHelpers<any>) => {
-        if (mongoose.Types.ObjectId.isValid(value)) return value;
-        else
-          return helpers.message({
-            custom: `${value} is not a valid ObjectId!`,
-          });
-      })
-      .required(),
     watchListIds: Joi.array()
       .items(
         Joi.string().custom((value, helpers) => {
