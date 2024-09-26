@@ -246,7 +246,7 @@ describe("/api/animeList", () => {
 
       newAnimeList = JSON.parse(JSON.stringify(animeListTemplate));
       newAnimeList.updated_at = new Date();
-      newAnimeList.userId = userInDb._id;
+      delete newAnimeList.userId;
     });
     const exec = function () {
       return request(app)
@@ -275,31 +275,6 @@ describe("/api/animeList", () => {
       const res = await exec();
       expect(res.status).toBe(400);
       expect(res.text).toBe("invalid animeListId");
-    });
-
-    //modify other animeListId
-    it("should return 401 if the user trying to modify other user's animeList", async () => {
-      let newAnimeListInDb = new userAnimeList(
-        JSON.parse(JSON.stringify(animeListTemplate))
-      );
-      newAnimeListInDb.userId = new mongoose.Types.ObjectId();
-      await newAnimeListInDb.save();
-      id = newAnimeListInDb._id.toString();
-
-      const res = await exec();
-      expect(res.status).toBe(401);
-      expect(res.text).toBe(
-        "unauthorized you can't edit other people's animeList"
-      );
-    });
-
-    //data valid
-
-    it("should return 400 if provided userId invalid ", async () => {
-      newAnimeList.userId = 123 as unknown as Types.ObjectId; //idk how this works but it forces the type of userId to string
-
-      const res = await exec();
-      expect(res.status).toBe(400);
     });
 
     it("should return 400 if watchId is invalid ", async () => {
@@ -361,7 +336,7 @@ describe("/api/animeList", () => {
       expect(diff).toBeLessThan(10 * 1000);
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("userId", newAnimeList.userId.toString());
+
       expect(res.body).toHaveProperty(
         "watchListIds",
         newAnimeList.watchListIds
@@ -381,7 +356,7 @@ describe("/api/animeList", () => {
       expect(diff).toBeLessThan(10 * 1000);
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("userId", newAnimeList.userId.toString());
+
       expect(res.body).toHaveProperty(
         "watchListIds",
         newAnimeList.watchListIds
@@ -443,22 +418,6 @@ describe("/api/animeList", () => {
       expect(res.text).toBe("invalid animeListId");
     });
 
-    //modify other animeListId
-    it("should return 401 if the user trying to delete other user's animeList", async () => {
-      let newAnimeListInDb = new userAnimeList(
-        JSON.parse(JSON.stringify(animeListTemplate))
-      );
-      newAnimeListInDb.userId = new mongoose.Types.ObjectId();
-      await newAnimeListInDb.save();
-      id = newAnimeListInDb._id.toString();
-
-      const res = await exec();
-      expect(res.status).toBe(401);
-      expect(res.text).toBe(
-        "unauthorized you can't delete other people's animeList"
-      );
-    });
-
     //return data
     it("should delete the animeList ", async () => {
       const res = await exec();
@@ -471,10 +430,7 @@ describe("/api/animeList", () => {
       const res = await exec();
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty(
-        "userId",
-        userAnimeListInDb.userId.toString()
-      );
+
       expect(res.body).toHaveProperty(
         "watchListIds",
         userAnimeListInDb.watchListIds

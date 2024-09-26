@@ -43,11 +43,6 @@ router.put("/:id", auth, async (req, res) => {
 
   if (!AnimeListInDb) return res.status(400).send("invalid animeListId");
 
-  if (req.session.user?.id !== AnimeListInDb.userId.toString())
-    return res
-      .status(401)
-      .send("unauthorized you can't edit other people's animeList");
-
   const updatedAnimeList = await userAnimeList.findOneAndUpdate(
     { _id: req.params.id },
     req.body,
@@ -63,11 +58,6 @@ router.delete("/:id", auth, async (req, res) => {
 
   const AnimeListInDb = await userAnimeList.findById(req.params.id);
   if (!AnimeListInDb) return res.status(400).send("invalid animeListId");
-
-  if (req.session.user?.id !== AnimeListInDb.userId.toString())
-    return res
-      .status(401)
-      .send("unauthorized you can't delete other people's animeList");
 
   const deletedAnimeList = await userAnimeList.findByIdAndDelete(req.params.id);
 
