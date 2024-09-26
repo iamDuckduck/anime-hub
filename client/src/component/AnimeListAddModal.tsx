@@ -49,8 +49,8 @@ const AnimeListAddModal = ({
   const { mutate: animeListPost } = useAnimeListPost(queryClient, navigate); //created new animeList for user
   const { mutate: animeListPut } = useAnimeListPut(
     queryClient,
-    navigate,
-    matchedAnimeList?._id || ""
+    matchedAnimeList?._id || "",
+    navigate
   ); //patch the user animeList data
   const newAnimeList: AnimeList = {
     userId: userData._id,

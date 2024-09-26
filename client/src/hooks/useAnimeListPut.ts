@@ -11,8 +11,8 @@ const animeListUploadClient = new APIClient<AnimeListPutRequest, AnimeList>(
 
 const useAnimeListPut = (
   queryClient: any,
-  navigate: NavigateFunction,
-  id: string
+  id: string,
+  navigate: NavigateFunction
 ) => {
   return useMutation<AnimeList, AxiosError, AnimeListPutRequest>({
     mutationFn: (animePutData: AnimeListPutRequest) => {
