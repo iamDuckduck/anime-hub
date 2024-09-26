@@ -116,13 +116,17 @@ describe("/api/animeList", () => {
     let cookie: string = "";
     let userInDb: UserDoc;
     let newAnimeList: any;
+    let animeListInDb: any;
 
     beforeEach(async () => {
       userInDb = await saveUser();
       cookie = await login();
 
       newAnimeList = JSON.parse(JSON.stringify(animeListTemplate));
-      newAnimeList.userId = userInDb._id;
+      delete newAnimeList.userId;
+
+      animeListInDb = JSON.parse(JSON.stringify(animeListTemplate));
+      animeListInDb.userId = userInDb._id;
     });
     const exec = function () {
       return request(app)
@@ -135,13 +139,6 @@ describe("/api/animeList", () => {
       cookie = "";
       const res = await exec();
       expect(res.status).toBe(401);
-    });
-
-    it("should return 400 if provided userId invalid ", async () => {
-      newAnimeList.userId = 123 as unknown as Types.ObjectId; //idk how this works but it forces the type of userId to string
-
-      const res = await exec();
-      expect(res.status).toBe(400);
     });
 
     it("should return 400 if watchId is invalid ", async () => {
@@ -179,16 +176,17 @@ describe("/api/animeList", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return 401 if the user trying to add animeList to another user", async () => {
-      newAnimeList.userId = new mongoose.Types.ObjectId();
+    // it("should return 401 if the user trying to add animeList to another user", async () => {
+    //   newAnimeList.userId = new mongoose.Types.ObjectId();
 
-      const res = await exec();
-      expect(res.status).toBe(401);
-      expect(res.text).toBe("unauthorized you can't post animeList for others");
-    });
+    //   const res = await exec();
+    //   expect(res.status).toBe(401);
+    //   expect(res.text).toBe("unauthorized you can't post animeList for others");
+    // });
 
     it("should return 400 if duplicated animeList", async () => {
-      await new userAnimeList(newAnimeList).save();
+      await new userAnimeList(animeListInDb).save();
+
       const res = await exec();
       expect(res.status).toBe(400);
       expect(res.text).toBe("duplicated animeList");
@@ -204,13 +202,17 @@ describe("/api/animeList", () => {
 
     it("should return the saved anime", async () => {
       const res = await exec();
-
+      console.log(res.body);
+      console.log();
       const savedAnimeList = await userAnimeList.findById(res.body._id);
       const diff = new Date().getTime() - savedAnimeList!.created_at.getTime();
 
       expect(diff).toBeLessThan(10 * 1000);
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("userId", newAnimeList.userId.toString());
+      expect(res.body).toHaveProperty(
+        "userId",
+        animeListInDb.userId.toString()
+      );
       expect(res.body).toHaveProperty(
         "watchListIds",
         newAnimeList.watchListIds

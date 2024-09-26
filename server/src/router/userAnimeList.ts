@@ -20,14 +20,10 @@ router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  if (req.session.user?.id !== req.body.userId)
-    return res
-      .status(401)
-      .send("unauthorized you can't post animeList for others");
-
   if (await userAnimeList.findOne({ "anime.animeId": req.body.anime.animeId }))
     return res.status(400).send("duplicated animeList");
 
+  req.body.userId = req.session.user?.id;
   const savedAnimeList = await new userAnimeList(req.body).save();
   res.send(savedAnimeList);
 });
