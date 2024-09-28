@@ -50,6 +50,13 @@ class APIClient<T, D = unknown> {
       .get<T>(this.endpoint, { withCredentials: true })
       .then((res) => res.data);
   };
+
+  delete = (id: string) => {
+    const url = this.endpoint + `/${id}`;
+    return axiosInstance
+      .delete<T>(url, { withCredentials: true })
+      .then((res) => res.data);
+  };
 }
 
 export default APIClient;
