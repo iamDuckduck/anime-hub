@@ -16,6 +16,7 @@ import useAnimeList from "../hooks/useAnimeList";
 import AnimeCardContainer from "../component/AnimeCard/AnimeCardContainer";
 import AnimeCardInProfile from "../component/AnimeCard/AnimeCardInProfile";
 import useFavorite from "../hooks/useUserFavorite";
+import UserProfileLists from "../component/ProfileAnimeListsGrid";
 
 const UserProfilePage = () => {
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
@@ -47,7 +48,7 @@ const UserProfilePage = () => {
 
         <TabPanels>
           <TabPanel>
-            <p>one!</p>
+            <UserProfileLists animeLists={animeLists}></UserProfileLists>
           </TabPanel>
           <TabPanel>
             <SimpleGrid
