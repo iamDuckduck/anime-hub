@@ -44,6 +44,10 @@ router.put("/:id", auth, async (req, res) => {
 
   if (!AnimeListInDb) return res.status(400).send("invalid animeListId");
 
+  if (req.body.currentEpisode == AnimeListInDb.anime.totalEpisodes)
+    // auto complete
+    req.body.status = "Completed";
+
   const updatedAnimeList = await userAnimeList.findOneAndUpdate(
     { _id: req.params.id },
     req.body,
