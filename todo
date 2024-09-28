@@ -17,6 +17,20 @@ backend
 %add profile_image, banner image link to user model
 %changed put api to patch, allow to patch one or more property
 
+%refactor database, spearate favorite property from animelist
+(the api is not perfect tested)
+%refactor post and put request related to animelist and implement usefavorite in frontend
+%add auto status completed when currentEp = totalEp
+
+%display animeList in profile page
+
+- if (req.session.user?.id !== userFavoriteInDb.userId.toString())
+  return res
+  .status(401)
+  .send("unauthorized you can't delete other people's favoriteId");
+  add this back to animeList put and delete request
+  -add loading page( when refreshing , flashing problem due to different component has different loading time)
+
 cloudinary
 
 % handle profile and banner pic
@@ -34,7 +48,7 @@ jikan api
   %should not include createdAt and updateAt when posting
 
   %add favorite feature in frontend
-  ? add error message and success message (temp fix just navigate it to login page, and console log the error)
+
   %get favorite anime in profile page
   %data still exists after user session passed (we should delete all user data cache ) temp fix by using queryClient.setQueryData
   -anime from jikan has different property name in our database
@@ -43,10 +57,14 @@ jikan api
   -when current ep is 12/12 should change the status to Completed
   -should validate the watchListIds in userAnimeList
 
+---
+
 frontend
 %user login icon
 
 -refactor layout -> mainLayout, homeLayout -> sideBarLayout
+
+? add error message and success message (temp fix just navigate it to login page, and console log the error)
 
 - screen flashing problem (getuser info before everypage not sure is this the problem?)
   %moved getUser refetch logic to navbar (so it onlys re render nav when refetching) and data and login state will be shared by zustand
@@ -65,20 +83,6 @@ frontend
 -add watchList feature
 %add + icon for adding anime to watch list
 %modal in animeCard maybe better to put in other place for render effiency
-
-1. handle add animeList
-   %refactor database, spearate favorite property from animelist
-   (the api is not perfect tested)
-   %refactor post and put request related to animelist and implement usefavorite in frontend
-
-- display animeList in profile page
-
-2. if (req.session.user?.id !== userFavoriteInDb.userId.toString())
-   return res
-   .status(401)
-   .send("unauthorized you can't delete other people's favoriteId");
-   add this back to animeList put and delete request
-   -add loading page( when refreshing , flashing problem due to different component has different loading time)
 
 api client
 

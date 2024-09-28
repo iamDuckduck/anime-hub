@@ -1,8 +1,6 @@
 import { AnimeInList } from "./AnimeInDb";
 
-export interface AnimeList {
-  _id: string;
-  userId: string;
+export interface AnimeListPost {
   watchListIds: string[];
   status: string;
   anime: AnimeInList;
