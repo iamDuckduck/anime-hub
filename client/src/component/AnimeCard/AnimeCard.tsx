@@ -18,7 +18,7 @@ import { useIsLoggedInStore } from "../../store";
 import useAnimeListPost from "../../hooks/useAnimeListPost";
 import { useQueryClient } from "@tanstack/react-query";
 import useAnimeListPut from "../../hooks/useAnimeListPut";
-import AnimeListAddModal from "../AnimeListAddModal";
+import AnimeListModal from "../AnimeListModal";
 import { UserFavorite } from "../../entities/UserFavorite";
 import useUserFavoritePost from "../../hooks/useUserFavoritePost";
 import useUserFavoritePut from "../../hooks/useUserFavoritePut";
@@ -74,12 +74,12 @@ const AnimeCard = ({ anime, userAnimeList, userFavorite }: Props) => {
   };
   return (
     <>
-      <AnimeListAddModal
+      <AnimeListModal
         onClose={onClose}
         isOpen={isOpen}
         anime={anime}
-        matchedAnimeList={matchedAnimeList}
-      ></AnimeListAddModal>
+        animeList={matchedAnimeList}
+      ></AnimeListModal>
 
       <Card position="relative">
         <Icon
