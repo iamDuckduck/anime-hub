@@ -2,7 +2,7 @@ import { WatchList, watchListDoc } from "../../models/watchList";
 import { Types } from "mongoose";
 import mongoose from "mongoose";
 import request from "supertest";
-import { app } from "../../index";
+import app from "../../index";
 import { User, UserDoc } from "../../models/users";
 import bcrypt from "bcrypt";
 

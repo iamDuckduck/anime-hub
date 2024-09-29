@@ -1,7 +1,7 @@
 import request from "supertest";
 import { User, UserDoc } from "../../models/users";
 import { userAnimeList, userAnimeListDoc } from "../../models/userAnimeList";
-import { app } from "../../index";
+import app from "../../index";
 import _ from "lodash";
 import mongoose, { Types } from "mongoose";
 import bcrypt from "bcrypt";

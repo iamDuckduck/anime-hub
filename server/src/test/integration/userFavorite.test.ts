@@ -1,6 +1,6 @@
 import request from "supertest";
 import { User, UserDoc } from "../../models/users";
-import { app } from "../../index";
+import app from "../../index";
 import { userFavorite, userFavoriteDoc } from "../../models/userFavorite";
 import mongoose, { Types } from "mongoose";
 import bcrypt from "bcrypt";

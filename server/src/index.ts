@@ -4,16 +4,9 @@ import { logger, handleRejection } from "./startup/logger";
 import routes from "./startup/routes";
 import mongodb from "./startup/mongodb";
 import { enableCors } from "./startup/cors";
-import config from "config";
 import { enableSession } from "./startup/session";
 
-// ugly way to check private key variable is setted or not
-// if (!config.get("jwtPrivateKey")) {
-//   console.log("setup failed");
-//   process.exit(1);
-// }
-
-export const app = express();
+const app = express();
 const env = process.env.NODE_ENV;
 
 handleRejection(); //it handles unhandled rejected promise outside the route scope
@@ -29,4 +22,4 @@ env !== "test"
   : logger.info(`not listening to any port (test env)`); //we need to dynamically assign ports when testing api
 
 // // Export the app as the default export
-// module.exports = app; // Ensure this is the last line
+export default app;

@@ -1,6 +1,6 @@
 import request from "supertest";
 import { User } from "../../models/users";
-import { app } from "../../index";
+import app from "../../index";
 import bcrypt from "bcrypt";
 import { UserDoc } from "../../models/users";
 

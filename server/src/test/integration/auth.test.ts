@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../../index"; // Your Express app
+import app from "../../index"; // Your Express app
 import { User } from "../../models/users"; // Your User model
 import bcrypt from "bcrypt";
 

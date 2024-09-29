@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../../index";
+import app from "../../index";
 
 // app.get("/test", async (req, res) => {
 //   throw new Error("Test error");
