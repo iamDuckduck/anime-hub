@@ -15,6 +15,7 @@ export interface CloudinaryRes {
   imageUrl: string;
 }
 
+// if no env detected, use localhost as api endpoint
 const axiosInstance = axios.create({
   baseURL:
     import.meta.env.VITE_ENV !== "production"
