@@ -1,4 +1,8 @@
 {
-  "db": "mongodb://localhost/anime_hub",
-  "jwtPrivateKey": ""
+  "MONGO_URL": "mongodb://localhost/anime_hub",
+  "jwtPrivateKey": "1234",
+  "CLOUDINARY_CLOUD_NAME": "",
+  "CLOUDINARY_API_KEY": "",
+  "CLOUDINARY_API_SECRET": "",
+  "NODE_ENV": ""
 }
