@@ -30,7 +30,6 @@ interface Props {
 }
 
 const AnimeCard = ({ anime, userAnimeList, userFavorite }: Props) => {
-  const userData = useIsLoggedInStore((s) => s.userData); // get user data
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
 
   const queryClient = useQueryClient(); // Get the query client to invalid query

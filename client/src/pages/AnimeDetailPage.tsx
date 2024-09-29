@@ -28,7 +28,7 @@ const AnimeDetails = () => {
 
   return (
     <>
-      <SimpleGrid columns={{ base: 1, md: 2 }}>
+      <SimpleGrid padding={5} columns={{ base: 1, md: 2 }}>
         <Box>
           <Heading>{anime.data.title}</Heading>
           <ExpandableText children={anime.data.synopsis}></ExpandableText>

@@ -14,6 +14,7 @@ const HomeLayout = () => {
           base: "1fr",
           lg: "200px 1fr",
         }}
+        padding={5}
       >
         <Show above="lg">
           <GridItem area="aside">

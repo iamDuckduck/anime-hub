@@ -24,7 +24,7 @@ const Layout = () => {
         </Box>
       )}
       <NavBar></NavBar>
-      <Box padding={5}>
+      <Box>
         <Outlet></Outlet>
       </Box>
     </>
