@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Image,
   SimpleGrid,
   Tab,
   TabList,
@@ -23,6 +24,7 @@ const UserProfilePage = () => {
   const navigate = useNavigate(); // Initialize navigate
   const { data: animeLists, isLoading: isAnimeListLoading } = useAnimeList();
   const { data: userFavorites, isLoading: isFavoriteLoading } = useFavorite(); // only fetch when logged in
+  const userData = useIsLoggedInStore((s) => s.userData); // get user data
 
   const {
     mutate,
@@ -35,11 +37,25 @@ const UserProfilePage = () => {
 
   return (
     <Box>
-      <Button isDisabled={logoutIsLoading} onClick={() => mutate()}>
-        Logout
-      </Button>
+      <Box
+        position="relative"
+        backgroundImage={`url(${userData.bannerImage})`}
+        backgroundRepeat="no-repeat"
+        backgroundSize="cover" // Use cover to fill the whole box
+        backgroundPosition="center" // Center the image
+        height="300px"
+        width="100%"
+      >
+        <Image
+          position="absolute"
+          bottom={0}
+          left={120}
+          boxSize="150px"
+          src={userData.profileImage}
+        ></Image>
+      </Box>
 
-      <Tabs>
+      <Tabs isFitted>
         <TabList>
           <Tab>My animeList</Tab>
           <Tab>Favorite</Tab>
@@ -57,11 +73,16 @@ const UserProfilePage = () => {
               spacing={6}
             >
               {!isFavoriteLoading &&
-                userFavorites?.map((userFavorite) => (
-                  <AnimeCardContainer key={userFavorite._id}>
-                    <AnimeCardInProfile userFavorite={userFavorite} />
-                  </AnimeCardContainer>
-                ))}
+                userFavorites?.map((userFavorite) => {
+                  if (userFavorite.favorite) {
+                    return (
+                      <AnimeCardContainer key={userFavorite._id}>
+                        <AnimeCardInProfile userFavorite={userFavorite} />
+                      </AnimeCardContainer>
+                    );
+                  }
+                  return null; // Return null if userFavorite.favorite is false
+                })}
             </SimpleGrid>
           </TabPanel>
 
@@ -69,13 +90,17 @@ const UserProfilePage = () => {
             <ImageUpload
               imageCategory="profileImage"
               imageTitle="Avatar"
-              dimensions={{ width: "200px", height: "200px" }}
+              dimensions={{ width: 200, height: 200 }}
             ></ImageUpload>
             <ImageUpload
               imageCategory="bannerImage"
               imageTitle="Banner"
-              dimensions={{ width: "500px", height: "300px" }}
+              dimensions={{ width: 400, height: 300 }}
             ></ImageUpload>
+
+            <Button isDisabled={logoutIsLoading} onClick={() => mutate()}>
+              Logout
+            </Button>
           </TabPanel>
         </TabPanels>
       </Tabs>
