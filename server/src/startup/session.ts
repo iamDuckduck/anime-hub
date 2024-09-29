@@ -14,9 +14,9 @@ export const enableSession = (app: Express) => {
       saveUninitialized: false,
       store: MongoStore.create({ mongoUrl: db }),
       cookie: {
-        httpOnly: true,
+        // httpOnly: true,
 
-        sameSite: "none",
+        // sameSite: "none",
 
         maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (1 day)
       },
