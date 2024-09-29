@@ -19,7 +19,7 @@ const axiosInstance = axios.create({
   baseURL:
     process.env.REACT_APP_ENV !== "production"
       ? "http://localhost:3000/api/"
-      : process.env.REACT_APP_MONGO_URL,
+      : process.env.REACT_APP_BACKEND,
 });
 
 class APIClient<T, D = unknown> {
