@@ -14,10 +14,6 @@ export const enableSession = (app: Express) => {
       store: MongoStore.create({ mongoUrl: db }),
       cookie: {
         maxAge: 60 * 60 * 1000,
-
-        secure: true, // required for cookies to work on HTTPS
-        httpOnly: false,
-        sameSite: "none",
       },
     })
   );
