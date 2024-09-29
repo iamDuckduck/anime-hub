@@ -22,7 +22,7 @@ mongodb(); // connect to mongodb
 enableSession(app); // enable session
 routes(app); //set up all the routes
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 env !== "test"
   ? app.listen(port, () => logger.info(`Listening on port 3000...`))
