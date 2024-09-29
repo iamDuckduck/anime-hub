@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --watchAll --verbose --runInBand",
     "build": "tsc",
-    "start": "ts-node ./src/index.ts"
+    "start": "ts-node --files ./src/index.ts"
   },
   "keywords": [],
   "author": "",

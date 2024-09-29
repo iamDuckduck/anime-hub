@@ -20,12 +20,6 @@ handleRejection(); //it handles unhandled rejected promise outside the route sco
 enableCors(app); //enable cors when it's in development, disable in production
 mongodb(); // connect to mongodb
 enableSession(app); // enable session
-// Declare the extended session data
-declare module "express-session" {
-  interface SessionData {
-    user?: { id: string };
-  }
-}
 routes(app); //set up all the routes
 
 const port = process.env.PORT || 3000;
