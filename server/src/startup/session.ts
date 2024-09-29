@@ -10,10 +10,12 @@ export const enableSession = (app: Express) => {
     session({
       name: "connect.sid", // Default session cookie name
       secret: "yourSecretKey", // Change this to your own secret
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({ mongoUrl: db }),
       cookie: {
         httpOnly: true,
 
-        secure: true,
         sameSite: "none",
 
         maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (1 day)
