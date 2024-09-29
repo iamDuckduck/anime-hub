@@ -6,7 +6,7 @@ import { useMenuBarToggleStore } from "../store";
 
 const Layout = () => {
   const isOpen = useMenuBarToggleStore((s) => s.isOpen);
-  console.log(import.meta.env.BACK_END);
+
   return (
     <>
       {isOpen && (
