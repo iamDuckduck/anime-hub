@@ -16,7 +16,10 @@ export interface CloudinaryRes {
 }
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api/",
+  baseURL:
+    process.env.REACT_APP_ENV !== "production"
+      ? "http://localhost:3000/api/"
+      : process.env.REACT_APP_MONGO_URL,
 });
 
 class APIClient<T, D = unknown> {
