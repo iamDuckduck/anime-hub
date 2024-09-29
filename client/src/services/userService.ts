@@ -19,7 +19,7 @@ const axiosInstance = axios.create({
   baseURL:
     import.meta.env.VITE_ENV !== "production"
       ? "http://localhost:3000/api/"
-      : import.meta.env.BACK_END,
+      : import.meta.env.VITE_BACK_END,
 });
 
 class APIClient<T, D = unknown> {
