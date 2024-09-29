@@ -4,7 +4,7 @@ import MongoStore from "connect-mongo";
 import config from "config";
 
 export const enableSession = (app: Express) => {
-  const db: string = config.get("MONGO_URL");
+  const db: string = process.env.MONGO_URL || "";
 
   app.use(
     session({
