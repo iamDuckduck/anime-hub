@@ -16,7 +16,7 @@ export const enableSession = (app: Express) => {
       cookie: {
         sameSite: "none", // Required for cross-origin requests
         secure: true, // Only allow over HTTPS
-
+        domain: "anime-hub-server.vercel.app",
         maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (1 day)
       },
     })
