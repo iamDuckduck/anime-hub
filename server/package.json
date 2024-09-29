@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll --verbose --runInBand",
-    "'build'": "tsc"
+    "build": "tsc",
+    "start": "ts-node ./src/index.ts"
   },
   "keywords": [],
   "author": "",

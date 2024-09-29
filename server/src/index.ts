@@ -20,6 +20,12 @@ handleRejection(); //it handles unhandled rejected promise outside the route sco
 enableCors(app); //enable cors when it's in development, disable in production
 mongodb(); // connect to mongodb
 enableSession(app); // enable session
+// Declare the extended session data
+declare module "express-session" {
+  interface SessionData {
+    user?: { id: string };
+  }
+}
 routes(app); //set up all the routes
 
 const port = process.env.PORT || 3000;
@@ -28,5 +34,6 @@ env !== "test"
   ? app.listen(port, () => logger.info(`Listening on port 3000...`))
   : logger.info(`not listening to any port (test env)`); //we need to dynamically assign ports when testing api
 
-// Export the app as the default export
-module.exports = app; // Ensure this is the last line
+export { app };
+// // Export the app as the default export
+// module.exports = app; // Ensure this is the last line
