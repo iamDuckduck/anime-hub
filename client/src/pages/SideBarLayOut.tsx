@@ -2,7 +2,7 @@ import { Grid, GridItem, Show } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import SideBar from "../component/SideBar";
 
-const HomeLayout = () => {
+const SideBarLayout = () => {
   return (
     <>
       <Grid
@@ -21,6 +21,7 @@ const HomeLayout = () => {
             <SideBar></SideBar>
           </GridItem>
         </Show>
+
         <GridItem area="main">
           <Outlet></Outlet>
         </GridItem>
@@ -28,4 +29,4 @@ const HomeLayout = () => {
     </>
   );
 };
-export default HomeLayout;
+export default SideBarLayout;

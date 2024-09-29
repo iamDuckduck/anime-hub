@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "../pages/Layout";
+import Layout from "../pages/NavbarLayout";
 import HomePage from "../pages/HomePage";
 import AnimeDetails from "../pages/AnimeDetailPage";
 import ErrorPage from "../pages/errorPage";
 import AnimeSchedules from "../pages/AnimeSchedules";
-import HomeLayOut from "../pages/HomeLayout";
+import HomeLayOut from "../pages/SideBarLayOut";
 import AnimeSeasons from "../pages/AnimeSeasons";
 import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
