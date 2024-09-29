@@ -22,8 +22,10 @@ mongodb(); // connect to mongodb
 enableSession(app); // enable session
 routes(app); //set up all the routes
 
+const port = process.env.PORT || 3000;
+
 env !== "test"
-  ? app.listen(3000, () => logger.info(`Listening on port 3000...`))
+  ? app.listen(port, () => logger.info(`Listening on port 3000...`))
   : logger.info(`not listening to any port (test env)`); //we need to dynamically assign ports when testing api
 
 // Export the app as the default export
