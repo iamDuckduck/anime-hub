@@ -26,4 +26,5 @@ env !== "test"
   ? app.listen(3000, () => logger.info(`Listening on port 3000...`))
   : logger.info(`not listening to any port (test env)`); //we need to dynamically assign ports when testing api
 
-export { app };
+// Export the app as the default export
+module.exports = app; // Ensure this is the last line
