@@ -17,9 +17,9 @@ export interface CloudinaryRes {
 
 const axiosInstance = axios.create({
   baseURL:
-    process.env.REACT_APP_ENV !== "production"
+    import.meta.env.VITE_ENV !== "production"
       ? "http://localhost:3000/api/"
-      : process.env.REACT_APP_BACKEND,
+      : import.meta.env.BACK_END,
 });
 
 class APIClient<T, D = unknown> {

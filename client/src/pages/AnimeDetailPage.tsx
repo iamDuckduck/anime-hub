@@ -17,6 +17,7 @@ import useAnimeChara from "../hooks/useAnimeChara";
 import ScrollableList from "../component/scrollableList";
 
 const AnimeDetails = () => {
+  console.log(import.meta.env.VITE_ENV);
   const { id } = useParams();
   const { data: anime, error, isLoading } = useAnime(id!);
   const { data: charas } = useAnimeChara(id!);
