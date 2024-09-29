@@ -16,7 +16,7 @@ export const enableSession = (app: Express) => {
       cookie: {
         // httpOnly: true,
 
-        // sameSite: "none",
+        sameSite: "lax",
 
         maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (1 day)
       },
