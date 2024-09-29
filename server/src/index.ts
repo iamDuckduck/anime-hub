@@ -8,10 +8,10 @@ import config from "config";
 import { enableSession } from "./startup/session";
 
 // ugly way to check private key variable is setted or not
-if (!config.get("jwtPrivateKey")) {
-  console.log("setup failed");
-  process.exit(1);
-}
+// if (!config.get("jwtPrivateKey")) {
+//   console.log("setup failed");
+//   process.exit(1);
+// }
 
 const app = express();
 const env = process.env.NODE_ENV;
