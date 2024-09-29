@@ -13,6 +13,7 @@ export const enableSession = (app: Express) => {
       saveUninitialized: false,
       store: MongoStore.create({ mongoUrl: db }),
       cookie: {
+        domain: ".vercel.app",
         maxAge: 60 * 60 * 1000,
       },
     })
