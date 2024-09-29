@@ -11,6 +11,7 @@ export const enableSession = (app: Express) => {
       name: "connect.sid", // Default session cookie name
       secret: "yourSecretKey", // Change this to your own secret
       cookie: {
+        domain: ".vercel.app", // Share the cookie across subdomains
         sameSite: "none", // Allow cross-origin requests
         maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (1 day)
       },
