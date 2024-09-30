@@ -1,15 +1,6 @@
 import React, { useRef } from "react";
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  Flex,
-  Input,
-  Spinner,
-} from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
 import { Navigate, useNavigate } from "react-router-dom"; // Import useNavigate
-import useGetUser from "../hooks/useGetUser";
 import useLogin from "../hooks/useLogin";
 import { useIsLoggedInStore } from "../store";
 
@@ -18,13 +9,14 @@ const LoginPage = () => {
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
+  const setIsLoggedIn = useIsLoggedInStore((s) => s.setIsLoggedIn);
   const navigate = useNavigate(); // Initialize navigate
 
   const {
     mutate,
     error: mutateErr,
     isLoading: mutateIsloading,
-  } = useLogin(navigate);
+  } = useLogin(navigate, setIsLoggedIn);
 
   if (isLoggedIn == null) return <></>; // when it is null, it means we don't know whether the user login or not
   if (isLoggedIn) return <Navigate to="/profile" replace />;
