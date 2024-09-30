@@ -18,6 +18,7 @@ const SearchAnimeResult = () => {
           <HStack
             key={index}
             padding={5}
+            flexDirection={{ base: "column", md: "row" }}
             _hover={{
               backgroundColor: "#4a4a4a",
               cursor: "pointer",
@@ -30,7 +31,7 @@ const SearchAnimeResult = () => {
               borderRadius={5}
               src={anime.images.jpg.image_url}
             ></Img>
-            <Text fontSize="36px">{anime.title}</Text>
+            <Text fontSize={{ base: "16px", md: "36px" }}>{anime.title}</Text>
           </HStack>
         </Link>
       ))}
