@@ -12,6 +12,11 @@ const SideBar = () => {
   return (
     <Flex justifyContent="space-between">
       <VStack paddingY={2} align="flex-start">
+        {isOpen && (
+          <Link to="/" onClick={() => setIsOpen(false)}>
+            Home
+          </Link>
+        )}
         <Link onClick={() => setIsOpen(false)} to="/animes/seasons">
           <Box fontSize="2xl">Season</Box>
         </Link>
