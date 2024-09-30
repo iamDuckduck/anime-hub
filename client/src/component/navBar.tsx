@@ -1,4 +1,12 @@
-import { Box, Button, HStack, Image, Show, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Image,
+  Show,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import logo from "../assets/logo.webp";
 import { Link, useLocation } from "react-router-dom";
 import SearchInput from "./SeachBar/SearchInput";
@@ -52,23 +60,26 @@ const navBar = () => {
                 transition: "transform .15s ease-in",
                 cursor: "pointer",
               }}
-            ></Image>
+            />
           </Link>
         </Show>
 
         <SearchInput></SearchInput>
-
-        <Box padding={2}>
-          {!isLoading && (
-            <Link to={isLoggedIn ? "/profile" : "/login"}>
-              {isLoggedIn ? (
-                <Avatar name="Dan Abrahmov" src={data?.profileImage} />
-              ) : (
-                <Text fontWeight="bold">Login</Text>
-              )}
-            </Link>
-          )}
-        </Box>
+        <Show above="lg">
+          <Box padding={2} width="80px">
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <Link to={isLoggedIn ? "/profile" : "/login"}>
+                {isLoggedIn ? (
+                  <Avatar name="Dan Abrahmov" src={data?.profileImage} />
+                ) : (
+                  <Text fontWeight="bold">Login</Text>
+                )}
+              </Link>
+            )}
+          </Box>
+        </Show>
 
         {isOpen && (
           <Box
