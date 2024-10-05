@@ -11,9 +11,9 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const { mutate, error: signupErr } = useSignUpMutation();
-
+  console.log("hi");
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
-  if (!isLoggedIn) return <Navigate to="/profile" replace />;
+  if (isLoggedIn) return <Navigate to="/profile" replace />;
 
   return (
     <Box>
