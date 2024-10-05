@@ -43,13 +43,13 @@ const navBar = () => {
   return (
     <>
       <HStack justifyContent="space-between" padding="10px">
-        <Show below="lg">
+        <Show below="lg" ssr={false}>
           <Button onClick={() => setIsOpen(true)}>
             <HamburgerIcon color="grey"></HamburgerIcon>
           </Button>
         </Show>
 
-        <Show above="lg">
+        <Show above="lg" ssr={false}>
           <Link to="/">
             <Image
               src={logo}
@@ -65,7 +65,7 @@ const navBar = () => {
         </Show>
 
         <SearchInput></SearchInput>
-        <Show above="lg">
+        <Show above="lg" ssr={false}>
           <Box padding={2} width="80px">
             {isLoading ? (
               <Spinner />

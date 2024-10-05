@@ -4,29 +4,28 @@ import SideBar from "../component/SideBar";
 
 const SideBarLayout = () => {
   return (
-    <>
-      <Grid
-        templateAreas={{
-          base: `"main"`,
-          lg: `"aside main"`,
-        }}
-        templateColumns={{
-          base: "1fr",
-          lg: "200px 1fr",
-        }}
-        padding={5}
-      >
-        <Show above="lg">
-          <GridItem area="aside">
-            <SideBar></SideBar>
-          </GridItem>
-        </Show>
+    <Grid
+      templateAreas={{
+        base: `"main"`,
+        lg: `"aside main"`,
+      }}
+      templateColumns={{
+        base: "1fr",
+        lg: "200px 1fr",
+      }}
+      padding={{ base: "10px", lg: "26px" }}
+    >
+      <GridItem area="main">
+        <Outlet></Outlet>
+      </GridItem>
 
-        <GridItem area="main">
-          <Outlet></Outlet>
+      {/* Sidebar is only visible on large screens (lg and above) or it still takes up the */}
+      <Show above="lg" ssr={false}>
+        <GridItem area="aside">
+          <SideBar />
         </GridItem>
-      </Grid>
-    </>
+      </Show>
+    </Grid>
   );
 };
 export default SideBarLayout;
