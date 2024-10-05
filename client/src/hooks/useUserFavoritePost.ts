@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import APIClient from "../services/userService";
+import UserAPIClient from "../services/userService";
 import { NavigateFunction } from "react-router-dom";
 import { UserFavorite } from "../entities/UserFavorite";
 
-const userFavoriteUploadClient = new APIClient<UserFavorite, UserFavorite>(
+const userFavoriteUploadClient = new UserAPIClient<UserFavorite, UserFavorite>(
   "favorite"
 );
 

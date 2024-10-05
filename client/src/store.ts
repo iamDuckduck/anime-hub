@@ -99,16 +99,25 @@ export const useAnimeSeasonTypeFilterStore = create<AnimeSeasonTypeFilterStore>(
 );
 
 interface IsLoggedInStore {
-  isLoggedIn: boolean | undefined;
+  isLoggedIn: boolean;
   userData: userData;
-  setIsLoggedIn: (state: boolean) => void;
+  setIsLoggedIn: (token: string | undefined | null) => void;
   setUserData: (userData: userData) => void;
 }
 
 export const useIsLoggedInStore = create<IsLoggedInStore>((set) => ({
-  isLoggedIn: undefined,
+  isLoggedIn: false,
   userData: {} as userData,
-  setIsLoggedIn: (state: boolean) => set(() => ({ isLoggedIn: state })),
+  setIsLoggedIn: (token: string | undefined | null) => {
+    // If state is false, remove the token from localStorage
+    if (!token) {
+      localStorage.removeItem("myToken");
+      set(() => ({ isLoggedIn: false }));
+    } else {
+      localStorage.setItem("myToken", token);
+      set(() => ({ isLoggedIn: true }));
+    }
+  },
   setUserData: (userData: userData) => set(() => ({ userData: userData })),
 }));
 

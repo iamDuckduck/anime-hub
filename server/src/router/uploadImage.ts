@@ -26,7 +26,7 @@ router.post(
     await cloudinary.v2.uploader
       .upload_stream(
         {
-          public_id: `${req.session.user?.id}_${req.file.originalname}`,
+          public_id: `${req.user?.id}_${req.file.originalname}`,
           resource_type: "image",
         },
         (error, result) => {

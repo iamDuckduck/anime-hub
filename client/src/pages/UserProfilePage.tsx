@@ -3,6 +3,7 @@ import {
   Button,
   Image,
   SimpleGrid,
+  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -20,7 +21,6 @@ import useFavorite from "../hooks/useUserFavorite";
 import UserProfileLists from "../component/ProfileAnimeListsGrid";
 
 const UserProfilePage = () => {
-  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   const navigate = useNavigate(); // Initialize navigate
   const { data: animeLists, isLoading: isAnimeListLoading } = useAnimeList();
   const { data: userFavorites, isLoading: isFavoriteLoading } = useFavorite(); // only fetch when logged in
@@ -30,7 +30,9 @@ const UserProfilePage = () => {
     mutate,
     isLoading: logoutIsLoading,
     error: logoutError,
-  } = useLogout(navigate);
+  } = useLogout();
+
+  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
 
   if (!isLoggedIn) return <Navigate to="/login" replace />;
   if (logoutError) return <p>logout error</p>;
@@ -64,7 +66,11 @@ const UserProfilePage = () => {
 
         <TabPanels>
           <TabPanel>
-            <UserProfileLists animeLists={animeLists}></UserProfileLists>
+            {isAnimeListLoading ? (
+              <Spinner></Spinner>
+            ) : (
+              <UserProfileLists animeLists={animeLists}></UserProfileLists>
+            )}
           </TabPanel>
           <TabPanel>
             <SimpleGrid

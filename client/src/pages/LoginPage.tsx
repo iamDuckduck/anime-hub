@@ -7,18 +7,11 @@ import { useIsLoggedInStore } from "../store";
 const LoginPage = () => {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
-
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
-  const setIsLoggedIn = useIsLoggedInStore((s) => s.setIsLoggedIn);
   const navigate = useNavigate(); // Initialize navigate
 
-  const {
-    mutate,
-    error: mutateErr,
-    isLoading: mutateIsloading,
-  } = useLogin(navigate, setIsLoggedIn);
+  const { mutate, error: mutateErr, isLoading: mutateIsloading } = useLogin();
 
-  if (isLoggedIn == null) return <></>; // when it is null, it means we don't know whether the user login or not
   if (isLoggedIn) return <Navigate to="/profile" replace />;
 
   return (

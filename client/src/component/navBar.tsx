@@ -25,19 +25,16 @@ const navBar = () => {
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
 
   const queryClient = useQueryClient();
-  const location = useLocation();
 
-  const setIsLoggedIn = useIsLoggedInStore((s) => s.setIsLoggedIn);
-  const setUserData = useIsLoggedInStore((s) => s.setUserData);
-  const { data, isLoading } = useGetUser(
-    setIsLoggedIn,
-    setUserData,
-    queryClient
-  ); // it returns error if user not auth
+  const { data, isLoading } = useGetUser(); // it returns error if user not auth
 
   // Invalidate the query on route change
+
   useEffect(() => {
-    queryClient.invalidateQueries(["userInfo"]);
+    if (isLoggedIn) {
+      //only do it when user is logged in and we keep track of it
+      queryClient.invalidateQueries(["userInfo"]);
+    }
   }, [location.pathname]); // Invalidate on pathname change
 
   return (
