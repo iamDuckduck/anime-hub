@@ -8,7 +8,7 @@ import AnimeSeasons from "../pages/AnimeSeasons";
 import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
 import UserProfilePage from "../pages/UserProfilePage";
-import SideBarLayout from "../pages/SidebarLayout";
+import SideBarLayout from "../pages/SideBarLayout";
 
 const router = createBrowserRouter([
   {
