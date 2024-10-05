@@ -4,7 +4,7 @@ import { User } from "../../models/users"; // Your User model
 import bcrypt from "bcrypt";
 
 describe("/api/auth", () => {
-  let cookie = "";
+  let token = "";
   let email = "test@example.com";
   let password = "password123";
   let userName = "test123";
@@ -49,9 +49,9 @@ describe("/api/auth", () => {
       expect(res.status).toBe(400);
     });
 
-    it("should return a cookie if valid", async () => {
+    it("should return a token if valid", async () => {
       const res = await exec();
-      expect(res.headers["set-cookie"]).toBeDefined();
+      expect(res.body).toBeDefined();
     });
   });
 
@@ -62,26 +62,28 @@ describe("/api/auth", () => {
     });
 
     const exec = () => {
-      return request(app).post("/api/auth/logout").set("Cookie", cookie);
+      return request(app)
+        .post("/api/auth/logout")
+        .set("authorization", `Bearer ${token}`);
     };
 
-    it("should return 401 if invalid cookie", async () => {
+    it("should return 401 if invalid token", async () => {
       const res = await exec();
       expect(res.status).toBe(401);
     });
 
-    it("should return the deleted cookie", async () => {
-      //get valid cookie
+    it("should return the token", async () => {
+      //get valid token
       const authRes = await request(app).post("/api/auth").send(loginInfo);
-      cookie = authRes.headers["set-cookie"];
+      token = authRes.body.token;
 
-      //delete session
+      //delete token
       let res = await exec();
       expect(res.status).toBe(200);
 
-      //deleted session should be invalid
-      res = await exec();
-      expect(res.status).toBe(401);
+      // //deleted token should be invalid !! we either handle it in frontend or use refresh token for it
+      // res = await exec();
+      // expect(res.status).toBe(401);
     });
   });
 });

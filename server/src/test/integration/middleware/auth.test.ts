@@ -6,15 +6,14 @@ import request from "supertest";
 describe("auth middleware", () => {
   let email: string = "123451@gmail.com";
   let password: string = "12345";
-  let cookie: string = "";
+  let token: string = "";
 
   //get auth
   const login = async () => {
     const authRes = await request(app)
       .post("/api/auth")
       .send({ email, password });
-
-    return authRes.headers["set-cookie"][0];
+    return authRes.body.token;
   };
 
   //save user
@@ -32,7 +31,7 @@ describe("auth middleware", () => {
 
   beforeEach(async () => {
     await saveUser();
-    cookie = await login();
+    token = await login();
   });
 
   afterEach(async () => {
@@ -40,18 +39,28 @@ describe("auth middleware", () => {
   });
 
   const exec = function () {
-    return request(app).get("/api/users/me").set("Cookie", cookie); // Include the full cookie string
-    // Expect HTTP status 200
+    return request(app)
+      .get("/api/users/me")
+      .set("Content-Type", "application/json")
+      .set("authorization", `Bearer ${token}`); // Pass the JWT token
   };
 
   it("should return 401 if the user did not login", async () => {
-    cookie = "";
+    token = "";
     const res = await exec();
     expect(res.status).toBe(401);
   });
 
+  it("should return 403 if authorization is undefinded", async () => {
+    const res = await request(app)
+      .get("/api/users/me")
+      .set("Content-Type", "application/json")
+      .set("authorization", ""); // Pass the JWT token
+
+    expect(res.status).toBe(403);
+  });
+
   it("should return 200 if a valid session is passed", async () => {
-    cookie = await login();
     const res = await exec();
     expect(res.status).toBe(200);
   });

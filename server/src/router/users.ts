@@ -13,7 +13,8 @@ interface savedUser {
 const router = Express.Router();
 
 router.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.session.user?.id).select("-password");
+  //have to make a function to decry token and get id
+  const user = await User.findById(req.user?.id).select("-password");
   res.status(200).send(user);
 });
 
@@ -37,7 +38,7 @@ router.post("/", async (req, res) => {
     ..._.pick(user, ["_id", "userName", "email"]),
   };
 
-  req.session.user = { id: user._id.toString() };
+  // req.session.user = { id: user._id.toString() };
 
   res.status(200).send(savedUser);
 });
@@ -55,7 +56,7 @@ router.put("/", auth, async (req, res) => {
   if (error) return res.status(400).send(error);
 
   // we get the userfromdbv
-  const userInDb = await User.findById(req.session.user?.id).select({
+  const userInDb = await User.findById(req.user?.id).select({
     userName: 1,
     email: 1,
     password: 1,
@@ -97,7 +98,7 @@ router.put("/", auth, async (req, res) => {
   }
 
   const updatedUser = await User.findOneAndUpdate(
-    { _id: req.session.user?.id }, // Update user with matching userId
+    { _id: req.user?.id }, // Update user with matching userId
     req.body, // New user data to update
     { new: true } // Return the updated user data
   );
@@ -107,7 +108,7 @@ router.put("/", auth, async (req, res) => {
 
 router.delete("/", auth, async (req, res) => {
   const deletedUser = await User.findOneAndDelete({
-    _id: req.session.user?.id,
+    _id: req.user?.id,
   });
   res.status(200).send(deletedUser);
 });
