@@ -1,7 +1,24 @@
 import { useEffect, useState } from "react";
 import AnimeSchedule from "../component/AnimeSchedule";
 import { useSearchScheduleStore } from "../store";
-import { Checkbox, HStack } from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
+import year from "react-datepicker/dist/year";
+import AnimeSeason from "../component/AnimeSeason";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { setYear } from "react-datepicker/dist/date_utils";
 
 const AnimeSchedules = () => {
   const days = [
@@ -13,36 +30,42 @@ const AnimeSchedules = () => {
     "Saturday",
     "Sunday",
   ];
-
-  // to render animeSchedule and send api query one by one, avoid overloading error
-  const [renderIndex, setRenderIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const kidContent = useSearchScheduleStore((s) => s.kidContent);
   const setKidContent = useSearchScheduleStore((s) => s.setKidContent);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log(renderIndex);
-      setRenderIndex((prevIndex) => prevIndex + 1);
-    }, 650);
-
-    return () => clearTimeout(timer);
-  }, [renderIndex < days.length ? renderIndex : null]);
-
   return (
     <>
-      <HStack justifyContent="end" padding={5}>
-        <Checkbox
-          isChecked={!kidContent}
-          onChange={() => setKidContent(kidContent ? false : true)}
-        >
-          Filter KidContent
-        </Checkbox>
-      </HStack>
+      <Menu>
+        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+          {kidContent ? "Only Kids Content" : "Exclude Kids Content"}
+        </MenuButton>
+        <MenuList maxHeight="200px" overflowY="scroll">
+          <MenuItem onClick={() => setKidContent(false)}>
+            Exclude Kids Content
+          </MenuItem>
+          <MenuItem onClick={() => setKidContent(true)}>
+            Only Kids Content
+          </MenuItem>
+        </MenuList>
+      </Menu>
 
-      {days.slice(0, renderIndex).map((d) => (
-        <AnimeSchedule day={d} key={d}></AnimeSchedule>
-      ))}
+      <Tabs paddingY={5} onChange={(index) => setTabIndex(index)}>
+        <TabList display="flex" flexWrap="wrap">
+          {days.map((s) => (
+            <Tab key={s}>{s}</Tab>
+          ))}
+        </TabList>
+
+        <TabPanels>
+          {days.map((d, i) => (
+            <TabPanel paddingX={0} key={i}>
+              {tabIndex == i && <AnimeSchedule day={d}></AnimeSchedule>}
+            </TabPanel>
+          ))}
+        </TabPanels>
+      </Tabs>
     </>
   );
 };

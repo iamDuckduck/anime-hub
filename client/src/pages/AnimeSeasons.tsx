@@ -71,7 +71,7 @@ const AnimeSeasons = () => {
       </HStack>
 
       <Tabs paddingY={5} onChange={(index) => setTabIndex(index)}>
-        <TabList>
+        <TabList display="flex" flexWrap="wrap">
           {seasons.map((s) => (
             <Tab key={s}>{s}</Tab>
           ))}
@@ -79,7 +79,7 @@ const AnimeSeasons = () => {
 
         <TabPanels>
           {seasons.map((s, i) => (
-            <TabPanel key={i}>
+            <TabPanel paddingX={0} key={i}>
               {tabIndex == i && (
                 <AnimeSeason year={year.toString()} season={s}></AnimeSeason>
               )}
