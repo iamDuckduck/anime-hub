@@ -4,6 +4,7 @@ import { auth } from "../middleware/auth";
 import bcrypt from "bcrypt";
 import _ from "lodash";
 import { Types } from "mongoose";
+import jwt from "jsonwebtoken";
 
 interface savedUser {
   _id: Types.ObjectId;
@@ -38,9 +39,16 @@ router.post("/", async (req, res) => {
     ..._.pick(user, ["_id", "userName", "email"]),
   };
 
-  // req.session.user = { id: user._id.toString() };
+  const secretOrPrivateKey = process.env.anime_jwtPrivateKey;
+  if (!secretOrPrivateKey) {
+    throw new Error("JWT secret is undefined! Make sure it's set.");
+  }
 
-  res.status(200).send(savedUser);
+  const token = jwt.sign({ id: user._id.toString() }, secretOrPrivateKey, {
+    expiresIn: "1h",
+  });
+
+  res.status(200).send({ ...savedUser, token });
 });
 
 interface UpdateUserBody {

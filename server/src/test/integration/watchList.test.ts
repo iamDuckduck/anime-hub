@@ -16,8 +16,7 @@ describe("/api/watchList", () => {
     const authRes = await request(app)
       .post("/api/auth")
       .send({ email, password });
-
-    return authRes.headers["set-cookie"][0];
+    return authRes.body.token;
   };
 
   //save user
@@ -38,20 +37,23 @@ describe("/api/watchList", () => {
   });
 
   describe("GET /myList", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
     });
 
     const exec = function () {
-      return request(app).get("/api/watchList/myList").set("Cookie", cookie);
+      return request(app)
+        .get("/api/watchList/myList")
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`); // Pass the JWT token
     };
 
     it("should return 401 if the user didn't login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -73,7 +75,7 @@ describe("/api/watchList", () => {
   });
 
   describe("Post /", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
     let newWatchList: {
       userId: Types.ObjectId;
@@ -82,18 +84,19 @@ describe("/api/watchList", () => {
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
     });
 
     const exec = function () {
       return request(app)
         .post("/api/watchList/")
-        .set("Cookie", cookie)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`) // Pass the JWT token
         .send(newWatchList);
     };
 
     it("should return 401 if the user didn't login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -173,7 +176,7 @@ describe("/api/watchList", () => {
   });
 
   describe("Put /:id", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
 
     let watchListInDb: watchListDoc;
@@ -185,7 +188,7 @@ describe("/api/watchList", () => {
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       watchListInDb = await new WatchList({
         userId: userInDb._id,
@@ -202,12 +205,13 @@ describe("/api/watchList", () => {
     const exec = function () {
       return request(app)
         .put(`/api/watchList/${watchListId}`)
-        .set("Cookie", cookie)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`) // Pass the JWT token
         .send({ newWatchList });
     };
 
     it("should return 401 if the user didn't login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -265,7 +269,7 @@ describe("/api/watchList", () => {
   });
 
   describe("DELETE /:id", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
 
     let watchListInDb: watchListDoc;
@@ -273,7 +277,7 @@ describe("/api/watchList", () => {
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       watchListInDb = await new WatchList({
         userId: userInDb._id,
@@ -285,11 +289,12 @@ describe("/api/watchList", () => {
     const exec = function () {
       return request(app)
         .delete(`/api/watchList/${watchListId}`)
-        .set("Cookie", cookie);
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`); // Pass the JWT token
     };
 
     it("should return 401 if not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });

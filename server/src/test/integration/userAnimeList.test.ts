@@ -33,8 +33,7 @@ describe("/api/animeList", () => {
     const authRes = await request(app)
       .post("/api/auth")
       .send({ email, password });
-
-    return authRes.headers["set-cookie"][0];
+    return authRes.body.token;
   };
 
   //save user
@@ -56,13 +55,13 @@ describe("/api/animeList", () => {
   });
 
   describe("Get /myList", () => {
-    let cookie: string = "";
+    let token: string = "";
     let userInDb: UserDoc;
     let userAnimeListInDb: userAnimeListDoc;
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       //save animeList
       userAnimeListInDb = new userAnimeList(
@@ -75,11 +74,12 @@ describe("/api/animeList", () => {
     const exec = function () {
       return request(app)
         .get("/api/userAnimeList/myList")
-        .set("Cookie", cookie);
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`);
     };
 
     it("should return 401 if the user did not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -113,14 +113,14 @@ describe("/api/animeList", () => {
   });
 
   describe("Post /", () => {
-    let cookie: string = "";
+    let token: string = "";
     let userInDb: UserDoc;
     let newAnimeList: any;
     let animeListInDb: any;
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       newAnimeList = JSON.parse(JSON.stringify(animeListTemplate));
       delete newAnimeList.userId;
@@ -131,12 +131,13 @@ describe("/api/animeList", () => {
     const exec = function () {
       return request(app)
         .post("/api/userAnimeList")
-        .set("Cookie", cookie)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`)
         .send(newAnimeList);
     };
 
     it("should return 401 if the user did not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -229,7 +230,7 @@ describe("/api/animeList", () => {
   });
 
   describe("Put /:id", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
     let id: string;
     let newAnimeList: any;
@@ -237,7 +238,7 @@ describe("/api/animeList", () => {
     let userAnimeListInDb: userAnimeListDoc;
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       userAnimeListInDb = new userAnimeList(
         JSON.parse(JSON.stringify(animeListTemplate))
@@ -253,12 +254,13 @@ describe("/api/animeList", () => {
     const exec = function () {
       return request(app)
         .put(`/api/userAnimeList/${id}`)
-        .set("Cookie", cookie)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`)
         .send(newAnimeList);
     };
 
     it("should return 401 if user no login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -375,14 +377,14 @@ describe("/api/animeList", () => {
   });
 
   describe("Delete /:id", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
     let id: string;
 
     let userAnimeListInDb: userAnimeListDoc;
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       userAnimeListInDb = new userAnimeList(
         JSON.parse(JSON.stringify(animeListTemplate))
@@ -396,11 +398,12 @@ describe("/api/animeList", () => {
     const exec = function () {
       return request(app)
         .delete(`/api/userAnimeList/${id}`)
-        .set("Cookie", cookie);
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`);
     };
 
     it("should return 400 if user no login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });

@@ -1,7 +1,10 @@
-import "express-session";
+// types.d.ts
+import "express";
 
-declare module "express-session" {
-  interface SessionData {
-    user?: { id: string }; // Adjust this to match your user structure
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
   }
 }

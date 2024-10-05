@@ -5,16 +5,16 @@ import mongoose from "mongoose";
 const router = Express.Router();
 
 router.get("/myList", auth, async (req, res) => {
-  const watchList = await WatchList.findOne({ userId: req.session.user?.id });
+  const watchList = await WatchList.findOne({ userId: req.user?.id });
   res.send(watchList);
 });
 
 router.post("/", auth, async (req, res) => {
-  if (req.body.userId !== req.session.user?.id)
-    return res.status(401).send("you can't add watchList for another user");
-
   const { error } = validate(req.body);
   if (error) return res.status(400).send("invalid info");
+
+  if (req.body.userId !== req.user?.id)
+    return res.status(401).send("you can't add watchList for another user");
 
   if (await WatchList.findOne({ name: req.body.name }))
     return res.status(400).send("duplicated watchList");
@@ -34,7 +34,7 @@ router.put("/:id", auth, async (req, res) => {
   if (!watchListId)
     return res.status(400).send("provided watchListId not found");
 
-  if (req.body.newWatchList.userId !== req.session.user?.id)
+  if (req.body.newWatchList.userId !== req.user?.id)
     return res.status(401).send("you can't modify other user's watchList");
 
   const updatedUser = await WatchList.findOneAndUpdate(
@@ -54,7 +54,7 @@ router.delete("/:id", auth, async (req, res) => {
 
   if (!watchListInDb) return res.status(400).send("watchList not found");
 
-  if (watchListInDb.userId.toString() !== req.session.user?.id)
+  if (watchListInDb.userId.toString() !== req.user?.id)
     return res.status(401).send("unauthorized");
 
   const deletedWatchList = await WatchList.findByIdAndDelete(req.params.id);

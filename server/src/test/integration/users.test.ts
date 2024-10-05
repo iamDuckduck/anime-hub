@@ -18,8 +18,7 @@ describe("/api/users", () => {
     const authRes = await request(app)
       .post("/api/auth")
       .send({ email, password });
-
-    return authRes.headers["set-cookie"][0];
+    return authRes.body.token;
   };
 
   //save user
@@ -41,19 +40,22 @@ describe("/api/users", () => {
   });
 
   describe("GET /me ", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
     });
 
     const exec = function () {
-      return request(app).get("/api/users/me").set("Cookie", cookie);
+      return request(app)
+        .get("/api/users/me")
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`); // Pass the JWT token
     };
 
     it("should return 401 if the user did not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -130,11 +132,16 @@ describe("/api/users", () => {
       expect(res.body).toHaveProperty("userName", user.userName);
       expect(res.body).toHaveProperty("email", user.email);
     });
+
+    it("should return the token if it is valid", async () => {
+      const res = await exec();
+      expect(res.body.token).toBeDefined();
+    });
   });
 
-  describe("PUt /", () => {
-    let cookie = "";
-    let userInDb: UserDoc; //idk what is the returned type of User(user).save()
+  describe("Put /", () => {
+    let token = "";
+    let userInDb: UserDoc;
     let newUserInfo: {
       userName?: string;
       email?: string;
@@ -145,7 +152,7 @@ describe("/api/users", () => {
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
       newUserInfo = {
         userName: userName,
         email: email,
@@ -160,12 +167,13 @@ describe("/api/users", () => {
     const exec = function () {
       return request(app)
         .put("/api/users/")
-        .set("Cookie", cookie)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`) // Pass the JWT token
         .send(newUserInfo);
     };
 
     it("should return 401 if the user did not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -273,20 +281,23 @@ describe("/api/users", () => {
   });
 
   describe("Delete /", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc; //idk what is the returned type of User(user).save()
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
     });
 
     const exec = function () {
-      return request(app).delete("/api/users/").set("Cookie", cookie);
+      return request(app)
+        .delete("/api/users/")
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`); // Pass the JWT token;
     };
 
     it("should return 401 if the user did not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });

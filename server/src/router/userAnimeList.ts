@@ -11,7 +11,7 @@ const router = Express.Router();
 
 router.get("/myList", auth, async (req, res) => {
   const userAnimeListInDb = await userAnimeList.find({
-    userId: req.session.user?.id,
+    userId: req.user?.id,
   });
   return res.send(userAnimeListInDb);
 });
@@ -23,12 +23,12 @@ router.post("/", auth, async (req, res) => {
   if (
     await userAnimeList.findOne({
       "anime.animeId": req.body.anime.animeId,
-      userId: req.session.user?.id,
+      userId: req.user?.id,
     })
   )
     return res.status(400).send("duplicated animeList");
 
-  req.body.userId = req.session.user?.id;
+  req.body.userId = req.user?.id;
   const savedAnimeList = await new userAnimeList(req.body).save();
   res.send(savedAnimeList);
 });

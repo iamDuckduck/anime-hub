@@ -25,12 +25,12 @@ describe("api/favorite", () => {
     favorite: true,
   };
 
+  //get auth
   const login = async () => {
     const authRes = await request(app)
       .post("/api/auth")
       .send({ email, password });
-
-    return authRes.headers["set-cookie"][0];
+    return authRes.body.token;
   };
 
   //save user
@@ -52,13 +52,13 @@ describe("api/favorite", () => {
   });
 
   describe("Get", () => {
-    let cookie: string = "";
+    let token: string = "";
     let userInDb: UserDoc;
     let userFavoriteInDb: userFavoriteDoc;
 
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       //save favorite
       userFavoriteInDb = new userFavorite(
@@ -69,11 +69,14 @@ describe("api/favorite", () => {
     });
 
     const exec = function () {
-      return request(app).get("/api/favorite").set("Cookie", cookie);
+      return request(app)
+        .get("/api/favorite")
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`);
     };
 
     it("should return 401 if the user did not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -91,13 +94,13 @@ describe("api/favorite", () => {
   });
 
   describe("Post", () => {
-    let cookie: string = "";
+    let token: string = "";
     let userInDb: UserDoc;
     let newUserFavorite: any;
     let userFavoriteInDb: any;
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       //save favorite
       newUserFavorite = JSON.parse(JSON.stringify(favoriteTemplate));
@@ -110,12 +113,13 @@ describe("api/favorite", () => {
     const exec = function () {
       return request(app)
         .post("/api/favorite")
-        .set("Cookie", cookie)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`)
         .send(newUserFavorite);
     };
 
     it("should return 401 if the user did not login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -181,7 +185,7 @@ describe("api/favorite", () => {
     //   });
   });
   describe("put /:id", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
     let id: string;
     let newUserFavoritePutReq: any;
@@ -189,7 +193,7 @@ describe("api/favorite", () => {
     let userFavoriteInDb: userFavoriteDoc;
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       userFavoriteInDb = new userFavorite(
         JSON.parse(JSON.stringify(favoriteTemplate))
@@ -204,12 +208,13 @@ describe("api/favorite", () => {
     const exec = function () {
       return request(app)
         .put(`/api/favorite/${id}`)
-        .set("Cookie", cookie)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`)
         .send(newUserFavoritePutReq);
     };
 
     it("should return 401 if user no login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
@@ -278,14 +283,14 @@ describe("api/favorite", () => {
   });
 
   describe("delete /:id", () => {
-    let cookie = "";
+    let token = "";
     let userInDb: UserDoc;
     let id: string;
 
     let userFavoriteInDb: userFavoriteDoc;
     beforeEach(async () => {
       userInDb = await saveUser();
-      cookie = await login();
+      token = await login();
 
       userFavoriteInDb = new userFavorite(
         JSON.parse(JSON.stringify(favoriteTemplate))
@@ -297,11 +302,14 @@ describe("api/favorite", () => {
     });
 
     const exec = function () {
-      return request(app).delete(`/api/favorite/${id}`).set("Cookie", cookie);
+      return request(app)
+        .delete(`/api/favorite/${id}`)
+        .set("Content-Type", "application/json")
+        .set("authorization", `Bearer ${token}`);
     };
 
     it("should return 400 if user no login", async () => {
-      cookie = "";
+      token = "";
       const res = await exec();
       expect(res.status).toBe(401);
     });
