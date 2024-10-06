@@ -20,10 +20,6 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -125,12 +121,12 @@ Ensure that MongoDB is running when using the application, either locally or usi
    ```
 4. Ensure the following environment variables are set. Use the set command for Windows or export for macOS/Linux. Make sure NODE_ENV is set to development.
    ```sh
-   anime_jwtPrivateKey
-   NODE_ENV
-   CLOUDINARY_CLOUD_NAME
-   CLOUDINARY_API_KEY
-   CLOUDINARY_API_SECRET
-   MONGO_URL=mongodb
+   anime_jwtPrivateKey=yourPrivateKey
+   NODE_ENV=development
+   CLOUDINARY_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   MONGO_URL=your_mongo_url
    ```
 5. Run the backend and frontend:
    ```sh
@@ -147,24 +143,52 @@ Ensure that MongoDB is running when using the application, either locally or usi
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+This web application allows users to browse anime, manage personal anime lists, and track their favorite shows. Below are some examples of how to interact with the key features.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+### 1. **Browse and Search Anime**
+   * On the homepage, you can search for anime by title using the search bar.
+   * The app fetches anime data from the Jikan API, allowing you to see detailed information such as synopsis, genres, and episodes.
+   * Example search for **Naruto**:
+     ![Search Example](https://github.com/iamDuckduck/anime-hub/images/search-example.png)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### 2. **Create a Personal Anime List**
+   * After logging in, you can create a personalized watchlist by adding anime to your **Anime List**.
+   * Navigate to the anime detail page, and click the **Add to List** button to include the anime in your list.
+   * Your list keeps track of what you’re currently watching, plan to watch, or have completed.
 
+### 3. **Manage Watchlists**
+   * You can access your anime list under the **My List** section.
+   * Here, you can update the status of anime (e.g., currently watching, completed, etc.), or remove items from the list.
+   * Example of managing your watchlist:
+     ![Manage List](https://github.com/iamDuckduck/anime-hub/images/manage-list.png)
+
+### 4. **Track Watching Progress**
+   * For each anime in your watchlist, you can update the episode number to track your progress.
+   * When you finish an episode, simply click the **Update Progress** button.
+
+### 5. **Mark Anime as Favorite**
+   * You can mark an anime as a favorite by clicking the **Add to Favorites** button on the anime's detail page.
+   * Your favorite anime will be highlighted in your **Favorites** section.
+
+### 6. **Login and User Authentication**
+   * The web app uses **JWT-based authentication** for secure login.
+   * You must log in to save anime to your list, update your progress, or manage favorites.
+   * Example login screen:
+     ![Login](https://github.com/iamDuckduck/anime-hub/images/login-example.png)
 
 
 <!-- ROADMAP -->
 ## Roadmap
+- [ ] Improve UI layout for a better user experience
+- [ ] Refactor codebase for better scalability and organization
+- [ ] Refactor database structure to accommodate future features
+- [ ] Handle user account deletion and information updates
+- [ ] Implement periodic updates to saved anime data (to avoid outdated information from the API)
+- [ ] Allow users to create custom watchlists
+- [ ] Add functionality for users to search and view other users' watchlists
+- [ ] Add a page to show recent user activity
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
+
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
