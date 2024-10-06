@@ -159,8 +159,6 @@ This web application allows users to browse anime, manage personal anime lists, 
 ### 3. **Manage Watchlists**
    * You can access your anime list under the **My List** section.
    * Here, you can update the status of anime (e.g., currently watching, completed, etc.), or remove items from the list.
-   * Example of managing your watchlist:
-     ![Manage List](https://github.com/iamDuckduck/anime-hub/images/manage-list.png)
 
 ### 4. **Track Watching Progress**
    * For each anime in your watchlist, you can update the episode number to track your progress.
@@ -173,9 +171,6 @@ This web application allows users to browse anime, manage personal anime lists, 
 ### 6. **Login and User Authentication**
    * The web app uses **JWT-based authentication** for secure login.
    * You must log in to save anime to your list, update your progress, or manage favorites.
-   * Example login screen:
-     ![Login](https://github.com/iamDuckduck/anime-hub/images/login-example.png)
-
 
 <!-- ROADMAP -->
 ## Roadmap
