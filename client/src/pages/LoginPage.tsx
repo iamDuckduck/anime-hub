@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
-import { Alert, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
+import { Box, Button, Flex, Input } from "@chakra-ui/react";
 import { Navigate, useNavigate } from "react-router-dom"; // Import useNavigate
 import useLogin from "../hooks/useLogin";
 import { useIsLoggedInStore } from "../store";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage = () => {
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -10,19 +11,12 @@ const LoginPage = () => {
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   const navigate = useNavigate(); // Initialize navigate
 
-  const { mutate, error: mutateErr, isLoading: mutateIsloading } = useLogin();
+  const { mutate, isLoading: mutateIsloading } = useLogin();
 
   if (isLoggedIn) return <Navigate to="/profile" replace />;
 
   return (
     <Box>
-      {mutateErr && ( //return the response if exist
-        <Alert status="error" marginBottom={10}>
-          <AlertIcon />
-          {mutateErr?.response?.data || mutateErr?.message}
-        </Alert>
-      )}
-
       <Box display="flex" justifyContent="center">
         <Flex
           direction="column"

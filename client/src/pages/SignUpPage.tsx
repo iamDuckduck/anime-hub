@@ -11,19 +11,11 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const { mutate, error: signupErr } = useSignUpMutation();
-  console.log("hi");
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
   if (isLoggedIn) return <Navigate to="/profile" replace />;
 
   return (
     <Box>
-      {signupErr && ( //return the response if exist
-        <Alert status="error" marginBottom={10}>
-          <AlertIcon />
-          {signupErr?.response?.data}
-        </Alert>
-      )}
-
       <Box display="flex" justifyContent="center">
         <Flex
           direction="column"
