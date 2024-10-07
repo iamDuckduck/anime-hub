@@ -44,8 +44,8 @@ const UserProfileLists = ({ animeLists }: Props) => {
       }}
     >
       <GridItem area="aside">
-        {statuses.map((status) => (
-          <List padding={2}>
+        {statuses.map((status, index) => (
+          <List padding={2} key={index}>
             <Button
               whiteSpace="normal"
               textAlign="left"
@@ -65,7 +65,7 @@ const UserProfileLists = ({ animeLists }: Props) => {
       </GridItem>
       <GridItem area="main">
         {uniqueStatusValues.map((status) => (
-          <Flex flexDirection="column">
+          <Flex key={status} flexDirection="column">
             <Heading paddingY={5} fontSize={26}>
               {status}
             </Heading>
@@ -78,7 +78,9 @@ const UserProfileLists = ({ animeLists }: Props) => {
               {animeLists
                 ?.filter((animelist) => animelist.status == status)
                 .map((animeList) => (
-                  <UserProfileList animeList={animeList}></UserProfileList>
+                  <Box key={animeList._id}>
+                    <UserProfileList animeList={animeList}></UserProfileList>
+                  </Box>
                 ))}
             </Box>
           </Flex>
