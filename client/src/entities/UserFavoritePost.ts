@@ -1,7 +1,7 @@
-export interface UserFavorite {
-  _id: string;
-  userId: string;
-  anime: {
+export interface UserFavoritePost {
+  _id?: string;
+  userId?: string;
+  anime?: {
     animeId: string;
     format: string;
     title: string;
@@ -13,5 +13,5 @@ export interface UserFavorite {
     status: string;
   };
   favorite: boolean;
-  updated_at: Date;
+  updated_at?: Date;
 }
