@@ -10,19 +10,20 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import ImageUpload from "../component/ImageUpload";
 import useLogout from "../hooks/useLogout";
 import { useIsLoggedInStore } from "../store";
-import useAnimeList from "../hooks/useAnimeList";
+import useAnimeLists from "../hooks/useAnimeLists";
 import AnimeCardContainer from "../component/AnimeCard/AnimeCardContainer";
 import AnimeCardInProfile from "../component/AnimeCard/AnimeCardInProfile";
 import useFavorite from "../hooks/useUserFavorite";
 import UserProfileLists from "../component/ProfileAnimeListsGrid";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const UserProfilePage = () => {
-  const navigate = useNavigate(); // Initialize navigate
-  const { data: animeLists, isLoading: isAnimeListLoading } = useAnimeList();
+  const { data: animeLists, isLoading: isAnimeListLoading } = useAnimeLists();
   const { data: userFavorites, isLoading: isFavoriteLoading } = useFavorite(); // only fetch when logged in
   const userData = useIsLoggedInStore((s) => s.userData); // get user data
 
