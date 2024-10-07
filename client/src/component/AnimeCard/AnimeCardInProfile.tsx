@@ -1,29 +1,18 @@
 import { Card, CardBody, HStack, Heading, Image, Text } from "@chakra-ui/react";
 import CriticScore from "../CriticScore";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Icon } from "@chakra-ui/react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
-import { AnimeList } from "../../entities/AnimeList";
-import { useQueryClient } from "@tanstack/react-query";
-import useAnimeListPut from "../../hooks/useAnimeListPut";
-import useFavorite from "../../hooks/useUserFavorite";
 import { UserFavorite } from "../../entities/UserFavorite";
-import useUserFavoritePut from "../../hooks/useUserFavoritePut";
+import useUserFavoriteDelete from "../../hooks/useUserFavoriteDelete";
 
 interface Props {
   userFavorite: UserFavorite;
 }
 
 const animeCardInProfile = ({ userFavorite }: Props) => {
-  const queryClient = useQueryClient(); // Get the query client to invalid query
-  const navigate = useNavigate(); // Initialize navigate
-
-  const { mutate: userFavoritePut } = useUserFavoritePut(
-    queryClient,
-    userFavorite?._id || "",
-    navigate
-  ); //patch the user animeList data
+  const { mutate: userFavoriteDelete } = useUserFavoriteDelete(); //delete the user animeList data
 
   return (
     <>
@@ -40,12 +29,7 @@ const animeCardInProfile = ({ userFavorite }: Props) => {
           as={userFavorite?.favorite ? FaHeart : FaRegHeart}
           color={userFavorite?.favorite ? "red.500" : "white"}
           boxSize={5}
-          onClick={() =>
-            userFavoritePut({
-              favorite: !userFavorite?.favorite,
-              updated_at: new Date(),
-            })
-          }
+          onClick={() => userFavoriteDelete(userFavorite._id)}
         />
 
         <Image

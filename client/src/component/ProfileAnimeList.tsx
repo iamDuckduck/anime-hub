@@ -15,7 +15,7 @@ const UserProfileList = ({ animeList }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure(); //the the modal
   const queryClient = useQueryClient(); // Get the query client to invalid query
   const navigate = useNavigate(); // Initialize navigate
-  const { mutate: animeListPut } = useAnimeListPut(queryClient, navigate); //patch the user animeList data
+  const { mutate: animeListPut } = useAnimeListPut(); //patch the user animeList data
 
   const handleUpdateEpisode = (currentEp: number, id: string) => {
     animeListPut({

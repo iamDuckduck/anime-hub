@@ -15,13 +15,11 @@ import { FaRegHeart, FaHeart, FaPlus, FaCheck } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
 import { AnimeList } from "../../entities/AnimeList";
 import { useIsLoggedInStore } from "../../store";
-import useAnimeListPost from "../../hooks/useAnimeListPost";
-import { useQueryClient } from "@tanstack/react-query";
-import useAnimeListPut from "../../hooks/useAnimeListPut";
 import AnimeListModal from "../AnimeListModal";
 import { UserFavorite } from "../../entities/UserFavorite";
 import useUserFavoritePost from "../../hooks/useUserFavoritePost";
-import useUserFavoritePut from "../../hooks/useUserFavoritePut";
+import useUserFavoriteDelete from "../../hooks/useUserFavoriteDelete";
+import { UserFavoritePost } from "../../entities/UserFavoritePost";
 
 interface Props {
   anime: Anime;
@@ -32,10 +30,9 @@ interface Props {
 const AnimeCard = ({ anime, userAnimeList, userFavorite }: Props) => {
   const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
 
-  const queryClient = useQueryClient(); // Get the query client to invalid query
-  const navigate = useNavigate(); // Initialize navigate
-
   const { isOpen, onOpen, onClose } = useDisclosure(); //the the modal
+
+  const navigate = useNavigate(); // Initialize navigate
 
   // Find the anime in the animeList array that matches the animeId
   const matchedAnimeList = userAnimeList?.find(
@@ -46,18 +43,13 @@ const AnimeCard = ({ anime, userAnimeList, userFavorite }: Props) => {
     (animeItem) => animeItem.anime?.animeId === anime.mal_id.toString()
   );
 
-  const { mutate: userFavoritePost } = useUserFavoritePost(
-    queryClient,
-    navigate
-  ); //created new animeList for user
+  const { mutate: userFavoritePost, isLoading: isFavoritePostLoading } =
+    useUserFavoritePost(); //created new animeList for user
 
-  const { mutate: userFavoritePut } = useUserFavoritePut(
-    queryClient,
-    matchedFavorite?._id || "",
-    navigate
-  ); //patch the user animeList data
+  const { mutate: userFavoriteDelete, isLoading: isFavoriteDeleteLoading } =
+    useUserFavoriteDelete(); //patch the user animeList data
 
-  const newUserFavorite: UserFavorite = {
+  const newUserFavorite: UserFavoritePost = {
     anime: {
       animeId: anime.mal_id.toString(),
       format: anime.type,
@@ -95,14 +87,14 @@ const AnimeCard = ({ anime, userAnimeList, userFavorite }: Props) => {
           boxSize={5}
           onClick={() =>
             matchedFavorite
-              ? userFavoritePut({
-                  favorite: !matchedFavorite?.favorite,
-                  updated_at: new Date(),
-                })
+              ? userFavoriteDelete(matchedFavorite._id)
               : userFavoritePost(newUserFavorite)
           }
           // if not exist, upload it and add it to favorite,
           // if exist, use put to set favorite to !isAnimeFavorited
+          pointerEvents={
+            isFavoritePostLoading || isFavoriteDeleteLoading ? "none" : "auto"
+          }
         />
 
         <Icon
