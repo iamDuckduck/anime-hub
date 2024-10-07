@@ -21,8 +21,6 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import Anime from "../entities/Anime";
 import { AnimeList } from "../entities/AnimeList";
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import useAnimeListPost from "../hooks/useAnimeListPost";
 import useAnimeListPut from "../hooks/useAnimeListPut";
 import useAnimeListDelete from "../hooks/useAnimeListDelete";
@@ -33,7 +31,7 @@ import { AnimeListPost } from "../entities/AnimeListPost";
 interface Props {
   onClose: () => void;
   isOpen: boolean;
-  anime: Anime | AnimeInList; //
+  anime: Anime | AnimeInList; //AnimeInList = the anime reference data in animeList
   animeList: AnimeList | undefined; //could be undefined if it's not in database
 }
 
@@ -42,16 +40,17 @@ function isAnime(anime: Anime | AnimeInList): anime is Anime {
 }
 
 const AnimeListModal = ({ onClose, isOpen, anime, animeList }: Props) => {
-  const [episodeProgress, setEpisodeProgress] = useState<number>(0);
+  const [episodeProgress, setEpisodeProgress] = useState<number>(
+    animeList ? animeList.currentEpisode : 0
+  );
   const [status, setStatus] = useState(animeList?.status || "Watching");
   const [finishDate, setFinishDate] = useState<Date | null>(null); // Use state for DatePicker
-  const queryClient = useQueryClient(); // Get the query client to invalid query
-  const navigate = useNavigate(); // Initialize navigate
 
-  const { mutate: animeListPost } = useAnimeListPost(queryClient, navigate); //created new animeList for user
-  const { mutate: animeListPut } = useAnimeListPut(queryClient, navigate); //patch the user animeList data
-  const { mutate: animeListDelete } = useAnimeListDelete(queryClient, navigate); //patch the user animeList data
-  const newAnimeList: AnimeListPost = isAnime(anime) //whether we working with anime from api or database
+  const { mutate: animeListPost } = useAnimeListPost(); //created new animeList for user
+  const { mutate: animeListPut } = useAnimeListPut(); //patch the user animeList data
+  const { mutate: animeListDelete } = useAnimeListDelete(); //patch the user animeList data
+
+  const newAnimeList: AnimeListPost = isAnime(anime)
     ? {
         watchListIds: [],
         anime: {
@@ -68,7 +67,7 @@ const AnimeListModal = ({ onClose, isOpen, anime, animeList }: Props) => {
         currentEpisode: episodeProgress,
         status: status,
       }
-    : ({} as AnimeList);
+    : ({} as AnimeListPost);
 
   const handleSaveButton = () => {
     if (animeList)
@@ -97,10 +96,7 @@ const AnimeListModal = ({ onClose, isOpen, anime, animeList }: Props) => {
         <ModalBody pb={6}>
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <Select
-              defaultValue={animeList?.status || "Watching"}
-              onChange={(e) => setStatus(e.target.value)}
-            >
+            <Select value={status} onChange={(e) => setStatus(e.target.value)}>
               <option>Watching</option>
               <option>Rewatching</option>
               <option>Completed</option>
@@ -115,7 +111,7 @@ const AnimeListModal = ({ onClose, isOpen, anime, animeList }: Props) => {
             <NumberInput
               max={isAnime(anime) ? anime.episodes : anime.totalEpisodes}
               min={0}
-              defaultValue={animeList ? animeList.currentEpisode : 0}
+              value={episodeProgress}
               onChange={(valueString) =>
                 setEpisodeProgress(parseInt(valueString) || 0)
               }
