@@ -20,7 +20,8 @@ const useGetUser = () => {
     onError: () => {
       setIsLoggedIn(null);
       queryClient.setQueryData(["userInfo"], null);
-      queryClient.setQueryData(["animeList"], null);
+      queryClient.setQueryData(["animeLists"], null);
+      queryClient.setQueryData(["userFavorite"], null);
     },
   });
 };
