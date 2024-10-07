@@ -5,16 +5,15 @@ import useAnimes from "../hooks/useAnimes";
 import AnimeCard from "./AnimeCard/AnimeCard";
 import AnimeCardContainer from "./AnimeCard/AnimeCardContainer";
 import AnimeCardSkeleton from "./AnimeCard/AnimeCardSkeleton";
-import useAnimeList from "../hooks/useAnimeList";
-import { useIsLoggedInStore } from "../store";
+import useAnimeLists from "../hooks/useAnimeLists";
 import useFavorite from "../hooks/useUserFavorite";
 
 const AnimeGrid = () => {
   const skeletons = [1, 2, 3, 4, 5, 6];
 
-  const isLoggedIn = useIsLoggedInStore((s) => s.isLoggedIn);
-  const { data: userAnimeList } = useAnimeList(isLoggedIn); // only fetch when logged in
-  const { data: userFavorite } = useFavorite(isLoggedIn); // only fetch when logged in
+  const { data: userAnimeList } = useAnimeLists(); // only fetch when logged in
+  const { data: userFavorite } = useFavorite(); // only fetch when logged in
+
   const {
     data: animes,
     error,
