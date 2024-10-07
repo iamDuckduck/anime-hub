@@ -25,7 +25,12 @@ router.post("/", auth, async (req, res) => {
   //       .status(401)
   //       .send("unauthorized you can't post animeList for others");
 
-  if (await userFavorite.findOne({ "anime.animeId": req.body.anime.animeId }))
+  if (
+    await userFavorite.findOne({
+      "anime.animeId": req.body.anime.animeId,
+      userId: req.user?.id,
+    })
+  )
     return res.status(400).send("duplicated favorite");
 
   req.body.userId = req.user?.id;
