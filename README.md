@@ -182,6 +182,7 @@ This web application allows users to browse anime, manage personal anime lists, 
 - [ ] Allow users to create custom watchlists
 - [ ] Add functionality for users to search and view other users' watchlists
 - [ ] Add a page to show recent user activity
+- [ ] Show voice actors for characters and show all the characters voiced by a voice actor
 
 
 
