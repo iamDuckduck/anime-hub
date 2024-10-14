@@ -207,7 +207,7 @@ describe("/api/watchList", () => {
         .put(`/api/watchList/${watchListId}`)
         .set("Content-Type", "application/json")
         .set("authorization", `Bearer ${token}`) // Pass the JWT token
-        .send({ newWatchList });
+        .send(newWatchList);
     };
 
     it("should return 401 if the user didn't login", async () => {

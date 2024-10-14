@@ -2,6 +2,8 @@ import Express from "express";
 import auth from "../middleware/auth";
 import { WatchList, validateWatchList as validate } from "../models/watchList";
 import mongoose from "mongoose";
+import validateReq from "../middleware/validateReq";
+
 const router = Express.Router();
 
 router.get("/myList", auth, async (req, res) => {
@@ -9,10 +11,7 @@ router.get("/myList", auth, async (req, res) => {
   res.send(watchList);
 });
 
-router.post("/", auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send("invalid info");
-
+router.post("/", auth, validateReq(validate), async (req, res) => {
   if (req.body.userId !== req.user?.id)
     return res.status(401).send("you can't add watchList for another user");
 
@@ -23,10 +22,7 @@ router.post("/", auth, async (req, res) => {
   res.send(newWatchList);
 });
 
-router.put("/:id", auth, async (req, res) => {
-  const { error } = validate(req.body.newWatchList);
-  if (error) return res.status(400).send(error.message);
-
+router.put("/:id", auth, validateReq(validate), async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id))
     return res.status(400).send("invalid watchListId");
 
@@ -34,12 +30,12 @@ router.put("/:id", auth, async (req, res) => {
   if (!watchListId)
     return res.status(400).send("provided watchListId not found");
 
-  if (req.body.newWatchList.userId !== req.user?.id)
+  if (req.body.userId !== req.user?.id)
     return res.status(401).send("you can't modify other user's watchList");
 
   const updatedUser = await WatchList.findOneAndUpdate(
     { _id: req.params.id },
-    req.body.newWatchList,
+    req.body,
     { new: true }
   );
 

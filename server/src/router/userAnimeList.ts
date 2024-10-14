@@ -5,6 +5,7 @@ import {
   validateUserAnimeList as validate,
   validatePut,
 } from "../models/userAnimeList";
+import validateReq from "../middleware/validateReq";
 
 import mongoose from "mongoose";
 const router = Express.Router();
@@ -16,10 +17,7 @@ router.get("/myList", auth, async (req, res) => {
   return res.send(userAnimeListInDb);
 });
 
-router.post("/", auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.message);
-
+router.post("/", auth, validateReq(validate), async (req, res) => {
   if (
     await userAnimeList.findOne({
       "anime.animeId": req.body.anime.animeId,
@@ -33,10 +31,7 @@ router.post("/", auth, async (req, res) => {
   res.send(savedAnimeList);
 });
 
-router.put("/:id", auth, async (req, res) => {
-  const { error } = validatePut(req.body);
-  if (error) return res.status(400).send(error.message);
-
+router.put("/:id", auth, validateReq(validatePut), async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id))
     return res.status(400).send("animeListId isn't a valid objectId");
 

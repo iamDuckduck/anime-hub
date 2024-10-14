@@ -4,12 +4,22 @@ import auth from "../middleware/auth";
 import bcrypt from "bcrypt";
 import _ from "lodash";
 import { Types } from "mongoose";
+import validateReq from "../middleware/validateReq";
 
 interface savedUser {
   _id: Types.ObjectId;
   userName: string;
   email: string;
 }
+
+interface UpdateUserBody {
+  userName?: string;
+  email?: string;
+  profileImage?: string;
+  bannerImage?: string;
+  password?: string; // Include password if needed
+}
+
 const router = Express.Router();
 
 router.get("/me", auth, async (req, res) => {
@@ -18,10 +28,7 @@ router.get("/me", auth, async (req, res) => {
   res.status(200).send(user);
 });
 
-router.post("/", async (req, res) => {
-  const { error } = validatePost(req.body);
-  if (error) return res.status(400).send(error.message);
-
+router.post("/", validateReq(validatePost), async (req, res) => {
   if (await User.findOne({ userName: req.body.userName }))
     return res.status(400).send("duplicated userName");
 
@@ -43,18 +50,7 @@ router.post("/", async (req, res) => {
   res.status(200).send({ ...savedUser, token });
 });
 
-interface UpdateUserBody {
-  userName?: string;
-  email?: string;
-  profileImage?: string;
-  bannerImage?: string;
-  password?: string; // Include password if needed
-}
-
-router.put("/", auth, async (req, res) => {
-  const { error } = validatePut(req.body);
-  if (error) return res.status(400).send(error);
-
+router.put("/", auth, validateReq(validatePut), async (req, res) => {
   // we get the userfromdbv
   const userInDb = await User.findById(req.user?.id).select({
     userName: 1,

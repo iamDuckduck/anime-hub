@@ -6,6 +6,7 @@ import {
   validateFavorite,
   validateFavoritePut,
 } from "../models/userFavorite";
+import validateReq from "../middleware/validateReq";
 
 const router = Express.Router();
 
@@ -16,10 +17,7 @@ router.get("/", auth, async (req, res) => {
   res.send(userFavoriteInDb);
 });
 
-router.post("/", auth, async (req, res) => {
-  const { error } = validateFavorite(req.body);
-  if (error) return res.status(400).send(error.message);
-
+router.post("/", auth, validateReq(validateFavorite), async (req, res) => {
   //   if (req.session.user?.id !== req.body.userId)
   //     return res
   //       .status(401)
@@ -38,10 +36,7 @@ router.post("/", auth, async (req, res) => {
   res.send(savedUserFavorite);
 });
 
-router.put("/:id", auth, async (req, res) => {
-  const { error } = validateFavoritePut(req.body);
-  if (error) return res.status(400).send(error.message);
-
+router.put("/:id", auth, validateReq(validateFavoritePut), async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id))
     return res.status(400).send("userFavoriteId isn't a valid objectId");
 
