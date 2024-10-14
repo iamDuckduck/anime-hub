@@ -1,5 +1,5 @@
 import Express from "express";
-import { auth } from "../middleware/auth";
+import auth from "../middleware/auth";
 import mongoose from "mongoose";
 import {
   userFavorite,

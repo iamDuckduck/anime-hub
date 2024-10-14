@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
-export const auth = function (req: Request, res: Response, next: NextFunction) {
+export default function (req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers["authorization"];
 
   if (!authHeader) {
@@ -22,4 +22,4 @@ export const auth = function (req: Request, res: Response, next: NextFunction) {
     req.user = user;
     next();
   });
-};
+}

@@ -1,5 +1,5 @@
 import Express from "express";
-import { auth } from "../middleware/auth";
+import auth from "../middleware/auth";
 import { WatchList, validateWatchList as validate } from "../models/watchList";
 import mongoose from "mongoose";
 const router = Express.Router();
