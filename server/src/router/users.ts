@@ -1,10 +1,9 @@
 import { User, validatePut, validatePost } from "../models/users";
 import Express from "express";
-import { auth } from "../middleware/auth";
+import auth from "../middleware/auth";
 import bcrypt from "bcrypt";
 import _ from "lodash";
 import { Types } from "mongoose";
-import jwt from "jsonwebtoken";
 
 interface savedUser {
   _id: Types.ObjectId;
@@ -39,14 +38,7 @@ router.post("/", async (req, res) => {
     ..._.pick(user, ["_id", "userName", "email"]),
   };
 
-  const secretOrPrivateKey = process.env.anime_jwtPrivateKey;
-  if (!secretOrPrivateKey) {
-    throw new Error("JWT secret is undefined! Make sure it's set.");
-  }
-
-  const token = jwt.sign({ id: user._id.toString() }, secretOrPrivateKey, {
-    expiresIn: "1h",
-  });
+  const token = user.generateAuthToken();
 
   res.status(200).send({ ...savedUser, token });
 });

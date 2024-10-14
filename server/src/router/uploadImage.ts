@@ -2,7 +2,7 @@ import Express from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
 import { Request, Response } from "express";
-import { auth } from "../middleware/auth";
+import auth from "../middleware/auth";
 const router = Express.Router();
 
 cloudinary.v2.config({

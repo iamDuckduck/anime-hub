@@ -72,18 +72,14 @@ describe("/api/auth", () => {
       expect(res.status).toBe(401);
     });
 
-    it("should return the token", async () => {
+    it("should return 200", async () => {
       //get valid token
       const authRes = await request(app).post("/api/auth").send(loginInfo);
       token = authRes.body.token;
 
-      //delete token
+      //token will be deleted in frontend
       let res = await exec();
       expect(res.status).toBe(200);
-
-      // //deleted token should be invalid !! we either handle it in frontend or use refresh token for it
-      // res = await exec();
-      // expect(res.status).toBe(401);
     });
   });
 });

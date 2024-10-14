@@ -14,7 +14,7 @@ export interface UserDoc extends Document {
   bannerImage: string;
   createdAt: Date;
   updatedAt: Date;
-  // generateAuthToken: () => string;
+  generateAuthToken: () => string;
 }
 
 //Schema
@@ -71,12 +71,16 @@ const userSchema = new Schema<UserDoc>({
 });
 
 // Add generateAuthToken method to the schema
-// userSchema.methods.generateAuthToken = function (this: UserDoc) {
-//   return jwt.sign(
-//     { _id: this._id, isAdmin: this.isAdmin },
-//     config.get("jwtPrivateKey")
-//   );
-// };
+userSchema.methods.generateAuthToken = function (this: UserDoc) {
+  const secretOrPrivateKey = process.env.anime_jwtPrivateKey;
+  if (!secretOrPrivateKey) {
+    throw new Error("JWT secret is undefined! Make sure it's set.");
+  }
+
+  return jwt.sign({ id: this.id, isAdmin: this.isAdmin }, secretOrPrivateKey, {
+    expiresIn: "1h",
+  });
+};
 
 // Create a Mongoose model
 const User = model<UserDoc, Model<UserDoc>>("User", userSchema);

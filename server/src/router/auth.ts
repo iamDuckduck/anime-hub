@@ -2,8 +2,7 @@ import Express from "express";
 import bcrypt from "bcrypt";
 import Joi from "joi";
 import { User } from "../models/users";
-import { auth } from "../middleware/auth";
-import jwt from "jsonwebtoken";
+import auth from "../middleware/auth";
 
 const router = Express.Router();
 router.get("/", async (req, res) => {
@@ -22,15 +21,7 @@ router.post("/", async (req, res) => {
 
   if (!validPassword) return res.status(400).send("Invalid email or password.");
 
-  const secretOrPrivateKey = process.env.anime_jwtPrivateKey;
-  if (!secretOrPrivateKey) {
-    throw new Error("JWT secret is undefined! Make sure it's set.");
-  }
-
-  const token = jwt.sign({ id: user._id.toString() }, secretOrPrivateKey, {
-    expiresIn: "1h",
-  });
-
+  const token = user.generateAuthToken();
   res.json({
     message: "Login successful",
     token,
@@ -38,7 +29,6 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/logout", auth, async (req, res) => {
-  req.session.destroy(() => {});
   res.status(200).send("successfully logout");
 });
 
