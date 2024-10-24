@@ -25,7 +25,7 @@ router.post("/", auth, validateReq(validateFavorite), async (req, res) => {
 
   if (
     await userFavorite.findOne({
-      "anime.animeId": req.body.anime.animeId,
+      animeID: req.body.animeID,
       userId: req.user?.id,
     })
   )

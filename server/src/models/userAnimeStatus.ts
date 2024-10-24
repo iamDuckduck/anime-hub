@@ -11,24 +11,12 @@ enum Status {
   Planning = "Planning",
 }
 
-export interface Anime {
-  animeId: String;
-  status: String;
-  format: String;
-  title: String;
-  imageUrl: String;
-  genre: String;
-  totalEpisodes: number;
-  score: number;
-  year: number;
-}
-
 //extend the document interface,
-export interface userAnimeListDoc extends Document {
+export interface userAnimeStatusDoc extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
-  watchListIds: Types.ObjectId[];
-  anime: Anime;
+  userWatchListIDs: Types.ObjectId[];
+  animeID: number;
   status: String;
   currentEpisode: number;
   expectedFinishDate: Date;
@@ -36,17 +24,17 @@ export interface userAnimeListDoc extends Document {
   updated_at: Date;
 }
 
-const userAnimeListSchema = new Schema({
+const userAnimeStatusSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  watchListIds: {
+  userWatchListIDs: {
     type: [mongoose.Schema.Types.ObjectId],
     required: true,
   },
-  anime: {
-    type: Object, //let validateUserAnimeList to validate
+  animeID: {
+    type: Number, //let validateUserAnimeList to validate
     required: true,
   },
   status: {
@@ -74,47 +62,35 @@ const userAnimeListSchema = new Schema({
   },
 });
 
-const userAnimeList = model<userAnimeListDoc, Model<userAnimeListDoc>>(
-  "userAnimeList",
-  userAnimeListSchema
+const userAnimeStatus = model<userAnimeStatusDoc, Model<userAnimeStatusDoc>>(
+  "userAnimeStatus",
+  userAnimeStatusSchema
 );
 
-const validateUserAnimeList = (userAnimeList: object) => {
+const validateUserAnimeStatus = (userAnimeStatus: object) => {
   const schema = Joi.object({
-    watchListIds: Joi.array()
-      .items(
-        Joi.string().custom((value, helpers) => {
-          if (!mongoose.Types.ObjectId.isValid(value)) {
-            return helpers.error("any.invalid");
-          }
-          return value;
-        })
-      )
-      .required(),
-    anime: Joi.object().keys({
-      animeId: Joi.string().required(),
-      status: Joi.string().required(),
-      format: Joi.string().required(),
-      title: Joi.string().required(),
-      imageUrl: Joi.string().required(),
-      genre: Joi.string().required(),
-      totalEpisodes: Joi.number().required(),
-      score: Joi.number().required(),
-      year: Joi.number().required(),
-    }),
+    userWatchListIDs: Joi.array().items(
+      Joi.string().custom((value, helpers) => {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return helpers.error("any.invalid");
+        }
+        return value;
+      })
+    ),
+    animeID: Joi.number().required(),
     status: Joi.string()
       .valid(...Object.values(Status))
       .required(),
     currentEpisode: Joi.number().required(),
-    expectedFinishDate: Joi.date(),
+    expectedFinishDate: Joi.date().allow(null),
   });
 
-  return schema.validate(userAnimeList);
+  return schema.validate(userAnimeStatus);
 };
 
-export const validatePut = (userAnimeList: object) => {
+export const validatePut = (userAnimeStatus: object) => {
   const schema = Joi.object({
-    watchListIds: Joi.array()
+    userWatchListIDs: Joi.array()
       .items(
         Joi.string().custom((value, helpers) => {
           if (!mongoose.Types.ObjectId.isValid(value)) {
@@ -124,30 +100,19 @@ export const validatePut = (userAnimeList: object) => {
         })
       )
       .optional(),
-    anime: Joi.object().keys({
-      animeId: Joi.string().required(),
-      status: Joi.string().required(),
-      format: Joi.string().required(),
-      title: Joi.string().required(),
-      imageUrl: Joi.string().required(),
-      genre: Joi.string().required(),
-      totalEpisodes: Joi.number().required(),
-      score: Joi.number().required(),
-      year: Joi.number().required(),
-    }),
+    animeID: Joi.number(),
     status: Joi.string()
       .valid(...Object.values(Status))
       .optional(),
     currentEpisode: Joi.number().optional(),
     expectedFinishDate: Joi.date().allow(null),
-
     updated_at: Joi.date().required(),
   });
 
-  return schema.validate(userAnimeList);
+  return schema.validate(userAnimeStatus);
 };
 
-export { userAnimeList, validateUserAnimeList };
+export { userAnimeStatus, validateUserAnimeStatus };
 
 // if i declare anime as Anime interface in userAnimeListDoc, it still
 // return a document type when requesting it if we validate anime

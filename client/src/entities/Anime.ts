@@ -5,8 +5,8 @@ import Studio from "./studio";
 
 export default interface Anime {
   mal_id: number;
-  title: string;
   images: images;
+  title: string;
   popularity: number;
   year: number;
   score: number;

@@ -6,7 +6,7 @@ import validateReq from "../middleware/validateReq";
 
 const router = Express.Router();
 
-router.get("/myList", auth, async (req, res) => {
+router.get("/myStatus", auth, async (req, res) => {
   const watchList = await WatchList.findOne({ userId: req.user?.id });
   res.send(watchList);
 });

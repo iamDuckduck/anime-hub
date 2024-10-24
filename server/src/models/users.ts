@@ -1,19 +1,20 @@
-import { Document, Schema, model, Model, Types } from "mongoose";
+import mongoose, { Document, Schema, model, Model, Types } from "mongoose";
 import jwt from "jsonwebtoken";
-import config from "config";
 import Joi from "joi";
 
 //extend the document interface,
 export interface UserDoc extends Document {
+  _id: Types.ObjectId;
   userName: string;
   email: string;
   password: string;
-  isAdmin: boolean;
-  _id: Types.ObjectId;
   profileImage: string;
   bannerImage: string;
   createdAt: Date;
   updatedAt: Date;
+  follow: Types.ObjectId[];
+  followedBy: Types.ObjectId[];
+  isAdmin: boolean;
   generateAuthToken: () => string;
 }
 
@@ -55,6 +56,16 @@ const userSchema = new Schema<UserDoc>({
     maxlength: 255,
     default:
       "https://res.cloudinary.com/drbighiyo/image/upload/v1726910174/user/ayctbuje418140gbij5z.jpg",
+  },
+  follow: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+    required: true,
+  },
+  followedBy: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+    required: true,
   },
   createdAt: {
     type: Date,

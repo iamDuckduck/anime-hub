@@ -1,13 +1,11 @@
 import { Document, Schema, model, Model, Types } from "mongoose";
 import mongoose from "mongoose";
 import Joi from "joi";
-import { Anime } from "./userAnimeList";
-import { create } from "lodash";
 
 interface userFavoriteDoc extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
-  anime: Anime;
+  animeID: Number;
   created_at: Date;
   updated_at: Date;
   favorite: boolean;
@@ -18,8 +16,8 @@ const userFavoriteSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  anime: {
-    type: Object,
+  animeID: {
+    type: Number,
     required: true,
   },
   favorite: {
@@ -45,17 +43,7 @@ const userFavorite = model<userFavoriteDoc, Model<userFavoriteDoc>>(
 
 const validateFavorite = (userFavorite: object) => {
   const schema = Joi.object({
-    anime: Joi.object().keys({
-      animeId: Joi.string().required(),
-      status: Joi.string().required(),
-      format: Joi.string().required(),
-      title: Joi.string().required(),
-      imageUrl: Joi.string().required(),
-      genre: Joi.string().required(),
-      totalEpisodes: Joi.number().required(),
-      score: Joi.number().required(),
-      year: Joi.number().required(),
-    }),
+    animeID: Joi.number().required(),
     favorite: Joi.boolean().required(),
   });
   return schema.validate(userFavorite);
