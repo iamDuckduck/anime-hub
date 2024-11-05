@@ -13,7 +13,8 @@ interface Props {
 
 const UserProfileList = ({ animeList }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure(); //the the modal
-  const { mutate: animeListPut } = useAnimeListPut(); //patch the user animeList data
+  const { mutate: animeListPut, isLoading: animePutIsloading } =
+    useAnimeListPut(); //patch the user animeList data
 
   const handleUpdateEpisode = (currentEp: number, id: string) => {
     animeListPut({
@@ -68,7 +69,7 @@ const UserProfileList = ({ animeList }: Props) => {
             mr={2}
             boxSize={3}
             onClick={
-              animeList.currentEpisode == 0
+              animeList.currentEpisode == 0 || animePutIsloading
                 ? undefined
                 : () =>
                     handleUpdateEpisode(
@@ -89,7 +90,8 @@ const UserProfileList = ({ animeList }: Props) => {
             ml={2}
             boxSize={3}
             onClick={
-              animeList.currentEpisode == animeList.anime.totalEpisodes
+              animeList.currentEpisode == animeList.anime.totalEpisodes ||
+              animePutIsloading
                 ? undefined
                 : () =>
                     handleUpdateEpisode(
