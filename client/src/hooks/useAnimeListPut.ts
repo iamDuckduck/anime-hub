@@ -25,7 +25,13 @@ const useAnimeListPut = () => {
       toastIdRef.current = toast.loading("updating...");
       return animeListUploadClient.put(animePutData, id);
     },
-    onSuccess: (updatedAnimeList: AnimeList) => {
+    onSuccess: (
+      updatedAnimeList: AnimeList,
+      putData: {
+        animePutData: AnimeListPutRequest;
+        id: string;
+      }
+    ) => {
       toast.update(toastIdRef.current || "", {
         render: "success!",
         type: "success",
@@ -33,10 +39,16 @@ const useAnimeListPut = () => {
         autoClose: 2000, // Close after 2 seconds
       });
 
-      // Optimistically update to the new value
-      queryClient.setQueryData<AnimeList[]>(["animeLists"], (oldAnimeList) => {
-        if (!oldAnimeList) return [updatedAnimeList];
-        return [...oldAnimeList, updatedAnimeList];
+      // update to the new value in cache
+      queryClient.setQueryData<AnimeList[]>(["animeLists"], (oldAnimeLists) => {
+        if (!oldAnimeLists) return [updatedAnimeList];
+
+        const index = oldAnimeLists?.findIndex(
+          (animeList) => animeList._id == putData.id
+        );
+        oldAnimeLists[index] = updatedAnimeList;
+        const newAimeLists = [...oldAnimeLists];
+        return newAimeLists;
       });
     },
     onError(error) {
